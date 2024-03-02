@@ -1,0 +1,149 @@
+import React, { useEffect } from "react";
+import InputFormComponent from "../../components/InputFormComponent/InputFormComponent";
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
+import { colors } from "../../contants/index";
+import logoLogin from '../../assets/images/logodangnhap.png'
+import { Image } from "antd";
+import {
+    EyeFilled,
+    EyeInvisibleFilled,
+} from '@ant-design/icons';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import * as UserService from '../../services/UserService'
+import { useMutationHooks } from "../../hooks/useMutationHook";
+import Loading from "../../components/LoadingComponent/Loading";
+import * as message from "../../components/Message/message"
+const SignUpPage = ()=>{
+    const [isShowPassword, setIsShowPassword] = useState(false)
+    const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false)
+    const [email,setEmail] = useState('')
+    const [password,setPassword] = useState('')
+    const [confirmPassword,setComfirmPassword] = useState('')
+    const mutation = useMutationHooks(//call api
+         (data) => UserService.signupUser(data)
+    )
+    const {data, isPending , isSuccess ,isError,error} = mutation
+    useEffect(()=>{
+        if(data?.status === "ERR"){
+            message.error()   
+        }
+        else if(isSuccess){
+            message.success()
+        }else if(isError){
+            message.error()
+        }
+    },[isSuccess ,isError,data])
+    
+    const handleOnchangeEmail = (e)=>{
+        setEmail(e.target.value)
+    }
+
+    const hanleOnChangePassword = (e)=>{
+        setPassword(e.target.value)
+    }
+
+    const hanleOnChangeComfirmPassword = (e)=>{
+        setComfirmPassword(e.target.value)
+    }
+
+    const handleSignUp = ()=>{
+        mutation.mutate({
+            name:"Nguyễn Quang Huy",
+            phone:"0367386108",
+            email,// truyền data req.body
+            password,
+            confirmPassword
+        })
+        console.log(email , password , confirmPassword)
+    }
+    const navigate = useNavigate()
+    const handleNavigateSignIn = ()=>{
+        navigate('/sign-in')
+    }
+    return (
+        <Loading isLoading={isPending} >
+            <div style={{display:'flex',alignItems:'center',justifyContent:'center',backgroundColor:'rgb(0,0,0,0.1)',height:'100vh'}}>
+            <div style={{ width: '800px', height: '445px', borderRadius: '10px', backgroundColor: 'white' ,display:'flex'}}>
+                <div className="WrapperContainerLeft">
+                    <h2>Xin chào,</h2>
+                    <p>Đăng ký</p>
+                    <InputFormComponent placeholder="Nhập tài khoản" style={{marginBottom:'10px'}} value={email} handleOnChange={handleOnchangeEmail} />
+                    <div style={{ position: 'relative' }}>
+                        <span
+                        onClick={() => setIsShowPassword(!isShowPassword)}
+                        style={{
+                            zIndex: 10,
+                            position: 'absolute',
+                            top: '4px',
+                            right: '8px'
+                        }}
+                        >{
+                            isShowPassword ? (
+                            <EyeFilled />
+                            ) : (
+                            <EyeInvisibleFilled />
+                            )
+                        }
+                        </span>
+                        <InputFormComponent placeholder="Nhập mật khẩu" type={isShowPassword ? "" : "password"} 
+                        style={{marginBottom:'10px'}} 
+                        value={password}
+                        handleOnChange={hanleOnChangePassword}
+                        />
+                    </div>
+                    <div style={{ position: 'relative' }}>
+                        <span
+                        onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
+                        style={{
+                            zIndex: 10,
+                            position: 'absolute',
+                            top: '4px',
+                            right: '8px'
+                        }}
+                        >{
+                            isShowConfirmPassword ? (
+                            <EyeFilled />
+                            ) : (
+                            <EyeInvisibleFilled />
+                            )
+                        }
+                        </span>
+                        <InputFormComponent placeholder="Nhập lại mật khẩu" type={isShowConfirmPassword ? "" : "password"}
+                        value={confirmPassword}
+                        handleOnChange={hanleOnChangeComfirmPassword}
+                        />
+                    </div>
+                    {isError || (data?.status === "ERR") ? (error === null ? <span style={{color:'red'}}>{data?.message}</span> : <span style={{color:'red'}}>{error.response.data.message }</span>) : <span style={{color:'green'}}>{data?.message}</span>}
+                    <ButtonComponent
+                        disabled={!email || !password || !confirmPassword}
+                        onClick={handleSignUp}
+                        size={20}
+                        styleButton={{
+                            backgroundColor: colors.primary,
+                            height: '48px',
+                            width: '100%',
+                            border: 'none',
+                            borderRadius: '4px',
+                            margin:'26px 0 10px'
+                        }}
+                        textButton={"Đăng ký"}
+                        styleTextButton={{ color: 'white' }}
+                    />
+                    <p style={{margin:0}}>Bạn đã có tài khoản ? <span className="WrapperTextLight" onClick={handleNavigateSignIn}>Đăng nhập</span></p>
+                </div>
+                <div className="WrapperContainerRight">
+                    <div style={{
+                        backgroundColor:''
+                    }}>
+                        <Image src={logoLogin} preview={false} alt="image-logo" width={203} height={203}/>
+                        <h4 style={{textAlign:'center'}}>Mua sắm tại shop tôi</h4>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </Loading>
+    )
+}
+
+export default SignUpPage

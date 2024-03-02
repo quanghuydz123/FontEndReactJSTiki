@@ -1,0 +1,35 @@
+@import "~slick-carousel/slick/slick.css"; 
+@import "~slick-carousel/slick/slick-theme.css";
+@import './components/Product/style.scss';
+@import './components/NavbarComponent/style.scss';
+@import './pages/HomePage/style.scss';
+@import './pages/TypeProductPage/style.scss';
+@import './pages/SignInPage/style.scss';
+@import './components/InputFormComponent/style.scss';
+@import './pages/Profile/style.scss';
+@import './components/AdminComponent/style.scss';
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+}
+html{
+  font-size: 16px;
+}
+
+
+.container {
+  padding: 0 120px;
+}
+
+.WapperTypeProduct{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid white;
+}

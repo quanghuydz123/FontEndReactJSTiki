@@ -1,0 +1,20 @@
+
+
+.WrapperButtonMore{
+    &:hover{
+        color: 'white';
+        background-color: rgb(13, 92, 182);
+        span{
+            color: white;
+        }
+    }
+    width: 100%;
+    text-align: center;
+}
+
+.WrapperProducts{
+    display: flex;
+    gap: 12px;
+    margin-top:20px;
+    flex-wrap: wrap;
+}

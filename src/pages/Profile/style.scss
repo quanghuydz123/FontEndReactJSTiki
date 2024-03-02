@@ -1,0 +1,38 @@
+.WapperHeaderProfile{
+    color: black;
+    font-size: 18px;
+    margin: 4px 0;
+}
+
+.WapperContentProfile{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    width: 550px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 10px;
+    gap: 30px;
+}
+.WapperLabel{
+    color: black;
+    font-size: 12px;
+    line-height:30px;
+    font-weight: 600;
+    width: 80px;
+    text-align: left;
+}
+.WapperInputProfile{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.WapperUploadFile{
+    & .ant-upload.ant-upload-select.ant-upload-select-picture-card { 
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+    }
+    
+}
