@@ -15,12 +15,15 @@ import Loading from "../LoadingComponent/Loading";
 import { useQuery } from "@tanstack/react-query";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import { useSelector } from "react-redux";
+import ModalComponent from "../ModalComponent/ModalComponent";
 
 const AdminProduct = ()=>{
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [rowSelected,setRowSelected] = useState('')
     const [isOpenDrawer,setIsOpenDrawer] = useState('')
     const [form] = Form.useForm()
+    const [formUpdate] = Form.useForm()
+    const [isOpenModalDetele,setIsOpenModalDelete] = useState('')
     const user = useSelector((state) => state.user)
     const [isPendingUpdate,setIsPendingUpdate] = useState(false)
     const [stateProduct,setStateProduct] = useState({
@@ -57,8 +60,8 @@ const AdminProduct = ()=>{
         setIsPendingUpdate(false)
     }
     useEffect(()=>{
-        form.setFieldsValue(stateProductDetals)//set value vào input
-    },[form,stateProductDetals])
+        formUpdate.setFieldsValue(stateProductDetals)//set value vào input
+    },[formUpdate,stateProductDetals])
     useEffect(()=>{
         if(rowSelected){
             fetchProductDetails(rowSelected)
@@ -89,8 +92,9 @@ const AdminProduct = ()=>{
                     fontSize:'30px',
                     cursor:'pointer',
                     marginLeft:'10px'
-
-                }}/>
+                }}
+                onClick={()=>{setIsOpenModalDelete(true)}}
+                />
                 
             </div>
         )
@@ -99,37 +103,66 @@ const AdminProduct = ()=>{
     const mutation = useMutationHooks(//call api
          (data) => ProductService.createProduct(data)
     )
+
     const mutationUpdateProduct = useMutationHooks(//call api
     (data) => {
         const {id,token,...rest} = data
         const res = ProductService.updateProduct(id,token,rest)
         return res
-    }
-)
+    })
+    const mutationDeleteProduct = useMutationHooks(//call api
+    (data) => {
+        const {id,token} = data
+        const res = ProductService.deleteProduct(id,token)
+        return res
+    })
+
+    
+
 
     const fetchProductAll = async ()=>{
         const res = await ProductService.getAllProduct()
         return res
     }
-    const { isLoading:isLoadingProduct, data:products } = useQuery({
+    const queryProduct = useQuery({
         queryKey: ['products'],
         queryFn: fetchProductAll,
         retry: 3,
         retryDelay: 1000
     });
+    const { isLoading:isLoadingProduct, data:products } = queryProduct
 
     const {data, isPending, isSuccess,isError,error} = mutation
     const {data:dataUpdate, isPending:isPendingUpdate1, isSuccess:isSuccessUpdate,isError:isErrorUpdate,error:errorUpdate} = mutationUpdateProduct
+    const {data:dataDelete, isPending:isPendingDelete1, isSuccess:isSuccessDelete,isError:isErrorDelete,error:errorDelete} = mutationDeleteProduct
+
     const showModal = () => {   
         setIsModalOpen(true);   
     };
     useEffect(()=>{
+        if(isSuccessUpdate){
+            message.success("Cập nhập thành công")
+        }else if(isErrorUpdate){
+            message.error(dataUpdate?.message || "Lỗi rồi")
+        }
+    },[isSuccessUpdate,isErrorUpdate])
+
+    useEffect(()=>{
         if(data?.status==="OK"){
-            message.success("Thêm thành công")
+            message.success(data?.message)
         }else if(data?.status==="ERR"){
             message.error(data?.message)
         }
     },[data])
+
+    useEffect(()=>{
+        if(dataDelete?.status==="OK" || isSuccessDelete){
+            message.success(dataDelete?.message)
+        }else if(data?.status==="ERR" || isErrorDelete){
+            message.error(dataDelete?.message)
+        }
+    },[dataDelete,isErrorDelete,isSuccessDelete])
+
     const handleCancel = () => {
         setIsModalOpen(false);
         setStateProduct({
@@ -143,13 +176,32 @@ const AdminProduct = ()=>{
          })
         form.resetFields()//xóa hết value input
     };
-    const onFinish = (values) => {
-        mutation.mutate(stateProduct)
+    const hanldeCancelDelete = ()=>{
+        setIsOpenModalDelete(false)
+    }
+    const handleDeleteProduct =()=>{
+        mutationDeleteProduct.mutate({id:rowSelected,token:user?.access_token},{
+            onSettled: ()=>{//tự động load lại khi update
+                queryProduct.refetch()
+            }
+        })
+        setIsOpenModalDelete(false)
+    }
+    const onFinish = () => {
+        mutation.mutate(stateProduct,{
+            onSettled: ()=>{//tự động load lại khi update
+                queryProduct.refetch()
+            }
+        })
 
     };
 
     const onUpdateProduct=()=>{
-        mutationUpdateProduct.mutate({id:rowSelected,token:user?.access_token,stateProductDetals})
+        mutationUpdateProduct.mutate({id:rowSelected,token:user?.access_token,stateProductDetals},{
+            onSettled: ()=>{//tự động load lại khi update
+                queryProduct.refetch()
+            }
+        })
     }
     const handleOnchange = (e)=>{
         setStateProduct({
@@ -233,7 +285,7 @@ const AdminProduct = ()=>{
                 }}/>
             </div>
             
-            <Modal title="Tạo sản phẩm" open={isModalOpen}  onCancel={handleCancel} className="modal=product" footer={null}>
+            <ModalComponent title="Tạo sản phẩm" open={isModalOpen}  onCancel={handleCancel} className="modal=product" footer={null}>
                 <Loading isLoading={isPending}>
                 <Form
                     name="basic"
@@ -364,12 +416,12 @@ const AdminProduct = ()=>{
                         style={{display:'flex',justifyContent:'flex-end', marginRight:'50px'}}
                     >
                         <Button type="primary" htmlType="submit">
-                            Submit
+                            Thêm
                         </Button>
                     </Form.Item>
                 </Form>
                 </Loading>
-            </Modal>
+            </ModalComponent>
             <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={()=>setIsOpenDrawer(false)} width="50%">
             <Loading isLoading={isPendingUpdate}>
                 <Form
@@ -383,7 +435,7 @@ const AdminProduct = ()=>{
                     style={{
                         maxWidth: 600,
                     }}
-                    form={form}
+                    form={formUpdate}
                     onFinish={onUpdateProduct}
                     autoComplete="off"
                 >
@@ -507,6 +559,13 @@ const AdminProduct = ()=>{
                 </Form>
                 </Loading>
             </DrawerComponent>
+            <ModalComponent title="Xóa sản phẩm" isOpen={isOpenModalDetele} onCancel={hanldeCancelDelete} onOk={handleDeleteProduct}>
+            <Loading isLoading={isPendingDelete1}>
+                <div>
+                    Bạn có muốn xóa sản phẩm này không ? 
+                </div>
+            </Loading>
+            </ModalComponent>
         </div>
     )
 }

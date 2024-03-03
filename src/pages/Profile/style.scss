@@ -34,5 +34,7 @@
         height: 60px;
         border-radius: 50%;
     }
-    
+    & .ant-upload-list-item-name{
+        display: none;
+    }
 }
