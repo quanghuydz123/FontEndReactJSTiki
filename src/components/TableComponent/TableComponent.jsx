@@ -4,7 +4,7 @@ import Loading from "../LoadingComponent/Loading";
 
 const TableComponent = (props)=>{
     const [selectionType, setSelectionType] = useState('checkbox');
-    const {columns,data,isLoading} = props  
+    const {columns,data,isLoading,onRow} = props  
     
       const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
@@ -27,6 +27,7 @@ const TableComponent = (props)=>{
                 }}
                 columns={columns}
                 dataSource={data}
+                onRow={onRow}
             />
             </Loading>
         </div>
