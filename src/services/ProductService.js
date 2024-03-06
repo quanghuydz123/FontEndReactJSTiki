@@ -34,3 +34,13 @@ export const deleteProduct  = async(id,access_token)=>{
     })
     return res.data
 }
+
+export const deleteManyProduct  = async(ids,access_token)=>{
+    const res = await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/product/delete-many`,{
+        headers:{
+            token: `Bearer ${access_token}`
+        },
+        data: ids // Truyền dữ liệu ids vào tham số data
+    })
+    return res.data
+}

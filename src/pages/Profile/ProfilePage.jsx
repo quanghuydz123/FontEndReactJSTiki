@@ -38,13 +38,13 @@ const ProfilePage = ()=>{
         setAvatar(user?.avatar)
     },[user])
     useEffect(()=>{
-        console.log(data?.status)
-        if(data?.status==="OK"){
+        if(data?.status==="OK" || isSuccess){
             message.success("Cập nhập thành công")
-        }else if(data?.status==="ERR"){
+        }else if(data?.status==="ERR" || isError)
+        { 
             message.error(data?.message)
         }
-    },[data])
+    },[data,isError,isSuccess])
 
     const handleGetDetailsUser = async (id,token)=>{
         const res = await UserService.getDetailsUser(id,token)
@@ -86,67 +86,23 @@ const ProfilePage = ()=>{
             <div className="WapperContentProfile">
                 <div className="WapperInputProfile">
                     <label className="WapperLabel" htmlFor="name">Họ tên</label>
-                    <InputFormComponent style={{width:'300px'}} value={name} handleOnChange ={handleOnchangeName} id="name" />
-                    <ButtonComponent
-                            onClick={handleUpdate}
-                            size={20}
-                            styleButton={{
-                                height: '30px',
-                                width: 'fit-content',
-                                borderRadius: '4px',
-                                padding:'2px 6px 6px',
-                            }}
-                            textButton={"Cập nhập"}
-                            styleTextButton={{ color: 'white',fontSize:'15px',fontWeight:'700'}}
-                        />
+                    <InputFormComponent style={{width:'400px'}} value={name} handleOnChange ={handleOnchangeName} id="name" />
+                  
                 </div>
                 <div className="WapperInputProfile">
                     <label className="WapperLabel" htmlFor="email">Email</label>
-                    <InputFormComponent style={{width:'300px'}} value={email} handleOnChange ={handleOnchangeEmail} id="email" />
-                    <ButtonComponent
-                            onClick={handleUpdate}
-                            size={20}
-                            styleButton={{
-                                height: '30px',
-                                width: 'fit-content',
-                                borderRadius: '4px',
-                                padding:'2px 6px 6px',
-                            }}
-                            textButton={"Cập nhập"}
-                            styleTextButton={{ color: 'white',fontSize:'15px',fontWeight:'700'}}
-                        />
+                    <InputFormComponent style={{width:'400px'}} value={email} handleOnChange ={handleOnchangeEmail} id="email" />
+                   
                 </div>
                 <div className="WapperInputProfile">
                     <label className="WapperLabel" htmlFor="phone">Số điện thoại</label>
-                    <InputFormComponent style={{width:'300px'}} value={phone} handleOnChange ={handleOnchangePhone} id="phone" />
-                    <ButtonComponent
-                            onClick={handleUpdate}
-                            size={20}
-                            styleButton={{
-                                height: '30px',
-                                width: 'fit-content',
-                                borderRadius: '4px',
-                                padding:'2px 6px 6px',
-                            }}
-                            textButton={"Cập nhập"}
-                            styleTextButton={{ color: 'white',fontSize:'15px',fontWeight:'700'}}
-                        />
+                    <InputFormComponent style={{width:'400px'}} value={phone} handleOnChange ={handleOnchangePhone} id="phone" />
+                    
                 </div>
                 <div className="WapperInputProfile">
                     <label className="WapperLabel" htmlFor="address">Địa chỉ</label>
-                    <InputFormComponent style={{width:'300px'}} value={address} handleOnChange ={handleOnchangeAddress} id="address" />
-                    <ButtonComponent
-                            onClick={handleUpdate}
-                            size={20}
-                            styleButton={{
-                                height: '30px',
-                                width: 'fit-content',
-                                borderRadius: '4px',
-                                padding:'2px 6px 6px',
-                            }}
-                            textButton={"Cập nhập"}
-                            styleTextButton={{ color: 'white',fontSize:'15px',fontWeight:'700'}}
-                        />
+                    <InputFormComponent style={{width:'400px'}} value={address} handleOnChange ={handleOnchangeAddress} id="address" />
+                            
                 </div>
 
                 <div className="WapperInputProfile">
@@ -162,18 +118,21 @@ const ProfilePage = ()=>{
                      <Upload onChange={handleOnchangeAvatar} className="WapperUploadFile" maxCount={1}>
                         <Button icon={<UploadOutlined />}>Select File</Button>
                     </Upload>
-                    {/* <InputFormComponent style={{width:'300px'}} value={avatar} handleOnChange ={handleOnchangeAvatar} id="avatar" /> */}
+                    {/* <InputFormComponent style={{width:'400px'}} value={avatar} handleOnChange ={handleOnchangeAvatar} id="avatar" /> */}
+                    
+                </div>
+                <div style={{display:'flex',justifyContent:'end'}}>
                     <ButtonComponent
-                            onClick={handleUpdate}
-                            size={20}
-                            styleButton={{
-                                height: '30px',
-                                width: 'fit-content',
-                                borderRadius: '4px',
-                                padding:'2px 6px 6px',
-                            }}
-                            textButton={"Cập nhập"}
-                            styleTextButton={{ color: 'white',fontSize:'15px',fontWeight:'700'}}
+                                onClick={handleUpdate}
+                                size={20}
+                                styleButton={{
+                                    height: '30px',
+                                    width: '150px',
+                                    borderRadius: '4px',
+                                    padding:'2px 6px 6px',
+                                }}
+                                textButton={"Cập nhập"}
+                                styleTextButton={{ color: 'white',fontSize:'15px',fontWeight:'700'}}
                         />
                 </div>
             </div>

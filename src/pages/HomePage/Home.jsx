@@ -11,6 +11,7 @@ import NavbarComponent from "../../components/NavbarComponent/NavbarComponent";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useQuery } from "@tanstack/react-query";
 import * as ProductService from '../../services/ProductService'
+import Loading from "../../components/LoadingComponent/Loading";
 const HomePage = ()=>{
     const fetchProductAll = async ()=>{
         const res = await ProductService.getAllProduct()
@@ -36,6 +37,7 @@ const HomePage = ()=>{
 
                 }}>
                     <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5]} />
+                    <Loading isLoading={isLoading}>
                     <div className="WrapperProducts">
                         {products?.data.map((product,index)=>{
                             return (
@@ -55,6 +57,7 @@ const HomePage = ()=>{
                         
                        
                     </div>
+                    </Loading>
                     
                     <div style={{ display: "flex", justifyContent: 'center', marginTop: '10px' }}>
                         <ButtonComponent className='WrapperButtonMore' textButton={"Xem thêm"}
@@ -74,7 +77,6 @@ const HomePage = ()=>{
                     </div>
                 </div>
             </div>
-            
         </>
     )
 }
