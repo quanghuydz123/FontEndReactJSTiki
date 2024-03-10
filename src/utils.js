@@ -25,3 +25,21 @@ export function getItem(label, key, icon, children, type) {
     type,
   };
 }
+
+export const renderOption = (arr)=>{
+  let result = []
+    if(arr){
+      result = arr?.map((item)=> {
+        return {
+          value: item,
+          label: item
+        }
+      }
+      
+
+      )
+      
+    }
+    
+    return result
+}

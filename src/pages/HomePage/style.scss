@@ -18,3 +18,11 @@
     margin-top:20px;
     flex-wrap: wrap;
 }
+
+.WrapperTypeProduct {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    justify-content: flex-start;
+    height: 44px;
+}

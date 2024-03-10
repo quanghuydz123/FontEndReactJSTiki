@@ -26,7 +26,7 @@ const AdminPage = ()=>{
                 return <></>
         }
     }
-    const [keySelected,setKeySelected] = useState('')
+    const [keySelected,setKeySelected] = useState('user')
     // const onOpenChange = (keys) => {
     //   const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     //   if (latestOpenKey && rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
@@ -53,6 +53,7 @@ const AdminPage = ()=>{
                     height:'100vh',
                 }}
                 items={items}
+                selectedKeys={[keySelected]}
                 onClick={hanleOnClick}
             />
             <div style={{flex:1,padding:'15px'}}>

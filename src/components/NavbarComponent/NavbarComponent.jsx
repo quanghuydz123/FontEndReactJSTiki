@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Checkbox ,Rate} from 'antd';
+import * as ProductService from '../../services/ProductService'
+import { useNavigate } from "react-router-dom";
+
 const NavbarComponent = ()=>{
+    const navigate = useNavigate()
+    const handleNavigateType = (type)=>{
+        navigate(`/product/${type.normalize('NFD').replace(/[\u0300-\u036f]/g, '')?.replace(/ /g,'_')}`,{state:type}) //bỏ dấu tiếng việt    
+    }
     const renderContent = (type,options)=>{
         switch(type){
             case "text":
                 return options.map((item,index)=>{
-                    return <span key={index} className="WrapperTextValue">{item}</span>
+                    return <span onClick={()=>handleNavigateType(item)} key={index} className="WrapperTextValue">{item}</span>
                 })
                 
             case 'checkbox':
@@ -39,11 +46,20 @@ const NavbarComponent = ()=>{
                 return {}
         }
     }
+    const [typeProducts,setTypeProducts]= useState([])
+    const fetchAllTypeProduct = async(  )=>{
+        const res = await ProductService.getAllTypeProduct()
+        setTypeProducts(res?.data)
+    }
+
+    useEffect(()=>{
+        fetchAllTypeProduct()
+    },[])
     return (
         <div>
-            <h4 className="WrapperLableText">Lable</h4>
+            <h4 className="WrapperLableText">Danh mục sản phẩm</h4>
             <div className="WrapperContent">
-                {renderContent('text', ['Tu lanh', 'TV', 'May giat'])}
+                {renderContent('text', typeProducts)}
             </div>
             {/* <div className="WrapperContent">
                 {renderContent('checkbox', [

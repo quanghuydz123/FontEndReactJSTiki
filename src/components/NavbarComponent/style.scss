@@ -10,6 +10,10 @@
     color: rgb(56, 56, 61);
     font-size: 12px;
     font-weight: 400;
+    cursor: pointer;
+    &:hover{
+        background-color: rgba(0,0,0,0.1);
+    }
 }
 
 .WrapperContent{
@@ -26,3 +30,4 @@
     padding:4px;
     color: rgb(56, 56, 61);
 }
+

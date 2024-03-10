@@ -1,4 +1,4 @@
-import { Button, Form, Modal,Space,Upload, message } from "antd";
+import { Button, Form, Modal,Select,Space,Upload, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
     PlusCircleOutlined,
@@ -9,13 +9,13 @@ import {
 import TableComponent from "../TableComponent/TableComponent";
 import InputComponent from "../InputComponent/InputComponent";
 import { UploadOutlined } from '@ant-design/icons';
-import {getBase64} from '../../utils'
+import {getBase64, renderOption} from '../../utils'
 import * as ProductService from '../../services/ProductService'
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import Loading from "../LoadingComponent/Loading";
 import { useQuery } from "@tanstack/react-query";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
-import { useSelector } from "react-redux";
+import {useSelector } from "react-redux";
 import ModalComponent from "../ModalComponent/ModalComponent";
 
 const AdminProduct = ()=>{
@@ -31,6 +31,7 @@ const AdminProduct = ()=>{
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const [key, setKey] = useState(0);//dùng để render lại compoent
+    const [typeSelect,setTypeSelect] = useState('')
     const [stateProduct,setStateProduct] = useState({
         name:'',
         price:'',
@@ -49,6 +50,11 @@ const AdminProduct = ()=>{
         type:'',
         countInStock:'',
     })
+    const fetchAllTypeProduct = async(  )=>{
+        const res = await ProductService.getAllTypeProduct()
+        return res
+    }
+    
     const fetchProductDetails = async (id)=>{
         const res = await ProductService.getDetailsProduct(id)
         if(res?.data){
@@ -218,22 +224,28 @@ const AdminProduct = ()=>{
         const res = await ProductService.getAllProduct()
         return res
     }
+    const queryTypeProduct = useQuery({
+        queryKey: ['type-products'],
+        queryFn: fetchAllTypeProduct,
+        retry: 3,
+        retryDelay: 1000
+    });
     const queryProduct = useQuery({
         queryKey: ['products'],
         queryFn: fetchProductAll,
         retry: 3,
         retryDelay: 1000
     });
+    const { isLoading:isLoadingTyperoduct, data:typeProduct } = queryTypeProduct
     const { isLoading:isLoadingProduct, data:products } = queryProduct
-
     const {data, isPending, isSuccess,isError,error} = mutation
     const {data:dataUpdate, isPending:isPendingUpdate1, isSuccess:isSuccessUpdate,isError:isErrorUpdate,error:errorUpdate} = mutationUpdateProduct
     const {data:dataDelete, isPending:isPendingDelete1, isSuccess:isSuccessDelete,isError:isErrorDelete,error:errorDelete} = mutationDeleteProduct
     const {data:dataDeleteMany, isPending:isPendingDeleteMany1, isSuccess:isSuccessDeleteMany,isError:isErrorDeleteMany,error:errorDeleteMany} = mutationDeleteProductMany
-
     const showModal = () => {   
         setIsModalOpen(true);   
     };
+    console.log('typeProduct',typeProduct?.data)
     useEffect(()=>{
         if(isSuccessUpdate){
             message.success("Cập nhập thành công")
@@ -337,7 +349,6 @@ const AdminProduct = ()=>{
             image:file.preview
         })
     }
-
     const handleOnchangeAvatarDetails = async({fileList}) =>{
         const file = fileList[0]
         if (!file.url && !file.preview) {
@@ -422,6 +433,22 @@ const AdminProduct = ()=>{
       const dataTable = products?.data.length && products?.data.map((item)=>{
         return {...item,key: item._id}
       })
+    const handleChange = (value) => {
+
+
+        setStateProduct({
+            ...stateProduct,
+            type: value
+
+        })
+
+    }
+    const handleChangeUpdate = (value)=>{
+        setStateProductDetails({
+            ...stateProductDetals,
+            type: value
+        })
+    }
     return (
         <div>
             <h1 className="WapperHeaderAdmin">Quản lý sản phẩm</h1>
@@ -481,7 +508,16 @@ const AdminProduct = ()=>{
                             },
                         ]}
                     >
-                        <InputComponent value={stateProduct.type} onChange={handleOnchange} name="type"/>
+                        {/* <InputComponent value={stateProduct.type} onChange={handleOnchange} name="type"/> */}
+                        <Select
+                            name='type'
+                            //onChange={handleChange}
+                            onChange={handleChange}
+                            options={
+                                renderOption(typeProduct?.data)
+                            }
+                        />
+                        
                     </Form.Item>
 
                     <Form.Item  
@@ -618,7 +654,14 @@ const AdminProduct = ()=>{
                             },
                         ]}
                     >
-                        <InputComponent value={stateProductDetals.type} onChange={handleOnchangeDetals} name="type"/>
+                        <Select
+                            name='type'
+                            //onChange={handleChange}
+                            onChange={handleChangeUpdate}
+                            options={
+                                renderOption(typeProduct?.data)
+                            }
+                        />
                     </Form.Item>
 
                     <Form.Item  

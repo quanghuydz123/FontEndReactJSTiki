@@ -5,16 +5,28 @@ import {
     StarOutlined,
     StarFilled
 } from '@ant-design/icons';
+import { useNavigate } from "react-router-dom";
 const { Meta } = Card;
 const CardComponent = (props)=>{
-    const {countInStock,description,image,name,price,rating,type,selled,discount} = props
+    const {countInStock,description,image,name,price,rating,type,selled,discount,id} = props
+    const navigate = useNavigate()  
+    const handleDetailsProduct = (event)=>{
+        //window.open(`/product-detail/${id}','_blank', 'rel=noopener noreferrer`)
+        if (event.ctrlKey || event.metaKey) {
+            window.open(`/product-detail/${id}`, '_blank');
+        } else {
+            navigate(`/product-detail/${id}`)
+        }
+        
+    }
     return <Card
             className="WrapperCardStyle"
             hoverable
             style={{ width: 200 }}
             headStyle={{width:'200px',height:'200px'}}
             bodyStyle={{padding:10}}
-            cover={<img alt="example" src="https://salt.tikicdn.com/cache/750x750/ts/product/a2/38/6c/ce008c63f4ac771550439da44f5f8ee8.png.webp" />}
+            cover={<img alt="example" src={image} />}
+            onClick={handleDetailsProduct}
             >
                 <img src={logo} style={{}} className="WrapperImage" alt="logo"/>
                 <div className="NameProduct">
@@ -28,7 +40,8 @@ const CardComponent = (props)=>{
                     
                 </div>
                 <div className="WrapperPriceText">
-                        {price} đ <span className="WrapperDiscuontText">-{discount || 5}%</span>
+                        {price?.toLocaleString()} đ <span className="WrapperDiscuontText">-{discount || 5}%</span>
+                        {/* <>toLocaleString format gia tien</> */}
                 </div>
         </Card>
 }

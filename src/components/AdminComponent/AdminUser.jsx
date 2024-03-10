@@ -35,22 +35,27 @@ const AdminUser = ()=>{
         name:'',
         email:'',
         phone:'',
+        address:'',
         isAdmin:false,
     })
     const [stateUserDetals,setStateUserDetails] = useState({
         name:'',
         email:'',
         phone:'',
+        avatar:'',
+        address:'',
         isAdmin:false,
     })
     const fetchUserDetails = async (id)=>{
-        const res = await UserService.getDetailsUser(id)
+        const res = await UserService.getDetailsUser(id,user?.access_token)
         if(res?.data){
             setStateUserDetails({
                 name:res?.data.name,
                 email:res?.data.email,
                 phone:res?.data.phone,
                 isAdmin:res?.data.isAdmin,
+                address:res?.data.address,
+                avatar:res?.data.avatar
                
             })
         }
@@ -59,11 +64,13 @@ const AdminUser = ()=>{
     useEffect(()=>{
         formUpdate.setFieldsValue(stateUserDetals)//set value vào input
     },[formUpdate,stateUserDetals])
+
     useEffect(()=>{
         if(rowSelected){
             fetchUserDetails(rowSelected)
         }
     },[rowSelected])
+
     const handleDetalsProduct = ()=>{
         if(rowSelected){
             setIsPendingUpdate(true)
@@ -216,7 +223,7 @@ const AdminUser = ()=>{
 
 
     const fetchUserAll = async ()=>{
-        const res = await UserService.getAllUser()
+        const res = await UserService.getAllUser(user?.access_token)
         return res
     }
     const queryUser = useQuery({
@@ -336,7 +343,7 @@ const AdminUser = ()=>{
         }
         setStateUserDetails({
             ...stateUserDetals,
-            image:file.preview
+            avatar:file.preview
         })
     }
 
@@ -383,6 +390,11 @@ const AdminUser = ()=>{
           title: 'Phone',
           dataIndex: 'phone',
           ...getColumnSearchProps('phone')
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            ...getColumnSearchProps('address')
         },
         {
           title: 'Action',
@@ -485,8 +497,8 @@ const AdminUser = ()=>{
                     >
                         <Upload onChange={handleOnchangeAvatar} className="WapperUploadFile" maxCount={1}>
                             <Button icon={<UploadOutlined />}>Select File</Button>
-                            {stateProduct.image && (
-                        <img src={stateProduct.image} style={{
+                            {stateUser.image && (
+                        <img src={stateUser.image} style={{
                             height:'60px',
                             width:'60px',
                             borderRadius:'50%',
@@ -515,7 +527,7 @@ const AdminUser = ()=>{
                 </Form>
                 </Loading>
             </ModalComponent>
-            <DrawerComponent title='Chi tiết người dùng' isOpen={isOpenDrawer} onClose={()=>setIsOpenDrawer(false)} width="50%">
+            <DrawerComponent title='Chi tiết người dùng' isOpen={isOpenDrawer} onClose={()=> {return setIsOpenDrawer(false)}} width="50%">
             <Loading isLoading={isPendingUpdate}>
                 <Form
                     name="basic"
@@ -584,21 +596,34 @@ const AdminUser = ()=>{
                         <InputComponent value={stateUserDetals.phone} onChange={handleOnchangeDetals} name="phone"/>
                     </Form.Item>
 
-                    
-                    {/* <Form.Item
-                        label="Image"
-                        name="image"
+                    <Form.Item
+                        label="Địa chỉ"
+                        name="address"
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input your image!',
+                                message: 'Please input your address!',
+                            },
+                        ]}
+                    >
+                        <InputComponent value={stateUserDetals.address} onChange={handleOnchangeDetals} name="address"/>
+                    </Form.Item>
+
+                    
+                    <Form.Item
+                        label="Avatar"
+                        name="avatar"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your avatar!',
                             },
                         ]}
                     >
                         <Upload onChange={handleOnchangeAvatarDetails} className="WapperUploadFile" maxCount={1}>
                             <Button icon={<UploadOutlined />}>Select File</Button>
-                            {stateProductDetals.image && (
-                        <img src={stateProductDetals.image} style={{
+                            {stateUserDetals.avatar && (
+                        <img src={stateUserDetals.avatar} style={{
                             height:'60px',
                             width:'60px',
                             borderRadius:'50%',
@@ -608,7 +633,7 @@ const AdminUser = ()=>{
                         )}
                         </Upload>
                        
-                    </Form.Item> */}
+                    </Form.Item>
 
                     
                    

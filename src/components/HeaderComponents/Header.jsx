@@ -16,9 +16,9 @@ import * as UserService from '../../services/UserService'
 import { useDispatch} from 'react-redux'
 import { resetUser } from "../../redux/slides/userSlide";
 import Loading from "../LoadingComponent/Loading";
-
+import * as ProductService from "../../services/ProductService"
+import { searchProduct } from "../../redux/slides/productSlide";
 const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
-    const arr = ['TV','Tu lanh','Lap top']
     //lấy dữ liệu truyền vào redux
     const user = useSelector((state) => state.user)
     const dispatch = useDispatch()
@@ -26,10 +26,12 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
     const [loading,setLoading] = useState(false)
     const [userName,setUserName] = useState('')
     const [userAvatar,setUserAvatar] = useState('')
-
+    const [search,setSearch] = useState('')
+    const [typeProducts,setTypeProducts]= useState([])
     const handleNavigateLogin = ()=>{
         navigate('/sign-in') // chuyển đến
     }
+    
     const handleNavigateHome = (event)=>{
             // Check if Ctrl (or Command on Mac) key is pressed
             if (event.ctrlKey || event.metaKey) {
@@ -86,7 +88,10 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
           <WapperContentPopup onClick={handleLogout}>Đăng xuất</WapperContentPopup>
         </div>
       );
-
+    const onSearch = (e)=>{
+        setSearch(e.target.value)
+        dispatch(searchProduct(e.target.value))
+    }
     //const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
     return (
         <div>
@@ -100,6 +105,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
                             size='large'
                             textButton = 'Tìm kiếm'
                             placeholder='Input text'
+                            onChange={onSearch}
                         />      
                         
                         </Col>)
@@ -141,7 +147,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
                         </WapperHeaderAccuont>
                     </Loading>
                     {!isHiddenCart && (
-                        <div>
+                        <div onClick={() => navigate('/order')} style={{cursor:'pointer'}}>
                         {/* Badge icon shop */}
                         <Badge count={1} size="small"> 
                             <ShoppingCartOutlined style={{fontSize:'35px', color:'#fff'}} />    
@@ -152,15 +158,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
                     )}
                 </Col>
             </WapperHeader>
-            {!isAdmin && (
-                <div style={{}}  className="container">
-                <div className="WapperTypeProduct">
-                    {arr.map((item) => {
-                        return <TypeProduct name={item} key={item} mr={16} p={10} />
-                    })}
-                </div>
-            </div>
-            )}
+           
             
         </div>
         

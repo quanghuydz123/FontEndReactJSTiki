@@ -8,7 +8,7 @@ const ButtonComponent = ({size,styleButton,icon,styleTextButton,textButton,...re
     style={
             {
                 ...styleButton,
-                backgroundColor: rest.disabled ? '#ccc' : colors.primary
+                backgroundColor: rest.disabled ? '#ccc' : styleButton.backgroundColor
             }
     }
     {...rest}

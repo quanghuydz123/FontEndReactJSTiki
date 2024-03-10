@@ -130,6 +130,7 @@ const ProfilePage = ()=>{
                                     width: '150px',
                                     borderRadius: '4px',
                                     padding:'2px 6px 6px',
+                                    backgroundColor: colors.primary,
                                 }}
                                 textButton={"Cập nhập"}
                                 styleTextButton={{ color: 'white',fontSize:'15px',fontWeight:'700'}}
