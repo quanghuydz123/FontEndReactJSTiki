@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Button, Col, Image, Popover } from 'antd';
+import { Badge, Col, Popover } from 'antd';
 import {WapperHeader,WapperTextHeader,WapperHeaderAccuont, WapperContentPopup} from './style'
-import Search from "antd/es/input/Search";
 import {
     UserOutlined,
     CaretDownOutlined,
     ShoppingCartOutlined
 } from '@ant-design/icons';
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
-import TypeProduct from "../Product/TypeProduct/TypeProduct";
-import logocongnghe from '../../assets/images/logocongnghe.jpg'
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import * as UserService from '../../services/UserService'
 import { useDispatch} from 'react-redux'
 import { resetUser } from "../../redux/slides/userSlide";
 import Loading from "../LoadingComponent/Loading";
-import * as ProductService from "../../services/ProductService"
 import { searchProduct } from "../../redux/slides/productSlide";
 const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
     //lấy dữ liệu truyền vào redux
@@ -28,6 +24,8 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
     const [userAvatar,setUserAvatar] = useState('')
     const [search,setSearch] = useState('')
     const [typeProducts,setTypeProducts]= useState([])
+    const order = useSelector((state) => state.order)
+
     const handleNavigateLogin = ()=>{
         navigate('/sign-in') // chuyển đến
     }
@@ -104,7 +102,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
                         <ButtonInputSearch
                             size='large'
                             textButton = 'Tìm kiếm'
-                            placeholder='Input text'
+                            placeholder='Bạn tìm gì hôm nay'
                             onChange={onSearch}
                         />      
                         
@@ -149,7 +147,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
                     {!isHiddenCart && (
                         <div onClick={() => navigate('/order')} style={{cursor:'pointer'}}>
                         {/* Badge icon shop */}
-                        <Badge count={1} size="small"> 
+                        <Badge count={order?.orderItems.length} size="small"> 
                             <ShoppingCartOutlined style={{fontSize:'35px', color:'#fff'}} />    
                         </Badge>
                         

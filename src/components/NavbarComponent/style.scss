@@ -3,17 +3,31 @@
     color:rgb(56, 56, 61);
     font-size: 14px;
     font-weight: 500;
+    margin: 0 0 8px 0;
     
 }
 
 .WrapperTextValue{
     color: rgb(56, 56, 61);
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
+    //padding: 7px 16px 7px 16px;
+    border-radius: 8px;
+}
+.WrapperType{
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 7px 6px;
+    border-radius: 8px;
+    transition: all 0.4s ease;
     &:hover{
         background-color: rgba(0,0,0,0.1);
     }
+}
+.WrapperIconType{
+   width: 32px;
+   height: 32px;
 }
 
 .WrapperContent{

@@ -1,13 +1,13 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import NavbarComponent from "../../components/NavbarComponent/NavbarComponent";
 import CardComponent from "../../components/Product/CardComponent";
-import { Col, Pagination, Row } from "antd";
-import TypeProduct from "../../components/Product/TypeProduct/TypeProduct";
+import { Button, Col, Pagination, Result, Row } from "antd";
 import { useLocation, useParams } from "react-router-dom";
 import * as ProductService from '../../services/ProductService'
 import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../hooks/useDebounce";
+import SearchNotFound from "../../components/SearchNotFound/SearchNotFound";
 
 const TypeProductPage = ()=>{
     const location = useLocation() //lấy ra pamrams state
@@ -55,16 +55,20 @@ const TypeProductPage = ()=>{
     return (
         <>
            <Loading isLoading={loading}>
-            <div  style={{ width:'100%',backgroundColor: "#efefef" ,height: 'calc(100vh - 64px)'}}>
-            <div style={{width:'1270px',margin:'0 auto',height:'100%',display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
+            <div  style={{ width:'100%',backgroundColor: "#efefef" ,minHeight: 'calc(100vh)'}}>
+            <div style={{width:'1270px',margin:'0 auto',minHeight:'calc(100vh)',display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
                 <Row style={{ flexWrap: 'nowrap', paddingTop: '10px' }}>
 
                     <Col span={4} style={{}} className="WrapperNavbar">
                         <NavbarComponent />
                     </Col>
 
-                    <Col span={20} style={{ marginLeft: '10px' }} className="WrapperProducts">
-                        {products?.filter(item => item.name.toLowerCase().includes(searchDounce.toLowerCase())).map((product,index)=> {
+                    <Col span={20} style={{ marginLeft: '10px' }}>
+                        <div className="WrapperLabelTypeProduct">
+                            <span>{location.state}</span>
+                        </div>
+                        <div className="WrapperProductsType">
+                        {products?.filter(item => item.name.toLowerCase().includes(searchDounce.toLowerCase())).length!==0 ? products?.filter(item => item.name.toLowerCase().includes(searchDounce.toLowerCase())).map((product,index)=> {
                             return   <CardComponent key={index} 
                             countInStock={product.countInStock}
                             description={product.description}
@@ -77,7 +81,8 @@ const TypeProductPage = ()=>{
                             discount={product.discount}
                             id={product._id}
                             />
-                        })}
+                        }) : <SearchNotFound />}
+                        </div>
                        
                        
                     </Col>

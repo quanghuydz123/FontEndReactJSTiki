@@ -1,10 +1,7 @@
-import { Divider, Dropdown, Radio, Space, Table } from "antd";
+import { Table } from "antd";
 import React, { useState } from "react";
 import Loading from "../LoadingComponent/Loading";
-import {
-  DownOutlined,
-  SmileOutlined 
-} from '@ant-design/icons';
+
 const TableComponent = (props)=>{
     const [selectionType, setSelectionType] = useState('checkbox');
     const {columns,data,isLoading,onRow,handleDeleteMany} = props  

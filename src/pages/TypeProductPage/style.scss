@@ -9,3 +9,19 @@
     margin-top: 20px;
     width: 200px;
 }
+
+.WrapperLabelTypeProduct{
+    margin-top: 20px;
+    font-size: 28px;
+    background-color: white;
+    padding: 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.WrapperProductsType{
+    display: flex;
+    gap: 12px;
+    margin-top:10px;
+    flex-wrap: wrap;
+}

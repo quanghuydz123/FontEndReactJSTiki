@@ -7,7 +7,6 @@ import slider3 from '../../assets/images/slide3.webp'
 import slider4 from '../../assets/images/slide4.webp'
 import slider5 from '../../assets/images/slide5.webp'
 import CardComponent from "../../components/Product/CardComponent";
-import NavbarComponent from "../../components/NavbarComponent/NavbarComponent";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useQuery } from "@tanstack/react-query";
 import * as ProductService from '../../services/ProductService'
@@ -19,10 +18,12 @@ import { colors } from "../../contants";
 
 const HomePage = ()=>{
     const searchProduct = useSelector((state) => state.product)
+    const user = useSelector((state) => state.user)
     const [isLoadingSearch,setIsLoadingSearch] = useState('')
     const searchDounce = useDebounce(searchProduct.search,200) //sau 1 giây mới gọi API
     const [limit,setLimit] = useState(6)
     const [typeProducts,setTypeProducts]= useState([])
+    const order = useSelector((state) => state.order)
     const fetchProductAll = async (context)=>{ //context get value cua useQuery
         const search = context?.queryKey && context?.queryKey[2]
         const limit = context?.queryKey && context?.queryKey[1]
@@ -56,12 +57,18 @@ const HomePage = ()=>{
         <Loading isLoading={isLoadingSearch}>
            
             <div style={{ width: '1270px', margin: '0 auto' }}>
-                <div className="WrapperTypeProduct">
-                    {typeProducts.map((item) => {
-                        return (
-                            <TypeProduct name={item} key={item} />
-                        )
-                    })}
+                <div className="WrapperType123">
+                    <div className="WrapperTypeProduct">
+                        {typeProducts.map((item) => {
+                            return (
+                                <TypeProduct name={item} key={item} />
+                            )
+                        })} 
+                    </div>
+                    <div style={{display:'flex',alignItems:'center'}}>
+                        <img src="https://salt.tikicdn.com/ts/upload/88/5c/9d/f5ee506836792eb7775e527ef8350a44.png" alt="location" style={{width:'20px',height:'20px'}}/>
+                       <span style={{color:'rgb(128,128,137)'}}> Giao đến:</span> <span style={{fontWeight:'bold',textDecoration:'underline',color:'rgb(39, 39, 42)'}}>{user.address}</span>
+                    </div>
                 </div>
             </div>
             <div className='body' style={{ width: '100%', backgroundColor: '#efefef', }}>

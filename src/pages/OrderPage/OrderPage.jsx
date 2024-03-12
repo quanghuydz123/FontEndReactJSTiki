@@ -9,9 +9,55 @@ import { convertPrice } from '../../utils';
 import ModalComponent from '../../components/ModalComponent/ModalComponent';
 import InputComponent from '../../components/InputComponent/InputComponent';
 import { colors } from '../../contants';
+import { increaseAnomunt,decreaseAnomunt,removeOrderProduct,removeAllOrderProduct } from "../../redux/slides/orderSlide";
 
 const OrderPage = () => {
-    const user = useSelector((state) => state.user)
+    const order = useSelector((state) => state.order)
+    const dispatch = useDispatch()
+    const [listChecked,setListChecked] = useState([])
+    const handleChangeCount = (type,idProduct)=>{
+      if(type==="increase"){
+        dispatch(increaseAnomunt({idProduct}))
+      }
+      else{
+        dispatch(decreaseAnomunt({idProduct}))
+      }
+      
+    }
+  const handleDeleteOrder = (idProduct)=>{
+      dispatch(removeOrderProduct({idProduct}))
+  }
+  const onChange = (e)=>{
+      if(listChecked.includes(e.target.value))
+      {
+        const newListChecked = listChecked.filter((item) => item !== e.target.value)
+        setListChecked(newListChecked)
+      }
+      else{
+        setListChecked([
+          ...listChecked,
+          e.target.value
+        ])
+      }
+  }
+  const handleCheckAll = (e)=>{  
+    if(e.target.checked){
+      const newListChecked = []
+      order?.orderItems?.forEach((item) => {
+        newListChecked.push(item?.product)
+      })
+      setListChecked(newListChecked)
+    }else{
+      setListChecked([])
+    }
+  }
+  const handleRemoveAllOrder = ()=>{
+    if(listChecked?.length > 0){
+      dispatch(removeAllOrderProduct({listChecked}))
+    }
+   
+  }
+  console.log("list",listChecked)
   return (
     <div style={{background: '#f5f5fa', with: '100%', height: '100vh'}}>
       <div style={{height: '100%', width: '1270px', margin: '0 auto'}}>
@@ -21,48 +67,52 @@ const OrderPage = () => {
              
             <WrapperStyleHeader>
                 <span style={{display: 'inline-block', width: '390px'}}>
-                  <CustomCheckbox></CustomCheckbox>
-                  <span> Tất cả 123 sản phẩm</span>
+                  <CustomCheckbox onClick={handleCheckAll} checked={listChecked?.length===order?.orderItems?.length   }></CustomCheckbox>
+                  <span style={{marginLeft:'20px'}}> Tất cả ({order.orderItems.length} sản phẩm)</span>
                 </span>
                 <div style={{flex:1,display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                   <span>Đơn giá</span>
                   <span>Số lượng</span>
                   <span>Thành tiền</span>
-                  <DeleteOutlined style={{cursor: 'pointer'}} />
+                  <DeleteOutlined style={{cursor: 'pointer'}} onClick={handleRemoveAllOrder} />
                 </div>
             </WrapperStyleHeader>
             <WrapperListOrder>
-              
-                  <WrapperItemOrder key={'order?.product'}>
-                <div style={{width: '390px', display: 'flex', alignItems: 'center', gap: 4}}> 
-                  <CustomCheckbox  ></CustomCheckbox>
-                  <img src={'https://salt.tikicdn.com/cache/280x280/ts/product/38/06/c3/01d16bdaf31be91903e7911595b6ee31.jpg.webp'} style={{width: '77px', height: '79px', objectFit: 'cover'}}/>
-                  <div style={{
-                    width: 260,
-                    overflow: 'hidden',
-                    textOverflow:'ellipsis',
-                    whiteSpace:'nowrap'
-                  }}>123</div>
-                </div>
-                <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <span>
-                    <span style={{ fontSize: '13px', color: '#242424' }}>123</span>
-                  </span>
-                  <WrapperCountOrder>
-                    <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} >
-                        <MinusOutlined style={{ color: '#000', fontSize: '10px' }} />
-                    </button>
-                    <InputNumber defaultValue={123} value={123} size="small" min={1} max={123} />
-                    <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} >
-                        <PlusOutlined style={{ color: '#000', fontSize: '10px' }}/>
-                    </button>
-                  </WrapperCountOrder>
-                  <span style={{color: 'rgb(255, 66, 78)', fontSize: '13px', fontWeight: 500}}>123</span>
-                  <DeleteOutlined style={{cursor: 'pointer'}} />
-                </div>
-              </WrapperItemOrder>
-                
-             
+              {order?.orderItems?.map((order) => {
+
+
+                return (
+                  <WrapperItemOrder key={order?.product}>
+                    <div style={{ width: '390px', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <CustomCheckbox onChange={onChange} value={order?.product} checked={listChecked.includes(order?.product)}></CustomCheckbox>
+                      <img src={order?.image} style={{ width: '77px', height: '79px', objectFit: 'cover' }} />
+                      <div style={{
+                        width: 260,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'  
+                      }}>{order?.name}</div>
+                    </div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span>
+                        <span style={{ fontSize: '13px', color: '#242424' }}>{order?.price}</span>
+                      </span>
+                      <WrapperCountOrder>
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={()=>handleChangeCount('decrease',order?.product)} >
+                          <MinusOutlined style={{ color: '#000', fontSize: '10px' }} />
+                        </button>
+                        <InputNumber defaultValue={order?.amount}  value={order?.amount} size="small" min={1} max={999} />
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={()=>handleChangeCount('increase',order?.product)}>
+                          <PlusOutlined style={{ color: '#000', fontSize: '10px' }} />
+                        </button>
+                      </WrapperCountOrder>
+                      <span style={{ color: 'rgb(255, 66, 78)', fontSize: '13px', fontWeight: 500 }}>{order?.price}</span>
+                      <DeleteOutlined style={{ cursor: 'pointer' }} onClick={()=> handleDeleteOrder(order?.product)} />
+                    </div>
+                  </WrapperItemOrder>
+                )
+              })}
+
             </WrapperListOrder>
           </WrapperLeft>
           <WrapperRight>
@@ -103,7 +153,7 @@ const OrderPage = () => {
                                 border:'1px solid rgb(13,92,182)',
                                 borderRadius:'4px'
                             }}
-                            textButton={"Mua trả sau"}
+                            textButton={"Mua Ngay"}
                             styleTextButton={{color:'white',fontSize:'15px',fontWeight:500}}
                         />
           </WrapperRight>

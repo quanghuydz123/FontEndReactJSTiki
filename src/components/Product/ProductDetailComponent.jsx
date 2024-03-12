@@ -9,12 +9,17 @@ import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import * as ProductService from '../../services/ProductService'
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../LoadingComponent/Loading";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { addOrderProduct } from "../../redux/slides/orderSlide";
 
 const ProductDetailComponent = ({idProduct})=>{
     const user = useSelector((state) => state.user)
-
+    const order = useSelector((state) => state.order)
+    const navigate = useNavigate()
+    const location = useLocation()
     const [numProduct,setNumProduct] = useState(1)
+    const dispatch = useDispatch()
     const fetchProductDetails = async ()=>{
         const res = await ProductService.getDetailsProduct(idProduct)
         return res?.data
@@ -43,6 +48,33 @@ const ProductDetailComponent = ({idProduct})=>{
             setNumProduct(prev => prev - 1)
         }
     }
+    const handleAddOrderProduct = ()=>{
+        if(!user?.id){
+            navigate('/sign-in',{state:location.pathname})
+        }else{
+            // {
+            //     name: { type: String, required: true },
+            //     amount: { type: Number, required: true },
+            //     image: { type: String, required: true },
+            //     price: { type: Number, required: true },
+            //     discount: { type: Number },
+            //     product: {
+            //         type: mongoose.Schema.Types.ObjectId,
+            //         ref: 'Product',
+            //         required: true,
+            //     },
+            // },
+            dispatch(addOrderProduct({
+                orderItem:{
+                    name: productDetails?.name,
+                    amount:numProduct,
+                    image:productDetails?.image,
+                    price:productDetails?.price,
+                    product:productDetails?._id
+                }
+            }))
+        }
+    }
     return (
         <div>
             <Loading isLoading={isLoadingProduct}>
@@ -51,6 +83,8 @@ const ProductDetailComponent = ({idProduct})=>{
                     <Image src={productDetails?.image}
                     preview={false}
                     style={{
+                        width:'507px',
+                        height:'507px'
                     }}
                     alt="image-product"
                     />
@@ -152,6 +186,7 @@ const ProductDetailComponent = ({idProduct})=>{
                                 border:'none',
                                 borderRadius:'4px'
                             }}
+                            onClick={handleAddOrderProduct}
                             textButton={"Chọn mua"}
                             styleTextButton={{color:'white'}}
                         />
