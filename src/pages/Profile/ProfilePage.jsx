@@ -29,7 +29,7 @@ const ProfilePage = ()=>{
     )
     const dispatch = useDispatch()
     const {data, isPending, isSuccess,isError,error} = mutation
-    console.log(data)
+    
     useEffect(()=>{
         setEmail(user?.email)
         setAddress(user?.address)
@@ -38,18 +38,16 @@ const ProfilePage = ()=>{
         setAvatar(user?.avatar)
     },[user])
     useEffect(()=>{
-        if(data?.status==="OK" || isSuccess){
+        if(data?.status==="OK"){
+            console.log("data?.user",data?.user)
             message.success("Cập nhập thành công")
-        }else if(data?.status==="ERR" || isError)
+        }else if(data?.status==="ERR")
         { 
             message.error(data?.message)
         }
     },[data,isError,isSuccess])
 
-    const handleGetDetailsUser = async (id,token)=>{
-        const res = await UserService.getDetailsUser(id,token)
-        dispatch(updateUser({...res?.data,access_token:token}))
-    }
+    
     const handleOnchangeEmail = (e) =>{
         setEmail(e.target.value)
     }
@@ -81,7 +79,7 @@ const ProfilePage = ()=>{
         })
     }
     return (
-        <div style={{width:'1270px', margin:'0 auto'}}>
+        <div style={{width:'1270px', margin:'0 auto',marginBottom:'20px'}}>
             <h1 className="WapperHeaderProfile">Thông tin người dùng</h1>
             <div className="WapperContentProfile">
                 <div className="WapperInputProfile">

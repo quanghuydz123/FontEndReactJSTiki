@@ -21,7 +21,7 @@ const HomePage = ()=>{
     const user = useSelector((state) => state.user)
     const [isLoadingSearch,setIsLoadingSearch] = useState('')
     const searchDounce = useDebounce(searchProduct.search,200) //sau 1 giây mới gọi API
-    const [limit,setLimit] = useState(6)
+    const [limit,setLimit] = useState(12)
     const [typeProducts,setTypeProducts]= useState([])
     const order = useSelector((state) => state.order)
     const fetchProductAll = async (context)=>{ //context get value cua useQuery
@@ -71,8 +71,8 @@ const HomePage = ()=>{
                     </div>
                 </div>
             </div>
-            <div className='body' style={{ width: '100%', backgroundColor: '#efefef', }}>
-                <div id="container" style={{ height: '1000px', width: '1270px', margin: '0 auto' }}>
+            <div className='body' style={{ width: '100%', backgroundColor: '#efefef',minHeight:'100vh' }}>
+                <div id="container" style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
                     <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5]} />
                     <Loading isLoading={isLoading}>
                         <div className="WrapperProducts">
@@ -100,7 +100,7 @@ const HomePage = ()=>{
 
 
 
-                    <div style={{ display: "flex", justifyContent: 'center', marginTop: '10px' }}>
+                    <div style={{ display: "flex", justifyContent: 'center', marginTop: '20px' }}>
                         <ButtonComponent className='WrapperButtonMore' textButton={isPlaceholderData ? "Load more..." : "Xem thêm"}
                             styleTextButton={{
                                 fontWeight: 500
@@ -113,7 +113,8 @@ const HomePage = ()=>{
                                 width: '240px',
                                 height: '38px',
                                 borderRadius: '4px',
-                                backgroundColor: colors.primary
+                                backgroundColor: colors.primary,
+                                marginBottom:'20px'
                             }}
                             disabled={products?.total <= products?.data.length}
                             onClick={() => { setLimit(prev => prev + 6) }}

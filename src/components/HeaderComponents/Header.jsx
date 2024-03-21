@@ -79,10 +79,14 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
         setUserAvatar(user?.avatar)
         setLoading(false)
     },[user.name,user?.avatar])
+    const handleMyOrder = ()=>{
+        navigate(`/my-order`,{state:{id:user?.id,token:user?.access_token}})
+    }
     const content = (
         <div>
           <WapperContentPopup onClick={handleNavigateProfile}>Thông tin người dùng</WapperContentPopup>
           {user?.isAdmin && <WapperContentPopup onClick={handleNavigateManager}>Quản lý hệ thống</WapperContentPopup>}
+          <WapperContentPopup onClick={handleMyOrder}>Đơn hàng của tôi</WapperContentPopup>
           <WapperContentPopup onClick={handleLogout}>Đăng xuất</WapperContentPopup>
         </div>
       );
@@ -128,7 +132,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
                             {userName ? (
                                 <>
                                     
-                                    <Popover content={content} trigger="hover">
+                                    <Popover content={content} trigger="hover" >
                                         <div style={{cursor:'pointer'}} >{userName}</div>
                                     </Popover>
                                 </>

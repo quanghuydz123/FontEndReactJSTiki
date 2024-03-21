@@ -11,6 +11,7 @@ import SearchNotFound from "../../components/SearchNotFound/SearchNotFound";
 
 const TypeProductPage = ()=>{
     const location = useLocation() //lấy ra pamrams state
+    const params = useParams()
     const searchProduct = useSelector((state) => state?.product?.search)
     const searchDounce = useDebounce(searchProduct,200) //sau 1 giây mới gọi API
     const [products,setProducts] = useState([])
@@ -20,11 +21,9 @@ const TypeProductPage = ()=>{
         limit:10,
         total:1
     })
-    console.log("searchProduct",searchProduct)
     const fetchProductType= async (type,page,limit)=>{
         setLoading(true)
         const res = await ProductService.getProductType(type,page,limit)
-        console.log("res",res)
         if(res?.status === "OK"){
             setLoading(false)   
             setProducts(res?.data)

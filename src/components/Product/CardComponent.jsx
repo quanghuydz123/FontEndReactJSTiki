@@ -6,6 +6,7 @@ import {
     StarFilled
 } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
+import { convertPrice } from "../../utils";
 const { Meta } = Card;
 const CardComponent = (props)=>{
     const {countInStock,description,image,name,price,rating,type,selled,discount,id} = props
@@ -36,11 +37,11 @@ const CardComponent = (props)=>{
                     <span>
                         <span>{rating}</span> <StarFilled style={{fontSize:10,color:"rgb(253,216,54)"}}/>
                     </span>
-                    <span> | Đã bán {selled || 10}+</span>
+                    <span> | Đã bán {selled || 0}</span>
                     
                 </div>
                 <div className="WrapperPriceText">
-                        {price?.toLocaleString()} đ <span className="WrapperDiscuontText">-{discount || 5}%</span>
+                        {convertPrice(price)} {discount && <span className="WrapperDiscuontText">-{discount}%</span>}
                         {/* <>toLocaleString format gia tien</> */}
                 </div>
         </Card>

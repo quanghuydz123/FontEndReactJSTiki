@@ -1,4 +1,4 @@
-import { Col, Image, InputNumber, Rate, Row } from "antd";
+import { Col, Image, InputNumber, Rate, Row, message } from "antd";
 import React, { useState } from "react";
 import {
     StarFilled,
@@ -12,6 +12,8 @@ import Loading from "../LoadingComponent/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slides/orderSlide";
+import { convertPrice } from "../../utils";
+import logo from '../../assets/images/logo.png'
 
 const ProductDetailComponent = ({idProduct})=>{
     const user = useSelector((state) => state.user)
@@ -42,15 +44,15 @@ const ProductDetailComponent = ({idProduct})=>{
     // }
     const handleChangeCount = (type)=>{
         if(type === 'increase'){
-            setNumProduct(prev => prev +1)
+            setNumProduct(prev => prev + 1)
         }
         else{
-            setNumProduct(prev => prev - 1)
-        }
+            setNumProduct(prev => prev > 1   ? prev - 1 : prev)
+        } 
     }
     const handleAddOrderProduct = ()=>{
         if(!user?.id){
-            navigate('/sign-in',{state:location.pathname})
+            navigate('/sign-in',{state:location.pathname}) //giữ lại trang khi người dùng đăng nhập lại
         }else{
             // {
             //     name: { type: String, required: true },
@@ -70,9 +72,12 @@ const ProductDetailComponent = ({idProduct})=>{
                     amount:numProduct,
                     image:productDetails?.image,
                     price:productDetails?.price,
-                    product:productDetails?._id
+                    product:productDetails?._id,
+                    discount:productDetails?.discount,
+                    countInStock:productDetails?.countInStock
                 }
             }))
+            message.success("Đặt hàng thành công")
         }
     }
     return (
@@ -80,14 +85,17 @@ const ProductDetailComponent = ({idProduct})=>{
             <Loading isLoading={isLoadingProduct}>
             <Row style={{padding:'16px',backgroundColor:'#fff',borderRadius:'4px'}}>
                 <Col span={10} style={{borderRight:'1px solid #e5e5e5',paddingRight:'8px'}}>
-                    <Image src={productDetails?.image}
-                    preview={false}
-                    style={{
-                        width:'507px',
-                        height:'507px'
-                    }}
-                    alt="image-product"
+                    <div style={{position:'relative'}}>
+                        <img src={logo} style={{zIndex:'1'}} className="WrapperImage" alt="logo"/>
+                        <Image src={productDetails?.image}
+                        preview={false}
+                        style={{
+                            width:'507px',
+                            height:'507px'
+                        }}
+                        alt="image-product"
                     />
+                    </div>
                     <Row style={{display:'flex',paddingTop:'10px',justifyContent:'space-between'}}>
                         <Col span={4}>
                             <Image src="https://salt.tikicdn.com/cache/280x280/media/catalog/producttmp/e7/37/0e/bf3b0407b0b0180fae83c6ff215b8519.png.webp"
@@ -151,11 +159,11 @@ const ProductDetailComponent = ({idProduct})=>{
                         {/* {renderStar(productDetails?.rating)} */}
                         <Rate allowHalf defaultValue={productDetails?.rating} value={productDetails?.rating} />
                         
-                        <span className="WapperStyleTextSell"> | Đã bán 1000+</span>
+                        <span className="WapperStyleTextSell"> | Đã bán {productDetails?.selled || 0}</span>
                     </div>
                     <div className="WrapperPriceProduct">
                         <h1 className="WrapperPriceTextProduct">
-                            {productDetails?.price.toLocaleString()} ₫
+                            {convertPrice(productDetails?.price)}
                         </h1>
                     </div>
                     <div className="WrapperAddresstProduct">

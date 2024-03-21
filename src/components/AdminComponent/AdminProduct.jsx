@@ -40,6 +40,7 @@ const AdminProduct = ()=>{
         image:'', 
         type:'',
         countInStock:'',
+        discount:''
     })
     const [stateProductDetals,setStateProductDetails] = useState({
         name:'',
@@ -49,6 +50,7 @@ const AdminProduct = ()=>{
         image:'', 
         type:'',
         countInStock:'',
+        discount:'',
     })
     const fetchAllTypeProduct = async(  )=>{
         const res = await ProductService.getAllTypeProduct()
@@ -66,6 +68,7 @@ const AdminProduct = ()=>{
                 image:res?.data.image, 
                 type:res?.data.type,
                 countInStock:res?.data.countInStock,
+                discount:res?.data.discount
             })
         }
         setIsPendingUpdate(false)
@@ -288,6 +291,7 @@ const AdminProduct = ()=>{
              image:'', 
              type:'',
              countInStock:'',
+            discount:''
          })
         form.resetFields()//xóa hết value input
     };
@@ -425,6 +429,10 @@ const AdminProduct = ()=>{
           dataIndex: 'type',
         },
         {
+            title: 'countInStock',
+            dataIndex: 'countInStock',
+          },
+        {
           title: 'Action',
           dataIndex: 'action',
           render: renderAction
@@ -558,6 +566,20 @@ const AdminProduct = ()=>{
                     >
                         <InputComponent  value={stateProduct.rating} onChange={handleOnchange} name="rating" />
                     </Form.Item>
+
+                    <Form.Item
+                        label="Discount"
+                        name="discount"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your discount!',
+                            },
+                        ]}
+                    >
+                        <InputComponent  value={stateProduct.discount} onChange={handleOnchange} name="discount" />
+                    </Form.Item>
+
 
                     <Form.Item
                         label="Description"
@@ -701,6 +723,19 @@ const AdminProduct = ()=>{
                         ]}
                     >
                         <InputComponent  value={stateProductDetals.rating} onChange={handleOnchangeDetals} name="rating" />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Discount"
+                        name="discount"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your discount!',
+                            },
+                        ]}
+                    >
+                        <InputComponent  value={stateProductDetals.discount} onChange={handleOnchangeDetals} name="discount" />
                     </Form.Item>
 
                     <Form.Item

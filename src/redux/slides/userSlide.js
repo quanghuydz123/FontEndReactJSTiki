@@ -10,11 +10,13 @@ export const userSlide = createSlice({
     avatar:'',
     access_token: '',
     id:'',
-    isAdmin:false
+    isAdmin:false,
+    city:''
   },
   reducers: {
     updateUser:(state, action)=>{
-        const {name='',email ='',address ='',phone ='',avatar = '',access_token ='',_id = '',isAdmin} = action.payload
+        const {name='',email ='',address ='',phone ='',avatar = '',access_token ='',_id = '',isAdmin,city=''} = action.payload
+
         //lưu trữ vào state
         state.name = name || email
         state.email = email
@@ -24,6 +26,7 @@ export const userSlide = createSlice({
         state.id = _id
         state.access_token = access_token
         state.isAdmin = isAdmin
+        state.city=city
     },
     resetUser:(state,action)=>{
       state.name = ''
@@ -34,6 +37,7 @@ export const userSlide = createSlice({
       state.id = ''
       state.access_token = ''
       state.isAdmin = false
+      state.city=''
   },
   }
 })
