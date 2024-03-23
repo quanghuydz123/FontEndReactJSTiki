@@ -9,10 +9,13 @@ import * as OrderService from '../../services/OrderService'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { convertPrice } from '../../utils';
 import { useMutationHooks } from "../../hooks/useMutationHook";
-import { message } from 'antd';
+import { Button, Result, message } from 'antd';
+import ModalComponent from '../../components/ModalComponent/ModalComponent';
 
 const MyOrderPage = () => {
   const user = useSelector((state) => state.user)
+  const [isOpenModalDetele, setIsOpenModalDelete] = useState('')
+  const [OrderSelected, setOrderSelected] = useState('')
   const location = useLocation()
   const navigate = useNavigate()
   const { id, token } = location.state
@@ -26,51 +29,56 @@ const MyOrderPage = () => {
     enabled: user?.id && user?.access_token ? true : false // chỉ gọi khi bằng true
   });
   const { isLoading, data } = queryOrder
-  console.log("data",data)
-  const handleDetailsOrder = (id)=>{
+  const handleDetailsOrder = (id) => {
     navigate(`/details-order/${id}`)
   }
   const handleNavigateProductOrder = (id) => {
     //window.open('/system/admin', '_blank');
     window.open(`/product-detail/${id}`, '_blank');
   }
-  const mutation  = useMutationHooks(
-    (data) =>{
-      const {id,token,orderItems} = data
-      const res = OrderService.cancelOrder(id,token,orderItems)
+  const mutation = useMutationHooks(
+    (data) => {
+      const { id, token, orderItems } = data
+      const res = OrderService.cancelOrder(id, token, orderItems)
       return res
     }
   )
 
-  const handleCanceOrder = (order)=>{
+  const handleCanceOrder = (order) => {
     mutation.mutate({
-      id:order?._id,token:user?.access_token,orderItems:order?.orderItems
-    },{
-      onSuccess:()=>{
+      id: order?._id, token: user?.access_token, orderItems: order?.orderItems
+    }, {
+      onSuccess: () => {
         queryOrder.refetch()
+      },
+      onError: () => {
+        message.error("Lỗi rồi")
       }
     })
+    setIsOpenModalDelete(false)
   }
   const { isLoading: isLoadingCancel, isSuccess: isSuccessCancel, isError: isErrorCancle, data: dataCancel } = mutation
-
+  const hanldeCancelDelete = () => {
+    setIsOpenModalDelete(false)
+  }
   useEffect(() => {
     if (dataCancel?.status === 'OK') {
       message.success('Hủy thành công')
-    } else if(dataCancel?.status === 'ERR') {
+    } else if (dataCancel?.status === 'ERR') {
       message.error(dataCancel?.message)
-    }else if (isErrorCancle) {
+    } else if (isErrorCancle) {
       message.error()
-    }else if(isSuccessCancel){
+    } else if (isSuccessCancel) {
       message.success('thành công')
     }
-  }, [isErrorCancle, isSuccessCancel,dataCancel])
+  }, [isErrorCancle, isSuccessCancel, dataCancel])
   const renderProduct = (data) => {
     return data?.map((order) => {
       return (
         <>
           <WrapperHeaderItem key={order?._id}>
-           <div style={{display:'flex',cursor:'pointer'}}  onClick={() => handleNavigateProductOrder(order?.product)}>
-            <img src={order?.image}
+            <div style={{ display: 'flex', cursor: 'pointer' }} onClick={() => handleNavigateProductOrder(order?.product)}>
+              <img src={order?.image}
                 style={{
                   width: '70px',
                   height: '70px',
@@ -84,13 +92,13 @@ const MyOrderPage = () => {
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
-                height:'100%',
+                height: '100%',
                 marginLeft: '10px'
               }}>{order?.name}</div>
-           </div>
+            </div>
             <span style={{ fontSize: '13px', color: '#242424', marginLeft: 'auto' }}>{convertPrice(order?.price)}</span>
           </WrapperHeaderItem>
-      
+
         </>
       )
     })
@@ -98,21 +106,21 @@ const MyOrderPage = () => {
   return (
     <Loading isLoading={isLoading}>
       <WrapperContainer>
-        <div style={{ height: '100%', width: '1270px', margin: '0 auto',marginBottom:'20px' }}>
+        <div style={{ height: '100%', width: '1270px', margin: '0 auto', marginBottom: '20px' }}>
           <h4>Đơn hàng của tôi</h4>
           <WrapperListOrder>
-            {data && data.data?.map((order) => {
+            {data?.data?.length !== 0 ? data?.data?.map((order) => {
               return (
                 <WrapperItemOrder key={order?._id}>
                   <WrapperStatus>
                     <span style={{ fontSize: '14px', fontWeight: 'bold' }}>Trạng thái</span>
                     <div>
                       <span style={{ color: 'rgb(255, 66, 78)' }}>Giao hàng: </span>
-                      <span style={{ color: 'rgb(90, 32, 193)', fontWeight: 'bold' }}>{order?.isDelivered ? 'Đã giao hàng' :'Đang giao hàng'}</span>
+                      <span style={{ color: 'rgb(90, 32, 193)', fontWeight: 'bold' }}>{order?.isDelivered ? 'Đã giao hàng' : 'Đang giao hàng'}</span>
                     </div>
                     <div>
                       <span style={{ color: 'rgb(255, 66, 78)' }}>Thanh toán: </span>
-                      <span style={{ color: 'rgb(90, 32, 193)', fontWeight: 'bold' }}>{order?.isPaid ? 'Đã thanh toán' :'Chưa thanh toán'}</span>
+                      <span style={{ color: 'rgb(90, 32, 193)', fontWeight: 'bold' }}>{order?.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</span>
                     </div>
                   </WrapperStatus>
                   {renderProduct(order?.orderItems)}
@@ -125,7 +133,7 @@ const MyOrderPage = () => {
                     </div>
                     <div style={{ display: 'flex', gap: '10px' }}>
                       <ButtonComponent
-                        onClick={()=>handleCanceOrder(order)}
+                        onClick={() => { setIsOpenModalDelete(true); setOrderSelected(order); }}
                         size={40}
                         styleButton={{
                           height: '36px',
@@ -137,7 +145,7 @@ const MyOrderPage = () => {
                       >
                       </ButtonComponent>
                       <ButtonComponent
-                        onClick={()=>handleDetailsOrder(order?._id)}
+                        onClick={() => handleDetailsOrder(order?._id)}
                         size={40}
                         styleButton={{
                           height: '36px',
@@ -152,10 +160,20 @@ const MyOrderPage = () => {
                   </WrapperFooterItem>
                 </WrapperItemOrder>
               )
-            })}
+            }) : <Result
+              status="404"
+              title="Chưa có đơn hàng nào"
+              subTitle="Hãy quay về trang chủ và mua sản phẩm đi nào"
+              extra={<Button onClick={() => { navigate('/') }} type="primary">Trang chủ</Button>}
+            />}
           </WrapperListOrder>
         </div>
       </WrapperContainer>
+      <ModalComponent title="Hủy đơn hàng" isOpen={isOpenModalDetele} onCancel={hanldeCancelDelete} onOk={() => handleCanceOrder(OrderSelected)}>
+        <div>
+          Bạn có muốn hủy đơn hàng này không ?
+        </div>
+      </ModalComponent>
     </Loading>
   )
 }

@@ -1,5 +1,5 @@
 import { Col, Image, InputNumber, Rate, Row, message } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     StarFilled,
     PlusOutlined,
@@ -11,13 +11,14 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "../LoadingComponent/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { addOrderProduct } from "../../redux/slides/orderSlide";
+import { addOrderProduct,resetOrder } from "../../redux/slides/orderSlide";
 import { convertPrice } from "../../utils";
 import logo from '../../assets/images/logo.png'
 
 const ProductDetailComponent = ({idProduct})=>{
     const user = useSelector((state) => state.user)
     const order = useSelector((state) => state.order)
+    const order123 = useRef(order?.orderItems.filter((order)=>order.product===idProduct))
     const navigate = useNavigate()
     const location = useLocation()
     const [numProduct,setNumProduct] = useState(1)
@@ -29,6 +30,9 @@ const ProductDetailComponent = ({idProduct})=>{
     const onChange = (e)=>{
         setNumProduct(Number(e.target.value))
     }
+    useEffect(()=>{
+        order123.current=order?.orderItems.filter((order)=>order.product===idProduct)
+    },[order])
     const queryProduct = useQuery({
         queryKey: ['products-details'],
         queryFn: fetchProductDetails,
@@ -44,12 +48,17 @@ const ProductDetailComponent = ({idProduct})=>{
     // }
     const handleChangeCount = (type)=>{
         if(type === 'increase'){
-            setNumProduct(prev => prev + 1)
+            setNumProduct(prev => Number(productDetails?.countInStock) - (order123.current.length!==0 ? Number(order123?.current[0]?.amount) : 0) > prev ? prev + 1 : prev)
         }
         else{
             setNumProduct(prev => prev > 1   ? prev - 1 : prev)
         } 
     }
+    useEffect(()=>{
+        return ()=>{
+            dispatch(resetOrder())
+        }
+    },[])
     const handleAddOrderProduct = ()=>{
         if(!user?.id){
             navigate('/sign-in',{state:location.pathname}) //giữ lại trang khi người dùng đăng nhập lại
@@ -66,6 +75,7 @@ const ProductDetailComponent = ({idProduct})=>{
             //         required: true,
             //     },
             // },
+            // check.current ++
             dispatch(addOrderProduct({
                 orderItem:{
                     name: productDetails?.name,
@@ -77,7 +87,11 @@ const ProductDetailComponent = ({idProduct})=>{
                     countInStock:productDetails?.countInStock
                 }
             }))
-            message.success("Đặt hàng thành công")
+            console.log(Number((order123.current.length!==0 ? Number(order123?.current[0]?.amount) : 0)+Number(numProduct)))
+            if(order?.isSuccessOrder && (Number((order123.current.length!==0 ? Number(order123?.current[0]?.amount) : 0))+Number(numProduct))<=Number(order123.current.length!==0 ? order123?.current[0]?.countInStock : productDetails?.countInStock)){
+                message.success("Đã thêm sản phẩm vào giỏ hàng") 
+                setNumProduct(1)   
+            }
         }
     }
     return (
@@ -178,13 +192,14 @@ const ProductDetailComponent = ({idProduct})=>{
                                 <MinusOutlined style={{fontSize:'20px'}}/>
                             </button>
                             
-                            <InputNumber min={1} max={10} onChange={onChange} value={numProduct} size="" className=""/>
+                            <InputNumber min={1} max={productDetails?.countInStock-(order123.current.length!==0 ? order123?.current[0]?.amount : 0)} onChange={onChange} value={numProduct} size="" className=""/>
                             <button style={{border:'none',backgroundColor:'transparent',cursor:'pointer'}} onClick={()=>handleChangeCount('increase')}>
                                 <PlusOutlined style={{fontSize:'20px'}}/>
                             </button>
                         </div>
                     </div>
-                    <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
+                    <div style={{display:'flex',alignItems:'start',gap:'12px'}}>
+                    <div>
                         <ButtonComponent 
                             size={20}
                             styleButton={{
@@ -197,8 +212,11 @@ const ProductDetailComponent = ({idProduct})=>{
                             onClick={handleAddOrderProduct}
                             textButton={"Chọn mua"}
                             styleTextButton={{color:'white'}}
-                        />
-
+                        />  
+                            <div>
+                                {order?.isSuccessOrder===false && <span style={{color:'red'}}>Sản phẩm đã hết hàng</span>}
+                            </div>
+                        </div>
                         <ButtonComponent 
                             size={20}
                             styleButton={{

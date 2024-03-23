@@ -1,4 +1,4 @@
-import { Checkbox, Form, InputNumber, Steps, message } from 'antd'
+import { Button, Checkbox, Form, InputNumber, Result, Steps, message } from 'antd'
 import React, { useEffect, useMemo, useState } from 'react'
 import { CustomCheckbox, WrapperCountOrder, WrapperInfo, WrapperItemOrder, WrapperLeft, WrapperListOrder, WrapperRight, WrapperStyleHeader, WrapperStyleHeaderDilivery, WrapperTotal } from './style';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
@@ -237,7 +237,7 @@ const OrderPage = () => {
               </div>
             </WrapperStyleHeader>
             <WrapperListOrder>
-              {order?.orderItems?.map((order) => {
+              {order?.orderItems.length !==0 ? order?.orderItems?.map((order) => {
 
 
                 return (
@@ -273,7 +273,12 @@ const OrderPage = () => {
                     </div>
                   </WrapperItemOrder>
                 )
-              })}
+              }) : <Result
+              status="404"
+              title="Giỏ hàng chưa có sản phẩm nào"
+              subTitle="Hãy quay về trang chủ và mua sản phẩm đi nào"
+              extra={<Button onClick={() => { navigate('/') }} type="primary">Trang chủ</Button>}
+            />}
 
             </WrapperListOrder>
           </WrapperLeft>

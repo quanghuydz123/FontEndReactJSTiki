@@ -34,6 +34,7 @@ export const orderSlide = createSlice({
     paidAt: '',
     isDelivered: false,
     deliveredAt: '',
+    isSuccessOrder:true
   },
   reducers: {
 
@@ -41,9 +42,16 @@ export const orderSlide = createSlice({
         const {orderItem}= action.payload
         const itemOrder = state?.orderItems.find((item)=>item?.product === orderItem.product)
         if(itemOrder){
-            itemOrder.amount += orderItem.amount
+            if(itemOrder.amount < itemOrder.countInStock)
+            {
+                itemOrder.amount += orderItem.amount
+                state.isSuccessOrder=true
+            }else{
+                state.isSuccessOrder=false
+            }
         }else{
             state.orderItems.push(orderItem)
+            state.isSuccessOrder=true
         }
 
     },
@@ -106,11 +114,15 @@ export const orderSlide = createSlice({
             }
         })
         state.selectedItemOrder = orderSelected
-    }
+    },
+    resetOrder:(state, action)=>{
+        state.isSuccessOrder=true
+
+    },
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { addOrderProduct,decreaseAnomunt,removeOrderProduct,increaseAnomunt,removeAllOrderProduct,selectedOrder } = orderSlide.actions
+export const { addOrderProduct,decreaseAnomunt,removeOrderProduct,increaseAnomunt,removeAllOrderProduct,selectedOrder,resetOrder } = orderSlide.actions
 
 export default orderSlide.reducer

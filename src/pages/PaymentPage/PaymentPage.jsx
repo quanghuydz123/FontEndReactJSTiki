@@ -169,7 +169,8 @@ const PaymentPage = () => {
         itemsPrice: priceMeno,
         shippingPrice: diliveryPriceMeno,
         totalPrice: totalPriceMeno - priceDiscountMeno,
-        user: user?.id
+        user: user?.id,
+        email:user?.email
       }, {
         onSuccess: (data) => {
           const arrOrder = []
@@ -211,7 +212,8 @@ const PaymentPage = () => {
       totalPrice: totalPriceMeno - priceDiscountMeno,
       user: user?.id,
       isPaid:true,
-      paidAt:details.update_time  
+      paidAt:details.update_time ,
+      email:user?.email 
     }, {
       onSuccess: (data) => {
         const arrOrder = []

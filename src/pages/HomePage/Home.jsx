@@ -53,9 +53,9 @@ const HomePage = ()=>{
     useEffect(()=>{
         fetchAllTypeProduct()
     },[])
+
     return (
         <Loading isLoading={isLoadingSearch}>
-           
             <div style={{ width: '1270px', margin: '0 auto' }}>
                 <div className="WrapperType123">
                     <div className="WrapperTypeProduct">
