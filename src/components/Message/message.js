@@ -9,7 +9,7 @@ const error = (mes="Error") =>{
 }
 
 const warning = (mes = "Warning")=>{
-    message.warning('warning')
+    message.warning(mes)
 }
 
 export {success,error,warning}

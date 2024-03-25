@@ -27,7 +27,6 @@ const DetailsOrderPage = () => {
 
 
   const { isLoading, data: orderDetails } = queryOrder
-
   return (
     <Loading isLoading={isLoading}>
     <div style={{ width: '100%', minHeight: 'calc(100vh)', background: '#f5f5fa' }}>
@@ -78,7 +77,7 @@ const DetailsOrderPage = () => {
                     }}
                   />
                   <div style={{
-                    width: 260,
+                    width: 460,
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',

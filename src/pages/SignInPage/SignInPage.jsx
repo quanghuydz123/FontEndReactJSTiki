@@ -29,19 +29,25 @@ const SignInPage = ()=>{
          (data) => UserService.loginUser(data)
     )
     const {data, isPending, isSuccess,isError,error} = mutation
-
+    useEffect(()=>{
+        if(location?.state?.message){   
+            message.warning(location?.state?.message)
+        }
+    },[])
+    console.log("data",data)
     useEffect(()=>{
         if(data?.status === "ERR"){
             message.error()   
         }
         else if(isSuccess){
-            if(location?.state){
-                navigate(location.state)
+            if(location?.state?.path){
+                navigate(location?.state?.path)
             }
             else{
                 navigate('/')
             }
             localStorage.setItem('access_token', JSON.stringify(data?.access_token)) //lưu trữ tokens
+            localStorage.setItem('refresh_token', JSON.stringify(data?.refresh_token)) //lưu trữ tokens
             if(data?.access_token){ //giải mã token
                 const decoded = jwtDecode(data?.access_token);
                 if(decoded?.id){
@@ -51,8 +57,10 @@ const SignInPage = ()=>{
         }
     },[isSuccess,data])
     const handleGetDetailsUser = async (id,token)=>{
+        const storage = localStorage.getItem('refresh_token')
+        const refreshToken = JSON.parse(storage)
         const res = await UserService.getDetailsUser(id,token)
-        dispatch(updateUser({...res?.data,access_token:token}))
+        dispatch(updateUser({...res?.data,access_token:token,refreshToken}))
     }
     
     const handleOnchangeEmail = (e)=>{  

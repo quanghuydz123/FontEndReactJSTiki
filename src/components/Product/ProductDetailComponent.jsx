@@ -32,7 +32,7 @@ const ProductDetailComponent = ({idProduct})=>{
     }
     useEffect(()=>{
         order123.current=order?.orderItems.filter((order)=>order.product===idProduct)
-    },[order])
+    },[order,idProduct])
     const queryProduct = useQuery({
         queryKey: ['products-details'],
         queryFn: fetchProductDetails,
@@ -61,7 +61,7 @@ const ProductDetailComponent = ({idProduct})=>{
     },[])
     const handleAddOrderProduct = ()=>{
         if(!user?.id){
-            navigate('/sign-in',{state:location.pathname}) //giữ lại trang khi người dùng đăng nhập lại
+            navigate('/sign-in',{state:{path:location.pathname,message:'Vui lòng đăng nhập trước khi thêm sản phẩm'}}) //giữ lại trang khi người dùng đăng nhập lại
         }else{
             // {
             //     name: { type: String, required: true },

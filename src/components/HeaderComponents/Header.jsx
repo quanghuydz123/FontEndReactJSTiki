@@ -63,6 +63,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
         await UserService.loguotUser()
         dispatch(resetUser())
         localStorage.removeItem('access_token')
+        navigate('/sign-in')
         setLoading(false)
     }
     const handleNavigateManager=(event)=>{
@@ -98,7 +99,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
     return (
         <div>
              <WapperHeader style={{display:"flex",alignItems:'center'}}>
-            {isAdmin ? <Col span={18}><WapperTextHeader onClick={handleNavigateAdminHome}>Trang quản trị</WapperTextHeader></Col> :
+            {isAdmin ? <Col span={18}><WapperTextHeader onClick={handleNavigateHome}>Shop của tôi</WapperTextHeader></Col> :
             <Col span={5}><WapperTextHeader onClick={handleNavigateHome}>Shop của tôi</WapperTextHeader></Col>}
              
                 {!isHiddenSearch &&

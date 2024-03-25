@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query'
 import { isJsonString } from './utils'
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector} from 'react-redux'
-import { updateUser } from "./redux/slides/userSlide";
+import { resetUser, updateUser } from "./redux/slides/userSlide";
 import * as UserService from './services/UserService'
 import { useLayoutEffect } from 'react'
 import Loading from './components/LoadingComponent/Loading'
@@ -42,10 +42,17 @@ function App() {
     // Do something before request is sent
     const  currentTime = new Date
     const {decoded} = handleDecoded()
-    const allCoki = Cookies.get()
+    let storageRefreshToken = localStorage.getItem('refresh_token')
+    const refreshToken = JSON.parse(storageRefreshToken)
+    const decodedRefreshToken = jwtDecode(refreshToken)
     if(decoded?.exp < currentTime.getTime() / 1000){
-        const data = await UserService.refreshToken()
-        config.headers['token'] = `Bearer ${data?.access_token}`
+        if(decodedRefreshToken?.exp > currentTime.getTime() / 1000 )
+        {
+          const data = await UserService.refreshToken(refreshToken)
+          config.headers['token'] = `Bearer ${data?.access_token}`
+        }else{
+          dispatch(resetUser())
+        }
       
     }
     return config;
@@ -64,8 +71,10 @@ function App() {
     return {decoded,storageData}
   }
   const handleGetDetailsUser = async (id,token)=>{
+    let storageRefreshToken = localStorage.getItem('refresh_token')
+    const refreshToken = JSON.parse(storageRefreshToken)
     const res = await UserService.getDetailsUser(id,token)
-    dispatch(updateUser({...res?.data,access_token:token}))
+    dispatch(updateUser({...res?.data,access_token:token,refreshToken:refreshToken}))
 }
   return (
     <div>

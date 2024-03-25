@@ -266,10 +266,14 @@ const AdminProduct = ()=>{
     },[data])
 
     useEffect(()=>{
-        if(dataDelete?.status==="OK" || isSuccessDelete){
+        if(dataDelete?.status==="OK"){
             message.success(dataDelete?.message)
-        }else if(dataDelete ?.status==="ERR" || isErrorDelete){
+        }else if(dataDelete ?.status==="ERR"){
             message.error(dataDelete?.message)
+        }else if(isSuccessDelete){
+            message.success('Thành công')
+        }else if(isErrorDelete){
+            message.error("Lỗi rồi")
         }
     },[dataDelete,isErrorDelete,isSuccessDelete])
 
