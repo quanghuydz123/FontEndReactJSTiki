@@ -30,7 +30,7 @@ const MyOrderPage = () => {
   });
   const { isLoading, data } = queryOrder
   const handleDetailsOrder = (id) => {
-    navigate(`/details-order/${id}`)
+    window.open(`/details-order/${id}`, '_blank');
   }
   const handleNavigateProductOrder = (id) => {
     //window.open('/system/admin', '_blank');

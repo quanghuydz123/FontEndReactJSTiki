@@ -89,7 +89,7 @@ const ProfilePage = ()=>{
                 </div>
                 <div className="WapperInputProfile">
                     <label className="WapperLabel" htmlFor="email">Email</label>
-                    <InputFormComponent style={{width:'400px'}} value={email} handleOnChange ={handleOnchangeEmail} id="email" />
+                    <InputFormComponent disabled style={{width:'400px'}} value={email} handleOnChange ={handleOnchangeEmail} id="email" />
                    
                 </div>
                 <div className="WapperInputProfile">

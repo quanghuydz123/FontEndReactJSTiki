@@ -25,8 +25,8 @@ const DetailsOrderPage = () => {
     enabled: id && user?.access_token ? true : false // chỉ gọi khi bằng true
   });
 
-
   const { isLoading, data: orderDetails } = queryOrder
+
   return (
     <Loading isLoading={isLoading}>
     <div style={{ width: '100%', minHeight: 'calc(100vh)', background: '#f5f5fa' }}>

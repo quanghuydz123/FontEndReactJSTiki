@@ -380,7 +380,7 @@ const AdminProduct = ()=>{
         {
           title: 'Price',
           dataIndex: 'price',
-          sorter: (a,b) => a.price - b.name.price,
+          sorter: (a,b) => a.price - b.price,
           filters: [
             {
               text: '>=50',
@@ -435,6 +435,7 @@ const AdminProduct = ()=>{
         {
             title: 'countInStock',
             dataIndex: 'countInStock',
+            sorter: (a,b) => a.countInStock - b.countInStock,
           },
         {
           title: 'Action',

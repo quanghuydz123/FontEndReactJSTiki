@@ -25,7 +25,6 @@ const OrderPage = () => {
     name: '',
     phone: '',
     address: '',
-    city: ''
   })
   const navigate = useNavigate()
   const [formUpdate] = Form.useForm()
@@ -125,7 +124,6 @@ const OrderPage = () => {
     if (res?.data) {
       setStateUserDetails({
         name: res?.data.name,
-        city: res?.data.city,
         phone: res?.data.phone,
         address: res?.data.address,
 
@@ -143,7 +141,7 @@ const OrderPage = () => {
   const handleAddCard = () => {
     if (order?.selectedItemOrder?.length < 1) {
       message.warning("Hãy chọn đơn hàng cần thanh toán")
-    } else if (!user?.phone || !user?.address || !user?.city || !user?.address) {
+    } else if (!user?.phone || !user?.address  || !user?.address) {
       fetchUserDetails(user?.id)
       setIsOpenModalUpdateInfo(true)
       message.warning("Hãy cập nhập thông tin đầy đủ")
@@ -157,7 +155,6 @@ const OrderPage = () => {
     setStateUserDetails({
       name: '',
       phone: '',
-      city: '',
       address: ''
 
     })
@@ -173,11 +170,11 @@ const OrderPage = () => {
   const { data: dataUpdate, isPending: isPendingUpdate1, isSuccess: isSuccessUpdate, isError: isErrorUpdate, error: errorUpdate } = mutationUpdateUser
 
   const handleUpdateInfoUser = () => {
-    const { name, address, city, phone } = stateUserDetals
-    if (name || address || city || phone) {
+    const { name, address, phone } = stateUserDetals
+    if (name || address  || phone) {
       mutationUpdateUser.mutate({ id: user?.id, token: user?.access_token, ...stateUserDetals }, {
         onSuccess: () => {
-          dispatch(updateUser({ name, address, city, phone }))
+          dispatch(updateUser({ name, address, phone }))
           setIsOpenModalUpdateInfo(false)
         },
       })
@@ -349,13 +346,7 @@ const OrderPage = () => {
             >
               <InputComponent value={stateUserDetals.name} name="name" onChange={handleOnchangeDetals} />
             </Form.Item>
-            <Form.Item
-              label="City"
-              name="city"
-              rules={[{ required: true, message: 'Please input your city!' }]}
-            >
-              <InputComponent value={stateUserDetals.city} name="city" onChange={handleOnchangeDetals} />
-            </Form.Item>
+           
             <Form.Item
               label="Phone"
               name="phone"

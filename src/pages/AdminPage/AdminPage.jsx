@@ -6,11 +6,14 @@ import Header from "../../components/HeaderComponents/Header";
 import AdminUser from "../../components/AdminComponent/AdminUser"
 import AdminProduct from "../../components/AdminComponent/AdminProduct";
 import AdminStatistic from "../../components/AdminComponent/AdminStatistic";
+import AdminOrder from "../../components/AdminComponent/AdminOrder";
+
 const AdminPage = ()=>{
     const items = [
         getItem('Thống kê', 'statistical', <BarChartOutlined />),
         getItem('Người dùng', 'user', <UserOutlined />),
         getItem('Sản phẩm', 'product', <AppstoreOutlined />),
+        getItem('Đơn hàng', 'order', <AppstoreOutlined />),
       ];
     // const rootSubmenuKeys = ['user', 'product'];
     // const [openKeys, setOpenKeys] = useState(['user']);
@@ -22,6 +25,8 @@ const AdminPage = ()=>{
                 return <AdminProduct />
             case 'statistical':
                 return <AdminStatistic />
+            case 'order':
+                return <AdminOrder />
             default:
                 return <></>
         }

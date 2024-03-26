@@ -20,9 +20,11 @@ const SignUpPage = ()=>{
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [confirmPassword,setComfirmPassword] = useState('')
+    const [checkOtp,setCheckOpt] = useState(false)
     const mutation = useMutationHooks(//call api
          (data) => UserService.signupUser(data)
     )
+    const [valueOpt,setValueOpt] = useState(Math.floor(Math.random() * (999999-100000))+100000)
     const {data, isPending , isSuccess ,isError,error} = mutation
     useEffect(()=>{
         if(data?.status === "ERR"){
@@ -61,6 +63,48 @@ const SignUpPage = ()=>{
     const handleNavigateSignIn = ()=>{
         navigate('/sign-in')
     }
+    const handleOnchangeInputOpt = (e) => {
+        if (e.target.value === valueOpt.toString()) {
+            setCheckOpt(true)
+        }
+        else { setCheckOpt(false) }
+    }
+    const handleSendOpt=()=>{
+        setValueOpt(Math.floor(Math.random() * (999999-100000))+100000)
+        
+    }
+    const mutationSendOpt = useMutationHooks(//call api
+         (data) => UserService.sendOptCreateAccount(data)
+    )
+    const {data:dataSendOpt, isPending:isPendingSendOpt , isSuccess:isSuccessSendOpt ,isError:isErrorSendOpt} = mutationSendOpt
+    console.log("dataSendOpt",mutationSendOpt)
+    useEffect(()=>{
+        if(dataSendOpt?.status === "ERR"){
+            message.error(dataSendOpt?.message)   
+        }
+        else if(dataSendOpt?.status === "OK"){
+            message.success(dataSendOpt?.message)   
+        }
+        else if(isSuccess){
+            message.success()
+        }else if(isError){
+            message.error()
+        }
+    },[isSuccessSendOpt ,isErrorSendOpt,dataSendOpt])
+    useEffect(()=>{
+        if(email)
+        {
+           try {
+                mutationSendOpt.mutate({
+                    email,
+                    opt:valueOpt,
+                })
+           } catch (error) {
+                message.error(error)
+           }
+        }
+
+    },[valueOpt])
     return (
         <Loading isLoading={isPending} >
             <div style={{display:'flex',alignItems:'center',justifyContent:'center',backgroundColor:'rgb(0,0,0,0.1)',height:'100vh'}}>
@@ -68,8 +112,25 @@ const SignUpPage = ()=>{
                 <div className="WrapperContainerLeft">
                     <h2>Xin chào,</h2>
                     <p>Đăng ký</p>
-                    <InputFormComponent placeholder="Nhập tài khoản" style={{marginBottom:'10px'}} value={email} handleOnChange={handleOnchangeEmail} />
-                    <div style={{ position: 'relative' }}>
+                    <InputFormComponent placeholder="Nhập email" style={{marginBottom:'10px'}} value={email} handleOnChange={handleOnchangeEmail} />
+                    <div style={{display:'flex',alignItems:'center'}}>
+                        <InputFormComponent  handleOnChange={handleOnchangeInputOpt} placeholder="Nhập otp" style={{marginRight:'20px'}} />
+                        <ButtonComponent
+                        size={20}
+                        disabled={checkOtp || !email}
+                        onClick={handleSendOpt}
+                        styleButton={{
+                            backgroundColor: colors.primary,
+                            height: '30px',
+                            width: '180px',
+                            border: 'none',
+                            borderRadius: '4px',
+                        }}
+                        textButton={"Gửi"}
+                        styleTextButton={{ color: 'white' }}
+                    />
+                    </div>
+                    <div style={checkOtp ? { position: 'relative',marginTop:'10px' } : { position: 'relative',display:'none',marginTop:'10px' }}>
                         <span
                         onClick={() => setIsShowPassword(!isShowPassword)}
                         style={{
@@ -92,7 +153,7 @@ const SignUpPage = ()=>{
                         handleOnChange={hanleOnChangePassword}
                         />
                     </div>
-                    <div style={{ position: 'relative' }}>
+                    <div style={checkOtp ? { position: 'relative' } : { position: 'relative',display:'none' }}>
                         <span
                         onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
                         style={{

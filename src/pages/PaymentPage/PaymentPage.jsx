@@ -29,7 +29,6 @@ const PaymentPage = () => {
     name: '',
     phone: '',
     address: '',
-    city: ''
   })
   const [payment, setPayment] = useState('later_money')
   const [delivery, setDelivery] = useState('fast')
@@ -95,7 +94,6 @@ const PaymentPage = () => {
     if (res?.data) {
       setStateUserDetails({
         name: res?.data.name,
-        city: res?.data.city,
         phone: res?.data.phone,
         address: res?.data.address,
 
@@ -112,7 +110,6 @@ const PaymentPage = () => {
     setStateUserDetails({
       name: '',
       phone: '',
-      city: '',
       address: ''
 
     })
@@ -128,11 +125,11 @@ const PaymentPage = () => {
   const { data: dataUpdate, isPending: isPendingUpdate1, isSuccess: isSuccessUpdate, isError: isErrorUpdate, error: errorUpdate } = mutationUpdateUser
 
   const handleUpdateInfoUser = () => {
-    const { name, address, city, phone } = stateUserDetals
-    if (name || address || city || phone) {
+    const { name, address, phone } = stateUserDetals
+    if (name || address || phone) {
       mutationUpdateUser.mutate({ id: user?.id, token: user?.access_token, ...stateUserDetals }, {
         isSuccess: () => {
-          dispatch(updateUser({ name, address, city, phone }))
+          dispatch(updateUser({ name, address, phone }))
           setIsOpenModalUpdateInfo(false)
         }
       })
@@ -157,14 +154,13 @@ const PaymentPage = () => {
     setPayment(e.target.value)
   }
   const handleAddOrder = () => {
-    if (user?.access_token && order?.selectedItemOrder && user?.name && user?.address && user?.phone && user?.city && priceMeno && user?.id) {
+    if (user?.access_token && order?.selectedItemOrder && user?.name && user?.address && user?.phone  && priceMeno && user?.id) {
       mutationAddOrder.mutate({
         token: user?.access_token,
         orderItems: order?.selectedItemOrder,
         fullName: user?.name,
         address: user?.address,
         phone: user?.phone,
-        city: user?.city,
         paymentMethod: payment,
         itemsPrice: priceMeno,
         shippingPrice: diliveryPriceMeno,
@@ -205,7 +201,6 @@ const PaymentPage = () => {
       fullName: user?.name,
       address: user?.address,
       phone: user?.phone,
-      city: user?.city,
       paymentMethod: payment,
       itemsPrice: priceMeno,
       shippingPrice: diliveryPriceMeno,
@@ -363,13 +358,7 @@ const PaymentPage = () => {
             >
               <InputComponent value={stateUserDetals.name} name="name" onChange={handleOnchangeDetals} />
             </Form.Item>
-            <Form.Item
-              label="City"
-              name="city"
-              rules={[{ required: true, message: 'Please input your city!' }]}
-            >
-              <InputComponent value={stateUserDetals.city} name="city" onChange={handleOnchangeDetals} />
-            </Form.Item>
+            
             <Form.Item
               label="Phone"
               name="phone"
