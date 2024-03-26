@@ -84,4 +84,13 @@ export const sendOptCreateAccount  = async(data)=>{
     return res.data
 }
 
+export const sendOptForgotPassword  = async(data)=>{
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/send-opt-forgot-password`,data)
+    return res.data
+}
 
+
+export const forgotPassword  = async(data)=>{
+    const res = await axios.put(`${process.env.REACT_APP_API_URL}/user/forgot-password`,data)
+    return res.data
+}

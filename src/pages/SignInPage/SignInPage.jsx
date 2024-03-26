@@ -131,7 +131,7 @@ const SignInPage = ()=>{
                             styleTextButton={{ color: 'white' }}
                         />
                     
-                    <p className="WrapperTextLight">Quên mật khẩu ?</p>
+                    <p className="WrapperTextLight" onClick={()=>{navigate('/forgot-password')}}>Quên mật khẩu ?</p>
                     <p style={{margin:0}}>Chưa có tài khoản ? <span className="WrapperTextLight" onClick={handleNavigateSignUp}>Tạo tài khoản</span></p>
                 </div>
                 <div className="WrapperContainerRight">

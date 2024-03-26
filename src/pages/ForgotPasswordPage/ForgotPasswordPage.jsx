@@ -14,7 +14,7 @@ import * as UserService from '../../services/UserService'
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import Loading from "../../components/LoadingComponent/Loading";
 import * as message from "../../components/Message/message"
-const SignUpPage = ()=>{
+const ForgotPasswordPage = ()=>{
     const [isShowPassword, setIsShowPassword] = useState(false)
     const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false)
     const [email,setEmail] = useState('')
@@ -22,13 +22,16 @@ const SignUpPage = ()=>{
     const [confirmPassword,setComfirmPassword] = useState('')
     const [checkOtp,setCheckOpt] = useState(false)
     const mutation = useMutationHooks(//call api
-         (data) => UserService.signupUser(data)
+         (data) => UserService.forgotPassword(data)
     )
     const [valueOpt,setValueOpt] = useState(Math.floor(Math.random() * (999999-100000))+100000)
     const {data, isPending , isSuccess ,isError,error} = mutation
     useEffect(()=>{
         if(data?.status === "ERR"){
-            message.error()   
+            message.error(data?.message)   
+        }
+        else if(data?.status === "OK"){
+            message.success(data?.message) 
         }
         else if(isSuccess){
             message.success()
@@ -49,11 +52,9 @@ const SignUpPage = ()=>{
         setComfirmPassword(e.target.value)
     }
 
-    const handleSignUp = ()=>{
+    const handleChangePassword = ()=>{
         mutation.mutate({
-            name:"Nguyễn Quang Huy",
-            phone:"0367386108",
-            email,// truyền data req.body
+            email,
             password,
             confirmPassword
         })
@@ -74,10 +75,9 @@ const SignUpPage = ()=>{
         
     }
     const mutationSendOpt = useMutationHooks(//call api
-         (data) => UserService.sendOptCreateAccount(data)
+         (data) => UserService.sendOptForgotPassword(data)
     )
     const {data:dataSendOpt, isPending:isPendingSendOpt , isSuccess:isSuccessSendOpt ,isError:isErrorSendOpt} = mutationSendOpt
-    console.log("dataSendOpt",mutationSendOpt)
     useEffect(()=>{
         if(dataSendOpt?.status === "ERR"){
             message.error(dataSendOpt?.message)   
@@ -111,8 +111,8 @@ const SignUpPage = ()=>{
             <div style={{ width: '800px', height: '445px', borderRadius: '10px', backgroundColor: 'white' ,display:'flex'}}>
                 <div className="WrapperContainerLeft">
                     <h2>Xin chào,</h2>
-                    <p>Đăng ký</p>
-                    <InputFormComponent placeholder="Nhập email đăng ký" style={{marginBottom:'10px'}} value={email} handleOnChange={handleOnchangeEmail} />
+                    <p>Quên mật khẩu</p>
+                    <InputFormComponent placeholder="Nhập email" style={{marginBottom:'10px'}} value={email} handleOnChange={handleOnchangeEmail} />
                     <div style={{display:'flex',alignItems:'center'}}>
                         <InputFormComponent  handleOnChange={handleOnchangeInputOpt} placeholder="Nhập OTP" style={{marginRight:'20px'}} />
                         <ButtonComponent
@@ -130,7 +130,7 @@ const SignUpPage = ()=>{
                         styleTextButton={{ color: 'white' }}
                     />
                     </div>
-                    <div style={checkOtp ? { position: 'relative',marginTop:'10px' } : { position: 'relative',display:'none',marginTop:'10px' }}>
+                    <div style={checkOtp ? { position: 'relative',marginTop:'10px' } : { position: 'relative',marginTop:'10px',display:"none" }}>
                         <span
                         onClick={() => setIsShowPassword(!isShowPassword)}
                         style={{
@@ -147,13 +147,13 @@ const SignUpPage = ()=>{
                             )
                         }
                         </span>
-                        <InputFormComponent placeholder="Nhập mật khẩu" type={isShowPassword ? "" : "password"} 
+                        <InputFormComponent placeholder="Nhập mật khẩu mới" type={isShowPassword ? "" : "password"} 
                         style={{marginBottom:'10px'}} 
                         value={password}
                         handleOnChange={hanleOnChangePassword}
                         />
                     </div>
-                    <div style={checkOtp ? { position: 'relative' } : { position: 'relative',display:'none' }}>
+                    <div style={checkOtp ? { position: 'relative' } : { position: 'relative',display:"none" }}>
                         <span
                         onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
                         style={{
@@ -170,7 +170,7 @@ const SignUpPage = ()=>{
                             )
                         }
                         </span>
-                        <InputFormComponent placeholder="Nhập lại mật khẩu" type={isShowConfirmPassword ? "" : "password"}
+                        <InputFormComponent placeholder="Nhập lại mật khẩu mới" type={isShowConfirmPassword ? "" : "password"}
                         value={confirmPassword}
                         handleOnChange={hanleOnChangeComfirmPassword}
                         />
@@ -178,7 +178,7 @@ const SignUpPage = ()=>{
                     {isError || (data?.status === "ERR") ? (error === null ? <span style={{color:'red'}}>{data?.message}</span> : <span style={{color:'red'}}>{error.response.data.message }</span>) : <span style={{color:'green'}}>{data?.message}</span>}
                     <ButtonComponent
                         disabled={!email || !password || !confirmPassword}
-                        onClick={handleSignUp}
+                        onClick={handleChangePassword}
                         size={20}
                         styleButton={{
                             backgroundColor: colors.primary,
@@ -188,7 +188,7 @@ const SignUpPage = ()=>{
                             borderRadius: '4px',
                             margin:'26px 0 10px'
                         }}
-                        textButton={"Đăng ký"}
+                        textButton={"Đổi mật khẩu"}
                         styleTextButton={{ color: 'white' }}
                     />
                     <p style={{margin:0}}>Bạn đã có tài khoản ? <span className="WrapperTextLight" onClick={handleNavigateSignIn}>Đăng nhập</span></p>
@@ -207,4 +207,4 @@ const SignUpPage = ()=>{
     )
 }
 
-export default SignUpPage
+export default ForgotPasswordPage

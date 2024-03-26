@@ -12,6 +12,7 @@ import PaymentPage from "../pages/PaymentPage/PaymentPage";
 import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 import MyOrderPage from "../pages/MyOrderPage/MyOrderPage";
 import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage/ForgotPasswordPage";
 
 export const routes = [
     {   
@@ -62,6 +63,11 @@ export const routes = [
     {
         path:'/sign-up',
         page:SignUpPage,
+        isShowHeader:false
+    },
+    {
+        path:'/forgot-password',
+        page:ForgotPasswordPage,
         isShowHeader:false
     },
     {
