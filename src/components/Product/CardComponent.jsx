@@ -3,13 +3,15 @@ import { Card, Image } from 'antd';
 import logo from '../../assets/images/logo.png'
 import {
     StarOutlined,
-    StarFilled
+    StarFilled,
+    HeartFilled,
+    HeartOutlined
 } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import { convertPrice } from "../../utils";
 const { Meta } = Card;
 const CardComponent = (props)=>{
-    const {countInStock,description,image,name,price,rating,type,selled,discount,id} = props
+    const {countInStock,description,image,name,price,rating,type,selled,discount,id,totalLike} = props
     const navigate = useNavigate()  
     const handleDetailsProduct = (event)=>{
         //window.open(`/product-detail/${id}','_blank', 'rel=noopener noreferrer`)
@@ -35,9 +37,9 @@ const CardComponent = (props)=>{
                 </div>
                 <div className="WapperReporText">
                     <span>
-                        <span>{rating}</span> <StarFilled style={{fontSize:10,color:"rgb(253,216,54)"}}/>
+                        <HeartOutlined style={{fontSize:10}}/> <span>{totalLike || 0}</span> 
                     </span>
-                    <span> | Đã bán {selled || 0}</span>
+                    <span style={{marginLeft:'10px'}}> | Đã bán {selled || 0}</span>
                     
                 </div>
                 <div className="WrapperPriceText">

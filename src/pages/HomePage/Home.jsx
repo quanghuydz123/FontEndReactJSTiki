@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { useDebounce } from "../../hooks/useDebounce";
 import { keepPreviousData } from '@tanstack/react-query'
 import { colors } from "../../contants";
+import * as LikeProductService from '../../services/LikeProductService'
 
 const HomePage = ()=>{
     const searchProduct = useSelector((state) => state.product)
@@ -53,7 +54,16 @@ const HomePage = ()=>{
     useEffect(()=>{
         fetchAllTypeProduct()
     },[])
-
+    const fetchProductAllLike = async (context)=>{ //context get value cua useQuery
+        const res = await LikeProductService.countLikeProducts()
+        return res?.data
+   
+    }
+    const useQueryAllLikeProducts = useQuery({
+        queryKey: ['allLikeProducts'],
+        queryFn: fetchProductAllLike,
+    });
+    const { isLoading:isLoadingAllLikeProduct, data:allLikeProducts } = useQueryAllLikeProducts
     return (
         <Loading isLoading={isLoadingSearch}>
             <div style={{ width: '1270px', margin: '0 auto' }}>
@@ -90,6 +100,7 @@ const HomePage = ()=>{
                                         selled={product.selled}
                                         discount={product.discount}
                                         id={product._id}
+                                        totalLike={allLikeProducts?.filter((item) => item._id.product===product._id)[0]?.totalLikes}
                                     />
                                 )
                             })}

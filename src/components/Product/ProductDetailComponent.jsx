@@ -1,12 +1,17 @@
-import { Col, Image, InputNumber, Rate, Row, message } from "antd";
+import { Badge, Col, Image, InputNumber, Rate, Row, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
     StarFilled,
     PlusOutlined,
-    MinusOutlined
+    MinusOutlined,
+    HeartFilled,
+    HeartOutlined
+
 } from '@ant-design/icons';
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import * as ProductService from '../../services/ProductService'
+import * as LikeProductService from '../../services/LikeProductService'
+
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../LoadingComponent/Loading";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +19,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct,resetOrder } from "../../redux/slides/orderSlide";
 import { convertPrice } from "../../utils";
 import logo from '../../assets/images/logo.png'
+import { useMutationHooks } from "../../hooks/useMutationHook";
 
 const ProductDetailComponent = ({idProduct})=>{
     const user = useSelector((state) => state.user)
@@ -22,6 +28,7 @@ const ProductDetailComponent = ({idProduct})=>{
     const navigate = useNavigate()
     const location = useLocation()
     const [numProduct,setNumProduct] = useState(1)
+    const [likeProduct,setLikeProduct] = useState(false)
     const dispatch = useDispatch()
     const fetchProductDetails = async ()=>{
         const res = await ProductService.getDetailsProduct(idProduct)
@@ -46,6 +53,39 @@ const ProductDetailComponent = ({idProduct})=>{
     //         stars.push(<StarFilled style={{fontSize:12,color:"rgb(253,216,54)"}}/>)
     //     return stars
     // }
+    const fetchProductLikeDetails = async ()=>{
+        const res = await LikeProductService.getDetailsLikeProduct(idProduct,user?.id)
+        return res?.data
+    }
+    const queryLikeProduct = useQuery({
+        queryKey: ['products'],
+        queryFn: fetchProductLikeDetails,
+        enabled:user?.id ? true : false
+    });
+    const { isLoading:isLoadingLikeProduct, data:productLikeDetails } = queryLikeProduct
+    useEffect(()=>{ 
+        if(productLikeDetails=== null || productLikeDetails === undefined){
+            setLikeProduct(false)
+        }else{
+            setLikeProduct(productLikeDetails?.like)
+        }
+    },[productLikeDetails])
+
+    const mutation = useMutationHooks(//call api
+        (data) => LikeProductService.createLikeProduct(data)
+    )
+    const {data, isPending , isSuccess ,isError,error} = mutation
+    useEffect(()=>{
+        mutation.mutate({
+            like:likeProduct,
+            product:idProduct,
+            user:user?.id
+        },{
+            onSuccess:()=>{
+                useQueryAllLikeProducts.refetch()
+            }
+        })
+    },[likeProduct])
     const handleChangeCount = (type)=>{
         if(type === 'increase'){
             setNumProduct(prev => Number(productDetails?.countInStock) - (order123.current.length!==0 ? Number(order123?.current[0]?.amount) : 0) > prev ? prev + 1 : prev)
@@ -87,13 +127,22 @@ const ProductDetailComponent = ({idProduct})=>{
                     countInStock:productDetails?.countInStock
                 }
             }))
-            console.log(Number((order123.current.length!==0 ? Number(order123?.current[0]?.amount) : 0)+Number(numProduct)))
             if(order?.isSuccessOrder && (Number((order123.current.length!==0 ? Number(order123?.current[0]?.amount) : 0))+Number(numProduct))<=Number(order123.current.length!==0 ? order123?.current[0]?.countInStock : productDetails?.countInStock)){
                 message.success("Đã thêm sản phẩm vào giỏ hàng") 
                 setNumProduct(1)   
             }
         }
     }
+    const fetchProductAllLike = async (context)=>{ //context get value cua useQuery
+        const res = await LikeProductService.countLikeProducts()
+        return res?.data
+   
+    }
+    const useQueryAllLikeProducts = useQuery({
+        queryKey: ['allLikeProducts'],
+        queryFn: fetchProductAllLike,
+    });
+    const { isLoading:isLoadingAllLikeProduct, data:allLikeProducts } = useQueryAllLikeProducts
     return (
         <div>
             <Loading isLoading={isLoadingProduct}>
@@ -169,11 +218,15 @@ const ProductDetailComponent = ({idProduct})=>{
                 </Col>
                 <Col span={14} style={{paddingLeft:'10px'}} >
                     <h1 className="WapperStyleNameProduct">{productDetails?.name}</h1>
-                    <div>
+                    <div style={{display:'flex', alignItems:'center'}}>
                         {/* {renderStar(productDetails?.rating)} */}
-                        <Rate allowHalf defaultValue={productDetails?.rating} value={productDetails?.rating} />
+                        {/* <Rate allowHalf defaultValue={productDetails?.rating} value={productDetails?.rating} /> */}
+                        <div style={{display:'flex',alignItems:'center'}}>
+                            {likeProduct ? <HeartFilled onClick={()=>setLikeProduct(!likeProduct)} style={{fontSize:'20px',marginRight:'5px',color:'red'}}/> : <HeartOutlined onClick={()=>setLikeProduct(!likeProduct)} style={{fontSize:'20px',marginRight:'5px'}}/>}
+                            <span>{allLikeProducts?.filter((item) => item._id.product===idProduct)[0]?.totalLikes || 0}</span>
+                        </div>
                         
-                        <span className="WapperStyleTextSell"> | Đã bán {productDetails?.selled || 0}</span>
+                        <span className="WapperStyleTextSell" style={{marginLeft:'10px'}}> | Đã bán {productDetails?.selled || 0}</span>
                     </div>
                     <div className="WrapperPriceProduct">
                         <h1 className="WrapperPriceTextProduct">

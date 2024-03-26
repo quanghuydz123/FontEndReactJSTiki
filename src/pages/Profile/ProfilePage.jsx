@@ -29,7 +29,7 @@ const ProfilePage = ()=>{
     )
     const dispatch = useDispatch()
     const {data, isPending, isSuccess,isError,error} = mutation
-    
+    console.log('user',user)
     useEffect(()=>{
         setEmail(user?.email)
         setAddress(user?.address)
@@ -95,8 +95,8 @@ const ProfilePage = ()=>{
                 <div className="WapperInputProfile">
                     <label className="WapperLabel" htmlFor="phone">Số điện thoại</label>
                     <InputFormComponent style={{width:'400px'}} value={phone} handleOnChange ={handleOnchangePhone} id="phone" />
-                    
                 </div>
+                
                 <div className="WapperInputProfile">
                     <label className="WapperLabel" htmlFor="address">Địa chỉ</label>
                     <InputFormComponent style={{width:'400px'}} value={address} handleOnChange ={handleOnchangeAddress} id="address" />
