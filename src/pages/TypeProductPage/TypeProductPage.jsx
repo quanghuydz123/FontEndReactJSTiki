@@ -8,6 +8,9 @@ import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../hooks/useDebounce";
 import SearchNotFound from "../../components/SearchNotFound/SearchNotFound";
+import { useQuery } from "@tanstack/react-query";
+import * as LikeProductService from '../../services/LikeProductService'
+
 
 const TypeProductPage = ()=>{
     const location = useLocation() //lấy ra pamrams state
@@ -51,6 +54,16 @@ const TypeProductPage = ()=>{
             limit:pageSize
         })
     }
+    const fetchProductAllLike = async (context)=>{ //context get value cua useQuery
+        const res = await LikeProductService.countLikeProducts()
+        return res?.data
+   
+    }
+    const useQueryAllLikeProducts = useQuery({
+        queryKey: ['allLikeProducts'],
+        queryFn: fetchProductAllLike,
+    });
+    const { isLoading:isLoadingAllLikeProduct, data:allLikeProducts } = useQueryAllLikeProducts
     return (
         <>
            <Loading isLoading={loading}>
@@ -79,6 +92,7 @@ const TypeProductPage = ()=>{
                             selled={product.selled}
                             discount={product.discount}
                             id={product._id}
+                            totalLike={allLikeProducts?.filter((item) => item._id.product===product._id)[0]?.totalLikes}
                             />
                         }) : <SearchNotFound />}
                         </div>

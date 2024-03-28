@@ -11,8 +11,8 @@ const NavbarComponent = ()=>{
     const renderContent = (type,options)=>{
         switch(type){
             case "text":
-                return options.map((item,index)=>{
-                    return (
+                return options.map((item,index)=>{ 
+                    return(
                         <div  onClick={()=>handleNavigateType(item)} className="WrapperType">
                             <img src="https://salt.tikicdn.com/cache/100x100/ts/category/54/c0/ff/fe98a4afa2d3e5142dc8096addc4e40b.png.webp" alt="icon type" className="WrapperIconType"/>
                             <span  key={index} className="WrapperTextValue">{item}</span>

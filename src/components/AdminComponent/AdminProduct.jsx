@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import {useSelector } from "react-redux";
 import ModalComponent from "../ModalComponent/ModalComponent";
+import TextArea from "antd/es/input/TextArea";
 
 const AdminProduct = ()=>{
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -374,7 +375,7 @@ const AdminProduct = ()=>{
           title: 'Name',
           dataIndex: 'name',
           render: (text) => <a>{text}</a>,
-          sorter: (a,b) => a.name.length - b.name.length,
+          sorter: (a,b) => a.name?.length - b.name?.length,
           ...getColumnSearchProps('name')
         },
         {
@@ -443,7 +444,7 @@ const AdminProduct = ()=>{
           render: renderAction
         },
       ];
-      const dataTable = products?.data.length && products?.data.map((item)=>{
+      const dataTable = products?.data?.length && products?.data.map((item)=>{
         return {...item,key: item._id}
       })
     const handleChange = (value) => {
@@ -596,7 +597,7 @@ const AdminProduct = ()=>{
                             },
                         ]}
                     >
-                        <InputComponent  value={stateProduct.description} onChange={handleOnchange} name="description" />
+                        <TextArea  value={stateProduct.description} onChange={handleOnchange} name="description" />
                     </Form.Item>
 
                     <Form.Item
@@ -753,7 +754,7 @@ const AdminProduct = ()=>{
                             },
                         ]}
                     >
-                        <InputComponent  value={stateProductDetals.description} onChange={handleOnchangeDetals} name="description" />
+                        <TextArea  value={stateProductDetals.description} onChange={handleOnchangeDetals} name="description" />
                     </Form.Item>
 
                     <Form.Item

@@ -63,7 +63,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
         await UserService.loguotUser()
         dispatch(resetUser())
         localStorage.removeItem('access_token')
-        navigate('/sign-in')
+        navigate('/ ')
         setLoading(false)
     }
     const handleNavigateManager=(event)=>{
