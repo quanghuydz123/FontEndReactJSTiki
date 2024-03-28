@@ -20,7 +20,7 @@ const SignUpPage = ()=>{
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [confirmPassword,setComfirmPassword] = useState('')
-    const [checkOtp,setCheckOpt] = useState(false)
+    const [checkOtp,setCheckOpt] = useState(true)
     const mutation = useMutationHooks(//call api
          (data) => UserService.signupUser(data)
     )

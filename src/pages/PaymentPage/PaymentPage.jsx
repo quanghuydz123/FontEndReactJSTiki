@@ -129,7 +129,7 @@ const PaymentPage = () => {
     if (name || address || phone) {
       mutationUpdateUser.mutate({ id: user?.id, token: user?.access_token, ...stateUserDetals }, {
         isSuccess: () => {
-          dispatch(updateUser({ name, address, phone }))
+          dispatch(updateUser({ ...user,_id:user?.id,name, address, phone }))
           setIsOpenModalUpdateInfo(false)
         }
       })
@@ -186,7 +186,7 @@ const PaymentPage = () => {
           })
         },
         onError: (data) => {
-
+          
           message.error("Lỗi rồi")
         }
       })

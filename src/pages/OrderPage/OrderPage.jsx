@@ -56,7 +56,6 @@ const OrderPage = () => {
       return 20000
     }
   }, [priceMeno])
-
   const totalPriceMeno = useMemo(() => {
     return Number(priceMeno) + Number(diliveryPriceMeno)
   }, [priceMeno, priceDiscountMeno, diliveryPriceMeno])
@@ -126,7 +125,6 @@ const OrderPage = () => {
         name: res?.data.name,
         phone: res?.data.phone,
         address: res?.data.address,
-
       })
     }
   }
@@ -160,7 +158,6 @@ const OrderPage = () => {
     })
     formUpdate.resetFields()//xóa hết value input
   }
-  console.log("idProductSelected",idProductSelected)
   const mutationUpdateUser = useMutationHooks(//call api
     (data) => {
       const { id, token, ...rest } = data
@@ -168,13 +165,13 @@ const OrderPage = () => {
       return res
     })
   const { data: dataUpdate, isPending: isPendingUpdate1, isSuccess: isSuccessUpdate, isError: isErrorUpdate, error: errorUpdate } = mutationUpdateUser
-
   const handleUpdateInfoUser = () => {
     const { name, address, phone } = stateUserDetals
     if (name || address  || phone) {
       mutationUpdateUser.mutate({ id: user?.id, token: user?.access_token, ...stateUserDetals }, {
         onSuccess: () => {
-          dispatch(updateUser({ name, address, phone }))
+          const _id = user?.id
+          dispatch(updateUser({...user,_id, address, phone }))
           setIsOpenModalUpdateInfo(false)
         },
       })
