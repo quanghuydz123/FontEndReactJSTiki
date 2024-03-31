@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 const TypeProduct = (props)=>{
 
     const navigate = useNavigate()
-    const {name,mr,p} = props
-    const handleNavigateType = (type)=>{
-        navigate(`/product/${type.normalize('NFD').replace(/[\u0300-\u036f]/g, '')?.replace(/ /g,'_')}`,{state:type}) //bỏ dấu tiếng việt    
+    const {name,mr,p,id} = props
+    const handleNavigateType = (type,id)=>{
+        navigate(`/product/${type}`,{state:{ type,id} }) //bỏ dấu tiếng việt    
     }
     // function removeVietnameseAccent(str) {
     //     str = str.toLowerCase();
@@ -19,7 +19,7 @@ const TypeProduct = (props)=>{
     //     return str;
     // }
     return (
-        <div style={{marginRight:mr,padding:p,cursor:'pointer',color:'rgb(128,128,137)'}} onClick={()=>handleNavigateType(name)}>
+        <div style={{marginRight:mr,padding:p,cursor:'pointer',color:'rgb(128,128,137)'}} onClick={()=>handleNavigateType(name,id)}>
             {name}
         </div>
     )

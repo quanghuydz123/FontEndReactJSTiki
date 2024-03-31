@@ -16,6 +16,8 @@ import { useDebounce } from "../../hooks/useDebounce";
 import { keepPreviousData } from '@tanstack/react-query'
 import { colors } from "../../contants";
 import * as LikeProductService from '../../services/LikeProductService'
+import * as CategoryService from '../../services/CategoryService'
+import NavbarComponent from "../../components/NavbarComponent/NavbarComponent";
 
 const HomePage = ()=>{
     const searchProduct = useSelector((state) => state.product)
@@ -24,6 +26,7 @@ const HomePage = ()=>{
     const searchDounce = useDebounce(searchProduct.search,200) //sau 1 giây mới gọi API
     const [limit,setLimit] = useState(12)
     const [typeProducts,setTypeProducts]= useState([])
+    const [categoryParent,setCategoryParent]= useState([])
     const order = useSelector((state) => state.order)
     const fetchProductAll = async (context)=>{ //context get value cua useQuery
         const search = context?.queryKey && context?.queryKey[2]
@@ -38,7 +41,6 @@ const HomePage = ()=>{
         return res
    
     }
-   
     const { isLoading, data:products,isPlaceholderData } = useQuery({
         queryKey: ['products',limit,searchDounce],
         queryFn: fetchProductAll,
@@ -46,14 +48,25 @@ const HomePage = ()=>{
         retry: 3,
         retryDelay: 1000,
     });
-    const fetchAllTypeProduct = async(  )=>{
-        const res = await ProductService.getAllTypeProduct()
-        setTypeProducts(res?.data)
+    //
+    // const fetchAllTypeProduct = async(  )=>{
+    //     const res = await ProductService.getAllTypeProduct()
+    //     setTypeProducts(res?.data)
+    // }
+
+    // useEffect(()=>{
+    //     fetchAllTypeProduct()
+    // },[])
+    //
+    const fetchAllCategoryParent = async(  )=>{
+        const res = await CategoryService.getAllCategoryParent()
+        setCategoryParent(res?.data)
     }
 
     useEffect(()=>{
-        fetchAllTypeProduct()
+        fetchAllCategoryParent()
     },[])
+    //
     const fetchProductAllLike = async (context)=>{ //context get value cua useQuery
         const res = await LikeProductService.countLikeProducts()
         return res?.data
@@ -63,15 +76,16 @@ const HomePage = ()=>{
         queryKey: ['allLikeProducts'],
         queryFn: fetchProductAllLike,
     });
+
     const { isLoading:isLoadingAllLikeProduct, data:allLikeProducts } = useQueryAllLikeProducts
     return (
         <Loading isLoading={isLoadingSearch}>
             <div style={{ width: '1270px', margin: '0 auto' }}>
                 <div className="WrapperType123">
                     <div className="WrapperTypeProduct">
-                        {typeProducts.map((item) => {
+                        {categoryParent.map((item) => {
                             return (
-                                <TypeProduct name={item} key={item} />
+                                <TypeProduct id={item._id} name={item.name} key={item.name} />
                             )
                         })} 
                     </div>

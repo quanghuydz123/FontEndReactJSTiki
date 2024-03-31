@@ -57,7 +57,7 @@ const MyOrderPage = () => {
     })
     setIsOpenModalDelete(false)
   }
-  const { isLoading: isLoadingCancel, isSuccess: isSuccessCancel, isError: isErrorCancle, data: dataCancel } = mutation
+  const { isPending: isLoadingCancel, isSuccess: isSuccessCancel, isError: isErrorCancle, data: dataCancel } = mutation
   const hanldeCancelDelete = () => {
     setIsOpenModalDelete(false)
   }
@@ -98,13 +98,12 @@ const MyOrderPage = () => {
             </div>
             <span style={{ fontSize: '13px', color: '#242424', marginLeft: 'auto' }}>{convertPrice(order?.price)}</span>
           </WrapperHeaderItem>
-
         </>
       )
     })
   }
   return (
-    <Loading isLoading={isLoading}>
+    <Loading isLoading={isLoading || isLoadingCancel}>
       <WrapperContainer>
         <div style={{ height: '100%', width: '1270px', margin: '0 auto', marginBottom: '20px' }}>
           <h4>Đơn hàng của tôi</h4>

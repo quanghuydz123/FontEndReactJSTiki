@@ -1,10 +1,11 @@
-import { Button, Form, Modal,Space,Upload, message } from "antd";
+import { Badge, Button, Form, Modal,Space,Upload, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
     PlusCircleOutlined,
     DeleteOutlined,
     EditOutlined,
-    SearchOutlined
+    SearchOutlined,
+    RollbackOutlined
     
 } from '@ant-design/icons';
 import TableComponent from "../TableComponent/TableComponent";
@@ -25,6 +26,8 @@ const AdminUser = ()=>{
     const [form] = Form.useForm()
     const [formUpdate] = Form.useForm()
     const [isOpenModalDetele,setIsOpenModalDelete] = useState('')
+    const [isOpenModalRestoreUser,setIsOpenModalRestoreUser] = useState('')
+
     const user = useSelector((state) => state.user)
     const [isPendingUpdate,setIsPendingUpdate] = useState(false)
     const [searchText, setSearchText] = useState('');
@@ -95,9 +98,21 @@ const AdminUser = ()=>{
                 <EditOutlined style={{
                     color:'orange',
                     fontSize:'30px',
-                    cursor:'pointer',
+                    cursor:'pointer'
                 }}
+                title="cập nhập người dùng"
                 onClick={handleDetalsProduct}
+                />
+
+                <RollbackOutlined 
+                onClick={()=>setIsOpenModalRestoreUser(true)}
+                title="khôi phục người dùng"
+                style={{
+                    color:'green',
+                    fontSize:'30px',
+                    cursor:'pointer',
+                    marginLeft:'10px'
+                }}
                 />
 
                 <DeleteOutlined style={{
@@ -106,8 +121,11 @@ const AdminUser = ()=>{
                     cursor:'pointer',
                     marginLeft:'10px'
                 }}
+                title="xóa người dùng"
                 onClick={()=>{setIsOpenModalDelete(true)}}
                 />
+
+                
                 
             </div>
         )
@@ -205,12 +223,21 @@ const AdminUser = ()=>{
         const res = UserService.updateUser(id,{...rest},token)
         return res
     })
+
+    const mutationRestoreUser = useMutationHooks(//call api
+    (data) => {
+        const {id,token} = data
+        const res = UserService.restoreUser(id,token)
+        return res
+    })
+    
     const mutationDeleteUser = useMutationHooks(//call api
     (data) => {
         const {id,token} = data
         const res = UserService.deleteUser(id,token)
         return res
     })
+
 
     const mutationDeleteUserMany = useMutationHooks(//call api
     (data) => {
@@ -233,11 +260,11 @@ const AdminUser = ()=>{
         retryDelay: 1000
     });
     const { isLoading:isLoadingUser, data:users } = queryUser
-
     const {data, isPending, isSuccess,isError,error} = mutation
     const {data:dataUpdate, isPending:isPendingUpdate1, isSuccess:isSuccessUpdate,isError:isErrorUpdate,error:errorUpdate} = mutationUpdateUser
     const {data:dataDelete, isPending:isPendingDelete1, isSuccess:isSuccessDelete,isError:isErrorDelete,error:errorDelete} = mutationDeleteUser
     const {data:dataDeleteMany, isPending:isPendingDeleteMany1, isSuccess:isSuccessDeleteMany,isError:isErrorDeleteMany,error:errorDeleteMany} = mutationDeleteUserMany
+    const {data:dataRestoreUser, isPending:isPendingRestoreUser1, isSuccess:isSuccessRestoreUser,isError:isErrorRestoreUser,error:errorRestoreUser} = mutationRestoreUser
 
     const showModal = () => {   
         setIsModalOpen(true);   
@@ -274,6 +301,14 @@ const AdminUser = ()=>{
         }
     },[dataDelete,isErrorDelete,isSuccessDelete])
 
+    useEffect(()=>{
+        if(dataRestoreUser?.status==="OK" || isSuccessRestoreUser){
+            message.success(dataRestoreUser?.message)
+        }else if(data?.status==="ERR" || isErrorRestoreUser){
+            message.error(dataRestoreUser?.message)
+        }
+    },[dataRestoreUser,isErrorRestoreUser,isSuccessRestoreUser])
+
     const handleCancel = () => {
         setIsModalOpen(false);
         setStateUser({
@@ -295,6 +330,14 @@ const AdminUser = ()=>{
             }
         })
         setIsOpenModalDelete(false)
+    }
+    const handleRestoreUser =()=>{
+        mutationRestoreUser.mutate({id:rowSelected,token:user?.access_token},{
+            onSettled: ()=>{//tự động load lại khi update
+                queryUser.refetch()
+            }
+        })
+        setIsOpenModalRestoreUser(false)
     }
     const onFinish = () => {
         mutation.mutate(stateUser,{
@@ -397,12 +440,20 @@ const AdminUser = ()=>{
             ...getColumnSearchProps('address')
         },
         {
+            title: 'Status',
+            dataIndex: 'status',
+            render: (_, record) => 
+                <div>{record?.status ? <Badge status="success" text="Đang hoạt động" /> : <Badge status="error" text="Ngưng hoạt động" />}</div>
+            
+            
+        },
+        {
           title: 'Action',
           dataIndex: 'action',
           render: renderAction
         },
       ];
-      const dataTable = users?.data.length && users?.data.filter(item => item.isAdmin === false).map((item)=>{
+      const dataTable = users?.data.length && users?.data.filter(item => item?.isAdmin === false).sort((b,a) =>{ return Number(a?.status) - Number(b?.status)}).map((item)=>{
         return {...item,key: item._id} //boolean k được
       })
     return (
@@ -423,110 +474,7 @@ const AdminUser = ()=>{
                 }}/>
             </div>
             
-            <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen}  onCancel={handleCancel} className="modal=product" footer={null}>
-                <Loading isLoading={isPending}>
-                <Form
-                    name="basic"
-                    labelCol={{
-                        span: 6,
-                    }}
-                    wrapperCol={{
-                        span: 18,
-                    }}
-                    style={{
-                        maxWidth: 600,
-                    }}
-                    form={form}
-                    onFinish={onFinish}
-                    autoComplete="off"//
-                >
-                    <Form.Item
-                        label="Name"
-                        name="name"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your name!',
-                            },
-                        ]}
-                    >
-                        <InputComponent value={stateUser.name} onChange={handleOnchange} name="name"/>
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Email    "
-                        name="email"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your email!',
-                            },
-                        ]}
-                    >
-                        <InputComponent value={stateUser.email} onChange={handleOnchange} name="email"/>
-                    </Form.Item>
-
-                    <Form.Item  
-                        label="Phone"
-                        name="phone"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your Phone!',
-                            },
-                        ]}
-                    >
-                        <InputComponent value={stateUser.phone} onChange={handleOnchange} name="phone"/>
-                    </Form.Item>
-
-                  
-
-                 
-
-                   
-
-                    {/* <Form.Item
-                        label="Image"
-                        name="image"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your image!',
-                            },
-                        ]}
-                    >
-                        <Upload onChange={handleOnchangeAvatar} className="WapperUploadFile" maxCount={1}>
-                            <Button icon={<UploadOutlined />}>Select File</Button>
-                            {stateUser.image && (
-                        <img src={stateUser.image} style={{
-                            height:'60px',
-                            width:'60px',
-                            borderRadius:'50%',
-                            objectFit:'cover',
-                            marginLeft:'20px'
-                        }} alt="avatar"/>
-                        )}
-                        </Upload>
-                       
-                    </Form.Item> */}
-
-                    
-                   
-
-                    <Form.Item
-                        wrapperCol={{
-                            offset: 8,
-                            span: 16,
-                        }}
-                        style={{display:'flex',justifyContent:'flex-end', marginRight:'50px'}}
-                    >
-                        <Button type="primary" htmlType="submit">
-                            Thêm
-                        </Button>
-                    </Form.Item>
-                </Form>
-                </Loading>
-            </ModalComponent>
+            
             <DrawerComponent title='Chi tiết người dùng' isOpen={isOpenDrawer} onClose={()=> {return setIsOpenDrawer(false)}} width="50%">
             <Loading isLoading={isPendingUpdate}>
                 <Form
@@ -658,6 +606,12 @@ const AdminUser = ()=>{
                     Bạn có muốn xóa người dùng này không ? 
                 </div>
             </Loading>
+            </ModalComponent>
+
+            <ModalComponent title="Khôi phục người dùng" isOpen={isOpenModalRestoreUser} onCancel={()=>setIsOpenModalRestoreUser(false)} onOk={handleRestoreUser}>
+                <div>
+                    Bạn có muốn khôi phục người dùng này không ? 
+                </div>
             </ModalComponent>
         </div>
             </div>

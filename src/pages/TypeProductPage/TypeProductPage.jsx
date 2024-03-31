@@ -16,6 +16,13 @@ const TypeProductPage = ()=>{
     const location = useLocation() //lấy ra pamrams state
     const params = useParams()
     const searchProduct = useSelector((state) => state?.product?.search)
+    const [categoryNameParent,setCategoryNameParent] = useState([])
+    const [categoryNameChild,setCategoryNameChild] = useState([])
+    const [nameCategorySelected,setNameCategorySelected] = useState(params?.type)
+    const [idSelectedCategoryParent,setIdSelectedCategoryParent] = useState('')
+    const [idSelectedCategoryChild,setIdSelectedCategoryChild] = useState('')
+
+    const [nameCategoryChildSelected,setNameCategoryChildSelected] = useState('')
     const searchDounce = useDebounce(searchProduct,200) //sau 1 giây mới gọi API
     const [products,setProducts] = useState([])
     const [loading,setLoading]= useState('')
@@ -24,9 +31,14 @@ const TypeProductPage = ()=>{
         limit:10,
         total:1
     })
-    const fetchProductType= async (type,page,limit)=>{
+    useEffect(()=>{
+        setIdSelectedCategoryParent(categoryNameParent.filter((item)=>item?.name===params?.type)[0]?.id)
+    },[params,categoryNameParent])
+    console.log("11",idSelectedCategoryParent)
+    //console.log("123",categoryNameParent.filter((item)=>item?.name===params?.type)[0]?.id)
+    const fetchProductType= async (id,page,limit,filter)=>{
         setLoading(true)
-        const res = await ProductService.getProductType(type,page,limit)
+        const res = await ProductService.getProductByIdParent(id,page,limit,filter)
         if(res?.status === "OK"){
             setLoading(false)   
             setProducts(res?.data)
@@ -38,15 +50,9 @@ const TypeProductPage = ()=>{
             setLoading(false)
         }
     }
-   
-    
     useEffect(()=>{
-        if(location.state)
-        {
-            fetchProductType(location.state,panigate.page,panigate.limit)
-        }
-        
-    },[location.state,panigate.page,panigate.limit])
+            fetchProductType(idSelectedCategoryParent,panigate.page,panigate.limit,idSelectedCategoryChild)
+    },[panigate.page,panigate.limit,idSelectedCategoryParent,idSelectedCategoryChild])
     const onChange = (current,pageSize)=>{
         setPanigate({
             ...panigate,
@@ -72,12 +78,12 @@ const TypeProductPage = ()=>{
                 <Row style={{ flexWrap: 'nowrap', paddingTop: '10px' }}>
 
                     <Col span={4} style={{}} className="WrapperNavbar">
-                        <NavbarComponent />
+                        <NavbarComponent setIdSelectedCategoryChild={setIdSelectedCategoryChild} categoryNameChild={categoryNameChild} categoryNameParent={categoryNameParent} setNameCategorySelected={setNameCategorySelected} setNameCategoryChildSelected={setNameCategoryChildSelected} setCategoryNameParent={setCategoryNameParent} setCategoryNameChild={setCategoryNameChild}/>
                     </Col>
 
                     <Col span={20} style={{ marginLeft: '10px' }}>
                         <div className="WrapperLabelTypeProduct">
-                            <span>{location.state}</span>
+                            <span>{`${nameCategorySelected && nameCategorySelected} ${nameCategoryChildSelected && '/'} ${nameCategoryChildSelected && nameCategoryChildSelected}`}</span>
                         </div>
                         <div className="WrapperProductsType">
                         {products?.filter(item => item.name.toLowerCase().includes(searchDounce.toLowerCase())).length!==0 ? products?.filter(item => item.name.toLowerCase().includes(searchDounce.toLowerCase())).map((product,index)=> {

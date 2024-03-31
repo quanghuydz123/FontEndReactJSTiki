@@ -29,6 +29,7 @@ const ProductDetailComponent = ({idProduct})=>{
     const location = useLocation()
     const [numProduct,setNumProduct] = useState(1)
     const [likeProduct,setLikeProduct] = useState(false)
+    const [check,setCheck] = useState(false)
     const dispatch = useDispatch()
     const fetchProductDetails = async ()=>{
         const res = await ProductService.getDetailsProduct(idProduct)
@@ -76,15 +77,18 @@ const ProductDetailComponent = ({idProduct})=>{
     )
     const {data, isPending , isSuccess ,isError,error} = mutation
     useEffect(()=>{
-        mutation.mutate({
-            like:likeProduct,
-            product:idProduct,
-            user:user?.id
-        },{
-            onSuccess:()=>{
-                useQueryAllLikeProducts.refetch()
-            }
-        })
+        if(check){
+            mutation.mutate({
+                like:likeProduct,
+                product:idProduct,
+                user:user?.id
+            },{
+                onSuccess:()=>{
+                    useQueryAllLikeProducts.refetch()
+                }
+            })
+        }
+        setCheck(true)
     },[likeProduct])
     const handleChangeCount = (type)=>{
         if(type === 'increase'){

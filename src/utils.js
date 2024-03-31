@@ -35,8 +35,6 @@ export const renderOption = (arr)=>{
           label: item
         }
       }
-      
-
       )
       
     }
