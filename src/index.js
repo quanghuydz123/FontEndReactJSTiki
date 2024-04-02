@@ -11,6 +11,7 @@ import {
 } from '@tanstack/react-query'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const queryClient = new QueryClient()
@@ -22,8 +23,10 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}> 
+      <BrowserRouter>
       <App />
-      </PersistGate>
+      </BrowserRouter>
+    </PersistGate>
     </Provider>
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>

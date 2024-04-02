@@ -45,13 +45,13 @@ export const routes = [
         page:PaymentPage,
         isShowHeader:true
     },
+    // {
+    //     path:'/product',
+    //     page:ProductPage,
+    //     isShowHeader:true
+    // },
     {
-        path:'/product',
-        page:ProductPage,
-        isShowHeader:true
-    },
-    {
-        path:'/product/:type',
+        path:'/:type',
         page:TypeProductPage,
         isShowHeader:true
     },

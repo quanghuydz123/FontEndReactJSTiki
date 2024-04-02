@@ -72,7 +72,12 @@ export const deleteManyProduct  = async(ids,access_token)=>{
 export const getProductByIdParent  = async(id,page,limit,filter)=>{
     let res = {}
     if(filter){
-        res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&limit=${limit}&page=${page}`)
+        if(limit){
+            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&limit=${limit}&page=${page}`)
+        }
+        else{
+            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}`)
+        }
     }
     else if(id){
         res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?id=${id}&limit=${limit}&page=${page}`)

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useParams, useLocation } from 'react-router-dom'
 import HomePage from './pages/HomePage/Home'
 import OrderPage from './pages/OrderPage/OrderPage'
 import { routes } from './routes'
@@ -22,6 +22,7 @@ function App() {
   //   return res.data
   // }
   // const query = useQuery({ queryKey: ['todos'], queryFn: fetchApi })
+  const location = useLocation()
   const dispatch = useDispatch()
   const [loading,setLoading] = useState(false)
   const user = useSelector((state) => state.user)
@@ -79,7 +80,6 @@ function App() {
   return (
     <div>
       <Loading isLoading={loading}>
-        <Router>
           <Routes>
             {
               routes.map((item, index) => {
@@ -99,7 +99,6 @@ function App() {
             }
 
           </Routes>
-        </Router>
       </Loading>
     </div>
   )

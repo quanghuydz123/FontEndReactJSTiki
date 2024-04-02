@@ -35,6 +35,7 @@ const PaymentPage = () => {
   const [formUpdate] = Form.useForm()
   const navigate = useNavigate()
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false)
+  console.log("123",order)
   const priceMeno = useMemo(() => { //dùng useMemo để không tinh toán không cần thiết khi render
     const result = order?.selectedItemOrder?.reduce((total, cur) => {
       return total + ((cur.price * cur.amount))

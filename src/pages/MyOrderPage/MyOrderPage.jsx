@@ -11,6 +11,7 @@ import { convertPrice } from '../../utils';
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import { Button, Result, message } from 'antd';
 import ModalComponent from '../../components/ModalComponent/ModalComponent';
+import LinkComponent from '../../components/LinkComponent/LinkComponent';
 
 const MyOrderPage = () => {
   const user = useSelector((state) => state.user)
@@ -77,7 +78,8 @@ const MyOrderPage = () => {
       return (
         <>
           <WrapperHeaderItem key={order?._id}>
-            <div style={{ display: 'flex', cursor: 'pointer' }} onClick={() => handleNavigateProductOrder(order?.product)}>
+          <LinkComponent to={`/product-detail/${order?.product}`} style={{color:'black'}} colorOnMouseEnter='rgb(26,148,255)' colorOnMouseLeave='black' >
+            <div style={{ display: 'flex', cursor: 'pointer' }}>
               <img src={order?.image}
                 style={{
                   width: '70px',
@@ -96,6 +98,7 @@ const MyOrderPage = () => {
                 marginLeft: '10px'
               }}>{order?.name}</div>
             </div>
+            </LinkComponent>
             <span style={{ fontSize: '13px', color: '#242424', marginLeft: 'auto' }}>{convertPrice(order?.price)}</span>
           </WrapperHeaderItem>
         </>
@@ -143,8 +146,8 @@ const MyOrderPage = () => {
                         styleTextButton={{ color: '#9255FD', fontSize: '14px' }}
                       >
                       </ButtonComponent>
+                      <LinkComponent to={`/details-order/${order?._id}`} style={{color:'black'}} colorOnMouseEnter='rgb(26,148,255)' colorOnMouseLeave='black' >
                       <ButtonComponent
-                        onClick={() => handleDetailsOrder(order?._id)}
                         size={40}
                         styleButton={{
                           height: '36px',
@@ -155,6 +158,7 @@ const MyOrderPage = () => {
                         styleTextButton={{ color: '#9255FD', fontSize: '14px' }}
                       >
                       </ButtonComponent>
+                      </LinkComponent>
                     </div>
                   </WrapperFooterItem>
                 </WrapperItemOrder>

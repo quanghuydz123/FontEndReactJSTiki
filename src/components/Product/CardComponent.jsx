@@ -9,44 +9,42 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import { convertPrice } from "../../utils";
+import LinkComponent from "../LinkComponent/LinkComponent";
 const { Meta } = Card;
 const CardComponent = (props)=>{
-    const {countInStock,description,image,name,price,rating,type,selled,discount,id,totalLike} = props
+    const {countInStock,description,image,name,price,rating,type,selled,discount,id,totalLike,detailsPage} = props
     const navigate = useNavigate()  
-    const handleDetailsProduct = (event)=>{
-        //window.open(`/product-detail/${id}','_blank', 'rel=noopener noreferrer`)
-        if (event.ctrlKey || event.metaKey) {
-            window.open(`/product-detail/${id}`, '_blank');
-        } else {
-            navigate(`/product-detail/${id}`)
-        }
-        
-    }
-    return <Card
-            className="WrapperCardStyle"
-            hoverable
-            style={{ width: 200 }}
-            headStyle={{width:'200px',height:'200px'}}
-            bodyStyle={{padding:10}}
-            cover={<img alt="example" src={image} />}
-            onClick={handleDetailsProduct}
-            >
-                <img src={logo} style={{}} className="WrapperImage" alt="logo"/>
-                <div className="NameProduct">
-                    {name}
-                </div>
-                <div className="WapperReporText">
-                    <span>
-                        <HeartOutlined style={{fontSize:10}}/> <span>{totalLike || 0}</span> 
-                    </span>
-                    <span style={{marginLeft:'10px'}}> | Đã bán {selled || 0}</span>
-                    
-                </div>
-                <div className="WrapperPriceText">
-                        {convertPrice(price)} {discount && <span className="WrapperDiscuontText">-{discount}%</span>}
-                        {/* <>toLocaleString format gia tien</> */}
-                </div>
-        </Card>
+  
+    return <LinkComponent to={`/product-detail/${id}`}>
+            <Card
+                    className="WrapperCardStyle"
+                    hoverable
+                    style={detailsPage ? { width: 186,margin:'8px',minHeight:'320px'} : { width: 200,minHeight:'320px'}}
+                    headStyle={{width:'200px',height:'200px'}}
+                    bodyStyle={{padding:10}}
+                    cover={<img alt="example" src={image} />}
+                    >
+                        <img src={logo} style={{}} className="WrapperImage" alt="logo"/>
+                        <div className="NameProduct">
+                            {name}
+                        </div>
+                        <div className="WapperReporText">
+                            <span>
+                                <HeartOutlined style={{fontSize:10}}/> <span>{totalLike || 0}</span> 
+                            </span>
+                            <span style={{marginLeft:'10px'}}> | Đã bán {selled || 0}</span>
+                            
+                        </div>
+                        <div className="WrapperPriceText">
+                            {discount ? <><span>{convertPrice(price*(100-discount)/100)}</span> <span className="WrapperDiscuontText">-{discount}%</span></>   : <span></span>}
+                        </div>
+                        {discount ? <div style={{fontSize:'12px',textDecoration:'line-through', color:'rgb(102 102 102)'}}>
+                                {convertPrice(price)}
+                        </div> : <div className="WrapperPriceText">
+                                {convertPrice(price)}
+                        </div>}
+                </Card>
+    </LinkComponent>
 }
 
 export default CardComponent

@@ -74,7 +74,7 @@ const AdminProduct = () => {
                 type: res?.data.type,
                 countInStock: res?.data.countInStock,
                 discount: res?.data.discount,
-                category:res?.data?.category?.name
+                category:res?.data?.category?._id
             })
         }
         setIsPendingUpdate(false)
@@ -464,10 +464,15 @@ const AdminProduct = () => {
             dataIndex: 'category',
         },
 
+
         {
             title: 'countInStock',
             dataIndex: 'countInStock',
             sorter: (a, b) => a.countInStock - b.countInStock,
+        },
+        {
+            title: 'Discount',
+            dataIndex: 'discount',
         },
         {
             title: 'Action',
@@ -584,6 +589,7 @@ const AdminProduct = () => {
                         >
                             <Select
                                 //defaultValue="lucy"
+                                showSearch
                                 name='category'
                                 style={{
                                     width: '100%',
@@ -652,11 +658,7 @@ const AdminProduct = () => {
                         <Form.Item
                             label="Discount"
                             name="discount"
-                            rules={[
-                                {
-                                    message: 'Please input your discount!',
-                                },
-                            ]}
+                            
                         >
                             <InputComponent value={stateProduct.discount} onChange={handleOnchange} name="discount" />
                         </Form.Item>
@@ -759,7 +761,8 @@ const AdminProduct = () => {
                         >
                             {/* <InputComponent value={stateProduct.type} onChange={handleOnchange} name="type"/> */}
                             <Select
-                                //defaultValue="lucy"
+                                defaultValue={stateProductDetals?.category}
+                                showSearch
                                 name='category'
                                 style={{
                                     width: '100%',
@@ -828,11 +831,7 @@ const AdminProduct = () => {
                         <Form.Item
                             label="Discount"
                             name="discount"
-                            rules={[
-                                {
-                                    message: 'Please input your discount!',
-                                },
-                            ]}
+                        
                         >
                             <InputComponent value={stateProductDetals.discount} onChange={handleOnchangeDetals} name="discount" />
                         </Form.Item>

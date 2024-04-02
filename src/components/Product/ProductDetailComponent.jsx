@@ -16,12 +16,12 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "../LoadingComponent/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { addOrderProduct,resetOrder } from "../../redux/slides/orderSlide";
+import { addOrderProduct,resetOrder,buyNowProduct } from "../../redux/slides/orderSlide";
 import { convertPrice } from "../../utils";
 import logo from '../../assets/images/logo.png'
 import { useMutationHooks } from "../../hooks/useMutationHook";
 
-const ProductDetailComponent = ({idProduct})=>{
+const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
     const user = useSelector((state) => state.user)
     const order = useSelector((state) => state.order)
     const order123 = useRef(order?.orderItems.filter((order)=>order.product===idProduct))
@@ -31,8 +31,9 @@ const ProductDetailComponent = ({idProduct})=>{
     const [likeProduct,setLikeProduct] = useState(false)
     const [check,setCheck] = useState(false)
     const dispatch = useDispatch()
-    const fetchProductDetails = async ()=>{
-        const res = await ProductService.getDetailsProduct(idProduct)
+    const fetchProductDetails = async (context)=>{
+
+        const res = await ProductService.getDetailsProduct(context.queryKey[1])
         return res?.data
     }
     const onChange = (e)=>{
@@ -42,7 +43,7 @@ const ProductDetailComponent = ({idProduct})=>{
         order123.current=order?.orderItems.filter((order)=>order.product===idProduct)
     },[order,idProduct])
     const queryProduct = useQuery({
-        queryKey: ['products-details'],
+        queryKey: ['products-details',idProduct],
         queryFn: fetchProductDetails,
         retry: 3,
         retryDelay: 1000,
@@ -54,14 +55,19 @@ const ProductDetailComponent = ({idProduct})=>{
     //         stars.push(<StarFilled style={{fontSize:12,color:"rgb(253,216,54)"}}/>)
     //     return stars
     // }
-    const fetchProductLikeDetails = async ()=>{
-        const res = await LikeProductService.getDetailsLikeProduct(idProduct,user?.id)
+    useEffect(()=>{
+        if(productDetails?.category?.name){
+            setCategoryChildProduct(productDetails?.category?._id)
+        }
+    },[productDetails])
+    const fetchProductLikeDetails = async (context)=>{
+        const res = await LikeProductService.getDetailsLikeProduct(context.queryKey[1],user?.id)
         return res?.data
     }
     const queryLikeProduct = useQuery({
-        queryKey: ['products'],
+        queryKey: ['products',idProduct],
         queryFn: fetchProductLikeDetails,
-        enabled:user?.id ? true : false
+        enabled:user?.id ? true : false,
     });
     const { isLoading:isLoadingLikeProduct, data:productLikeDetails } = queryLikeProduct
     useEffect(()=>{ 
@@ -133,9 +139,23 @@ const ProductDetailComponent = ({idProduct})=>{
             }))
             if(order?.isSuccessOrder && (Number((order123.current.length!==0 ? Number(order123?.current[0]?.amount) : 0))+Number(numProduct))<=Number(order123.current.length!==0 ? order123?.current[0]?.countInStock : productDetails?.countInStock)){
                 message.success("Đã thêm sản phẩm vào giỏ hàng") 
-                setNumProduct(1)   
+                setNumProduct(1)
             }
         }
+    }
+    const handleBuyNowProduct = ()=>{
+        dispatch(buyNowProduct({
+            orderItem:{
+                name: productDetails?.name,
+                amount:numProduct,
+                image:productDetails?.image,
+                price:productDetails?.price,
+                product:productDetails?._id,
+                discount:productDetails?.discount,
+                countInStock:productDetails?.countInStock
+            }
+        }))
+        navigate('/payment',{ state: ['buynow'] })
     }
     const fetchProductAllLike = async (context)=>{ //context get value cua useQuery
         const res = await LikeProductService.countLikeProducts()
@@ -143,10 +163,11 @@ const ProductDetailComponent = ({idProduct})=>{
    
     }
     const useQueryAllLikeProducts = useQuery({
-        queryKey: ['allLikeProducts'],
+        queryKey: ['allLikeProducts',idProduct],
         queryFn: fetchProductAllLike,
     });
     const { isLoading:isLoadingAllLikeProduct, data:allLikeProducts } = useQueryAllLikeProducts
+    console.log("123",productDetails)
     return (
         <div>
             <Loading isLoading={isLoadingProduct}>
@@ -234,7 +255,8 @@ const ProductDetailComponent = ({idProduct})=>{
                     </div>
                     <div className="WrapperPriceProduct">
                         <h1 className="WrapperPriceTextProduct">
-                            {convertPrice(productDetails?.price)}
+                            {productDetails?.discount ? <span style={{color:'red'}}>{convertPrice(productDetails?.price*(100-productDetails?.discount)/100)}</span>: <span style={{color:'red'}}>{convertPrice(productDetails?.price)}</span>}
+                            {productDetails?.discount ? <span style={{fontSize:'16px',textDecoration:'line-through', color:'rgb(102 102 102)',marginLeft:'8px'}}> {convertPrice(productDetails?.price)}</span> : <span></span>}
                         </h1>
                     </div>
                     <div className="WrapperAddresstProduct">
@@ -267,13 +289,14 @@ const ProductDetailComponent = ({idProduct})=>{
                                 borderRadius:'4px'
                             }}
                             onClick={handleAddOrderProduct}
-                            textButton={"Chọn mua"}
+                            textButton={"Thêm vào giỏ hàng"}
                             styleTextButton={{color:'white'}}
                         />  
                             <div>
                                 {order?.isSuccessOrder===false && <span style={{color:'red'}}>Sản phẩm đã hết hàng</span>}
                             </div>
                         </div>
+
                         <ButtonComponent 
                             size={20}
                             styleButton={{
@@ -283,9 +306,15 @@ const ProductDetailComponent = ({idProduct})=>{
                                 border:'1px solid rgb(13,92,182)',
                                 borderRadius:'4px'
                             }}
-                            textButton={"Mua trả sau"}
+                            onClick={handleBuyNowProduct}
+                            textButton={"Mua ngay"}
                             styleTextButton={{color:'rgb(13,92,182)',fontSize:'15px',fontWeight:500}}
                         />
+                    </div>
+                    <div style={{marginTop:'10px'}}>
+                        <h3>
+                            {productDetails?.description}
+                        </h3>
                     </div>
                 </Col>
             </Row>

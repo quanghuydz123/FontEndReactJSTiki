@@ -34,7 +34,6 @@ const TypeProductPage = ()=>{
     useEffect(()=>{
         setIdSelectedCategoryParent(categoryNameParent.filter((item)=>item?.name===params?.type)[0]?.id)
     },[params,categoryNameParent])
-    console.log("11",idSelectedCategoryParent)
     //console.log("123",categoryNameParent.filter((item)=>item?.name===params?.type)[0]?.id)
     const fetchProductType= async (id,page,limit,filter)=>{
         setLoading(true)

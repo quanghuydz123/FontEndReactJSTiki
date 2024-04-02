@@ -1,19 +1,21 @@
 import { Menu } from "antd";
 import React, { useState } from "react";
 import { getItem } from "../../utils";
-import { AppstoreOutlined, UserOutlined,BarChartOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, UserOutlined,BarChartOutlined,GiftOutlined } from '@ant-design/icons';
 import Header from "../../components/HeaderComponents/Header";
 import AdminUser from "../../components/AdminComponent/AdminUser"
 import AdminProduct from "../../components/AdminComponent/AdminProduct";
 import AdminStatistic from "../../components/AdminComponent/AdminStatistic";
 import AdminOrder from "../../components/AdminComponent/AdminOrder";
+import AdminCategory from "../../components/AdminComponent/AdminCategory";
 
 const AdminPage = ()=>{
     const items = [
         getItem('Thống kê', 'statistical', <BarChartOutlined />),
         getItem('Người dùng', 'user', <UserOutlined />),
         getItem('Sản phẩm', 'product', <AppstoreOutlined />),
-        getItem('Đơn hàng', 'order', <AppstoreOutlined />),
+        getItem('Danh mục', 'category', <AppstoreOutlined />),
+        getItem('Đơn hàng', 'order', <GiftOutlined />),
       ];
     // const rootSubmenuKeys = ['user', 'product'];
     // const [openKeys, setOpenKeys] = useState(['user']);
@@ -27,6 +29,8 @@ const AdminPage = ()=>{
                 return <AdminStatistic />
             case 'order':
                 return <AdminOrder />
+            case 'category':
+                return <AdminCategory />
             default:
                 return <></>
         }

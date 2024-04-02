@@ -41,6 +41,7 @@ const HomePage = ()=>{
         return res
    
     }
+    console.log("123",order)
     const { isLoading, data:products,isPlaceholderData } = useQuery({
         queryKey: ['products',limit,searchDounce],
         queryFn: fetchProductAll,

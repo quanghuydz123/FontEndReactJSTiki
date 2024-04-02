@@ -1,13 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import LinkComponent from "../../LinkComponent/LinkComponent";
 
 const TypeProduct = (props)=>{
 
     const navigate = useNavigate()
     const {name,mr,p,id} = props
-    const handleNavigateType = (type,id)=>{
-        navigate(`/product/${type}`,{state:{ type,id} }) //bỏ dấu tiếng việt    
-    }
+    // const handleNavigateType = (type,id)=>{
+    //     navigate(`/product/${type}`) //bỏ dấu tiếng việt    
+    // }
     // function removeVietnameseAccent(str) {
     //     str = str.toLowerCase();
     //     // Dùng bảng mã Unicode để chuyển đổi ký tự có dấu thành không dấu
@@ -19,8 +20,8 @@ const TypeProduct = (props)=>{
     //     return str;
     // }
     return (
-        <div style={{marginRight:mr,padding:p,cursor:'pointer',color:'rgb(128,128,137)'}} onClick={()=>handleNavigateType(name,id)}>
-            {name}
+        <div style={{marginRight:mr,padding:p,cursor:'pointer',color:'rgb(128,128,137)'}} >
+            <LinkComponent to={`/${name}`} style={{color:'black'}} colorOnMouseEnter='red' colorOnMouseLeave='black'>{name}</LinkComponent>
         </div>
     )
 }

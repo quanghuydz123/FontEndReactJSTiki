@@ -14,6 +14,9 @@ import { useDispatch} from 'react-redux'
 import { resetUser } from "../../redux/slides/userSlide";
 import Loading from "../LoadingComponent/Loading";
 import { searchProduct } from "../../redux/slides/productSlide";
+import {Link} from 'react-router-dom';
+import LinkComponent from "../LinkComponent/LinkComponent";
+
 const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
     //lấy dữ liệu truyền vào redux
     const user = useSelector((state) => state.user)
@@ -85,9 +88,9 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
     }
     const content = (
         <div>
-          <WapperContentPopup onClick={handleNavigateProfile}>Thông tin người dùng</WapperContentPopup>
-          {user?.isAdmin && <WapperContentPopup onClick={handleNavigateManager}>Quản lý hệ thống</WapperContentPopup>}
-          <WapperContentPopup onClick={handleMyOrder}>Đơn hàng của tôi</WapperContentPopup>
+          <WapperContentPopup><LinkComponent to='/profile-user' style={{color:'black'}} colorOnMouseEnter='red' colorOnMouseLeave='black'>Thông tin người dùng</LinkComponent></WapperContentPopup>
+          {user?.isAdmin && <WapperContentPopup><LinkComponent to='/system/admin' style={{color:'black'}} colorOnMouseEnter='red' colorOnMouseLeave='black'>Quản lý hệ thống</LinkComponent></WapperContentPopup>}
+          <WapperContentPopup><Link to={'/my-order'} style={{color:'black'}} onMouseEnter={(e) => e.target.style.color = 'red'}  onMouseLeave={(e) => e.target.style.color = 'black'}  state={{id:user?.id,token:user?.access_token}}>Đơn hàng của tôi</Link></WapperContentPopup>
           <WapperContentPopup onClick={handleLogout}>Đăng xuất</WapperContentPopup>
         </div>
       );
@@ -99,8 +102,8 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
     return (
         <div>
              <WapperHeader style={{display:"flex",alignItems:'center'}}>
-            {isAdmin ? <Col span={18}><WapperTextHeader onClick={handleNavigateHome}>Shop của tôi</WapperTextHeader></Col> :
-            <Col span={5}><WapperTextHeader onClick={handleNavigateHome}>Shop của tôi</WapperTextHeader></Col>}
+            {isAdmin ? <Col span={18}><WapperTextHeader><LinkComponent to='/' style={{color:'white'}} colorOnMouseEnter='white' colorOnMouseLeave='white'>Shop của tôi</LinkComponent></WapperTextHeader></Col> :
+            <Col span={5}><WapperTextHeader><LinkComponent to='/' style={{color:'white'}} colorOnMouseEnter='white' colorOnMouseLeave='white'>Shop của tôi</LinkComponent></WapperTextHeader></Col>}
              
                 {!isHiddenSearch &&
                     (                    <Col span={13}>
@@ -150,14 +153,16 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
                         </WapperHeaderAccuont>
                     </Loading>
                     {!isHiddenCart && (
-                        <div onClick={() => navigate('/order')} style={{cursor:'pointer'}}>
-                        {/* Badge icon shop */}
-                        <Badge count={order?.orderItems.length} size="small"> 
-                            <ShoppingCartOutlined style={{fontSize:'35px', color:'#fff'}} />    
-                        </Badge>
-                        
-                        <span style={{fontSize:'12px',color:'#fff'}}>Giỏ hàng</span>
-                    </div>
+                   <LinkComponent to={'/order'}>
+                            <div>
+                                {/* Badge icon shop */}
+                                <Badge count={order?.orderItems.length} size="small"> 
+                                    <ShoppingCartOutlined style={{fontSize:'35px', color:'#fff'}} />    
+                                </Badge>
+                                
+                                <span style={{fontSize:'12px',color:'#fff'}}>Giỏ hàng</span>
+                            </div>
+                   </LinkComponent>
                     )}
                 </Col>
             </WapperHeader>

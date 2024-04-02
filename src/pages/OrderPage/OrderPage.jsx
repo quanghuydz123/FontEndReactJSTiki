@@ -16,6 +16,7 @@ import Loading from '../../components/LoadingComponent/Loading';
 import { updateUser } from '../../redux/slides/userSlide';
 import { useNavigate } from 'react-router-dom';
 import StepComponent from '../../components/Step/Step';
+import LinkComponent from '../../components/LinkComponent/LinkComponent';
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order)
@@ -238,16 +239,18 @@ const OrderPage = () => {
                   <WrapperItemOrder key={order?.product}>
                     <div style={{ width: '390px', display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
                       <CustomCheckbox onChange={onChange} value={order?.product} checked={listChecked.includes(order?.product)}></CustomCheckbox>
-                      <div style={{display:'flex',alignItems:'center'}} onClick={() => handleNavigateProductOrder(order?.product)}>
-                        <img src={order?.image} style={{ width: '77px', height: '79px', objectFit: 'cover' }} />
-                        <div style={{
-                          width: 260,
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          marginLeft:'20px',
-                        }} >{order?.name}</div>
-                      </div>
+                      <LinkComponent to={`/product-detail/${order?.product}`} style={{color:'black'}} colorOnMouseEnter='rgb(26,148,255)' colorOnMouseLeave='black' >
+                        <div style={{display:'flex',alignItems:'center'}} >
+                          <img src={order?.image} style={{ width: '77px', height: '79px', objectFit: 'cover' }} />
+                          <div style={{
+                            width: 260,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            marginLeft:'20px',
+                          }} >{order?.name}</div>
+                        </div>
+                      </LinkComponent>
                     </div>
                     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <span>
@@ -362,7 +365,7 @@ const OrderPage = () => {
           </Form>
         </Loading>
       </ModalComponent>
-      <ModalComponent  title="Hủy đơn hàng" isOpen={isOpenModalDetele} onCancel={hanldeCancelDelete} onOk={()=>handleDeleteProduct(idProductSelected)}>
+      <ModalComponent title="Hủy đơn hàng" isOpen={isOpenModalDetele} onCancel={hanldeCancelDelete} onOk={()=>handleDeleteProduct(idProductSelected)}>
             <div>
                 Bạn có muốn hủy sản phẩm này không ?
             </div>

@@ -17,7 +17,7 @@ const NavbarComponent = (props)=>{
     const [items,setItems] = useState([])
     const [itemsChildAndParent,setItemsChildAndParent] = useState([])
     const handleNavigateType = (type,id)=>{
-        navigate(`/product/${type}`,{state:{ type,id}}) //bỏ dấu tiếng việt    
+        navigate(`/${type}`) //bỏ dấu tiếng việt    
     }
     
     const [typeProducts,setTypeProducts]= useState([])

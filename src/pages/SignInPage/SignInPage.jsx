@@ -62,7 +62,6 @@ const SignInPage = ()=>{
         const res = await UserService.getDetailsUser(id,token)
         dispatch(updateUser({...res?.data,access_token:token,refreshToken}))
     }
-    
     const handleOnchangeEmail = (e)=>{  
         setEmail(e.target.value)
     }
