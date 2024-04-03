@@ -34,6 +34,8 @@ const AdminUser = ()=>{
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const [key, setKey] = useState(0);//dùng để render lại compoent
+    const [previousRowSelected, setPreviousRowSelected] = useState(true);
+
     const [stateUser,setStateUser] = useState({
         name:'',
         email:'',
@@ -72,12 +74,11 @@ const AdminUser = ()=>{
         if(rowSelected){
             fetchUserDetails(rowSelected)
         }
-    },[rowSelected])
+    },[rowSelected,previousRowSelected])
 
     const handleDetalsProduct = ()=>{
         if(rowSelected){
             setIsPendingUpdate(true)
-            fetchUserDetails(rowSelected)    
         }
         setIsOpenDrawer(true)
         
@@ -468,6 +469,7 @@ const AdminUser = ()=>{
                     return {
                     onClick: (event) => {
                         setRowSelected(record._id)
+                        setPreviousRowSelected(!previousRowSelected)
                     }, // click row
                         
                         };

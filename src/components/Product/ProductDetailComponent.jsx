@@ -256,7 +256,7 @@ const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
                     <div className="WrapperPriceProduct">
                         <h1 className="WrapperPriceTextProduct">
                             {productDetails?.discount ? <span style={{color:'red'}}>{convertPrice(productDetails?.price*(100-productDetails?.discount)/100)}</span>: <span style={{color:'red'}}>{convertPrice(productDetails?.price)}</span>}
-                            {productDetails?.discount ? <span style={{fontSize:'16px',textDecoration:'line-through', color:'rgb(102 102 102)',marginLeft:'8px'}}> {convertPrice(productDetails?.price)}</span> : <span></span>}
+                            {productDetails?.discount ? <><span style={{fontSize:'16px',textDecoration:'line-through', color:'rgb(102 102 102)',marginLeft:'8px'}}> {convertPrice(productDetails?.price)}</span><span style={{fontSize:'16px',color:'red'}}> -{productDetails?.discount}%</span> </>: <span></span>}
                         </h1>
                     </div>
                     <div className="WrapperAddresstProduct">
@@ -312,9 +312,7 @@ const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
                         />
                     </div>
                     <div style={{marginTop:'10px'}}>
-                        <h3>
-                            {productDetails?.description}
-                        </h3>
+                        <div dangerouslySetInnerHTML={{ __html: productDetails?.description }} />
                     </div>
                 </Col>
             </Row>

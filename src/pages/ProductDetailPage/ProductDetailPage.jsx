@@ -35,7 +35,9 @@ const ProductDetailPage = () => {
         speed: 500,
         slidesToShow: totalProduct > 6 ? 6 : totalProduct,
         slidesToScroll: totalProduct > 6 ? 6 : totalProduct,
-        variableWidth: true
+        variableWidth: true,
+        autoplay:true,
+        autoplaySpeed:5000,
 
     }
     useEffect(()=>{

@@ -19,10 +19,10 @@ const CardComponent = (props)=>{
             <Card
                     className="WrapperCardStyle"
                     hoverable
-                    style={detailsPage ? { width: 186,margin:'8px',minHeight:'320px'} : { width: 200,minHeight:'320px'}}
+                    style={detailsPage ? { width: 186,margin:'8px',minHeight:'320px',border:'1px solid rgb(240, 240, 240)',padding:'4px'} : { width: 196,minHeight:'320px',border:'1px solid rgb(240, 240, 240)',padding:'4px'}}
                     headStyle={{width:'200px',height:'200px'}}
                     bodyStyle={{padding:10}}
-                    cover={<img alt="example" src={image} />}
+                    cover={<img alt="example" src={image} style={detailsPage ? {width:'180px'} : {width:'190px'}} />}
                     >
                         <img src={logo} style={{}} className="WrapperImage" alt="logo"/>
                         <div className="NameProduct">

@@ -20,6 +20,8 @@ import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import { useSelector } from "react-redux";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import TextArea from "antd/es/input/TextArea";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const AdminProduct = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,6 +37,8 @@ const AdminProduct = () => {
     const searchInput = useRef(null);
     const [key, setKey] = useState(0);//dùng để render lại compoent
     const [typeSelect, setTypeSelect] = useState('')
+    const [previousRowSelected, setPreviousRowSelected] = useState(true);
+    const [check,setCheck] = useState(false)
     const [stateProduct, setStateProduct] = useState({
         name: '',
         price: '',
@@ -77,24 +81,26 @@ const AdminProduct = () => {
                 category:res?.data?.category?._id
             })
         }
+        setCheck(true)
         setIsPendingUpdate(false)
     }
     useEffect(() => {
         formUpdate.setFieldsValue(stateProductDetals)//set value vào input
     }, [formUpdate, stateProductDetals])
-    useEffect(() => {
-        if (rowSelected) {
-            fetchProductDetails(rowSelected)
-        }
-    }, [rowSelected])
+
     const handleDetalsProduct = () => {
         if (rowSelected) {
             setIsPendingUpdate(true)
-            fetchProductDetails(rowSelected)
         }
         setIsOpenDrawer(true)
 
     }
+    
+    useEffect(() => {
+        if (rowSelected) {
+            fetchProductDetails(rowSelected)
+        }
+    }, [rowSelected,previousRowSelected])
 
     const renderAction = () => {
         return (
@@ -462,6 +468,8 @@ const AdminProduct = () => {
         {
             title: 'Category',
             dataIndex: 'category',
+            sorter: (a, b) => a.category?.length - b.category?.length,
+            ...getColumnSearchProps('category')
         },
 
 
@@ -476,6 +484,7 @@ const AdminProduct = () => {
         },
         {
             title: 'Action',
+            width:'110px    ',
             dataIndex: 'action',
             render: renderAction
         },
@@ -484,14 +493,11 @@ const AdminProduct = () => {
         return { ...item, category: item?.category?.name, key: item._id }
     })
     const handleChange = (value) => {
-
-
         setStateProduct({
             ...stateProduct,
             type: value
 
         })
-
     }
     const handleChangeSelect = (value) => {
         setStateProduct({
@@ -507,6 +513,24 @@ const AdminProduct = () => {
             category: value
         })
     }
+    const handleCancelDetails = ()=>{
+        setIsOpenDrawer(false)
+    }
+    console.log("abc",stateProductDetals)
+    const handleOnchangeCKEditorCreate = (value)=>{
+        setStateProduct({
+            ...stateProduct,
+            description: value
+        })
+    }
+    const handleOnchangeCKEditorUpdate = (value)=>{
+       if(check){
+        setStateProductDetails({
+            ...stateProductDetals,
+            description: value
+        })
+       }
+    }
     return (
         <div>
             <h1 className="WapperHeaderAdmin">Quản lý sản phẩm</h1>
@@ -519,7 +543,9 @@ const AdminProduct = () => {
                 <TableComponent key={key} handleDeleteMany={handleDeleteManyProduct} columns={columns} data={dataTable} isLoading={isLoadingProduct} onRow={(record, rowIndex) => {
                     return {
                         onClick: (event) => {
+                            setCheck(false)
                             setRowSelected(record._id)
+                            setPreviousRowSelected(!previousRowSelected)
                         }, // click row
 
                     };
@@ -674,7 +700,24 @@ const AdminProduct = () => {
                                 },
                             ]}
                         >
-                            <TextArea value={stateProduct.description} onChange={handleOnchange} name="description" />
+                            {/* <TextArea value={stateProduct.description} onChange={handleOnchange} name="description" /> */}
+                            <CKEditor
+                                editor={ ClassicEditor }
+                                data=""
+                                onReady={ editor => {
+                                    editor.editing.view.change((writer) => {writer.setStyle(
+                                        "height",
+                                        "150px",
+                                        editor.editing.view.document.getRoot()
+                                    );
+                                    });
+                                    
+                                } }
+                                onChange={ ( event,editor ) => {
+                                    handleOnchangeCKEditorCreate(editor.getData())
+                                } }
+                            />
+                            
                         </Form.Item>
 
                         <Form.Item
@@ -719,7 +762,7 @@ const AdminProduct = () => {
                     </Form>
                 </Loading>
             </ModalComponent>
-            <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width="50%">
+            <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={handleCancelDetails} width="50%">
                 <Loading isLoading={isPendingUpdate}>
                     <Form
                         name="basic"
@@ -759,7 +802,6 @@ const AdminProduct = () => {
                                 },
                             ]}
                         >
-                            {/* <InputComponent value={stateProduct.type} onChange={handleOnchange} name="type"/> */}
                             <Select
                                 defaultValue={stateProductDetals?.category}
                                 showSearch
@@ -846,7 +888,24 @@ const AdminProduct = () => {
                                 },
                             ]}
                         >
-                            <TextArea value={stateProductDetals.description} onChange={handleOnchangeDetals} name="description" />
+                            {/* <TextArea value={stateProductDetals.description} onChange={handleOnchangeDetals} name="description" /> */}
+                            <CKEditor
+                                editor={ ClassicEditor }
+                                data={stateProductDetals?.description}
+                                onReady={ editor => {
+                                    editor.editing.view.change((writer) => {writer.setStyle(
+                                        "height",
+                                        "150px",
+                                        editor.editing.view.document.getRoot()
+                                    );
+                                    });
+                                    
+                                } }
+                                onChange={ ( event,editor ) => {
+                                    console.log("editor.getData()",editor.getData())
+                                    handleOnchangeCKEditorUpdate(editor.getData())
+                                } }
+                            />
                         </Form.Item>
 
                         <Form.Item

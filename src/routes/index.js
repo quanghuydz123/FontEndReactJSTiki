@@ -56,6 +56,11 @@ export const routes = [
         isShowHeader:true
     },
     {
+        path:'/:type/:childType',
+        page:TypeProductPage,
+        isShowHeader:true
+    },
+    {
         path:'/sign-in',
         page:SignInPage,
         isShowHeader:false

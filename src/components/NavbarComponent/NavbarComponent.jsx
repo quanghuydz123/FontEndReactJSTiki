@@ -11,13 +11,17 @@ import * as CategoryService from '../../services/CategoryService'
 
 const NavbarComponent = (props)=>{
     const navigate = useNavigate()
-    const {setIdSelectedCategoryChild,categoryNameChild,categoryNameParent,setCategoryNameChild,setCategoryNameParent,setNameCategorySelected,setNameCategoryChildSelected} = props
+    const {categoryNameChild,categoryNameParent,setCategoryNameChild,setCategoryNameParent,setNameCategorySelected,setNameCategoryChildSelected} = props
     const [categoryParent,setCategoryParent]= useState([])
     const cuont = useRef(0)
     const [items,setItems] = useState([])
     const [itemsChildAndParent,setItemsChildAndParent] = useState([])
     const handleNavigateType = (type,id)=>{
         navigate(`/${type}`) //bỏ dấu tiếng việt    
+    }
+
+    const handleNavigateTypeChild = (type,child)=>{
+        navigate(`/${type}/${child}`) //bỏ dấu tiếng việt    
     }
     
     const [typeProducts,setTypeProducts]= useState([])
@@ -67,7 +71,7 @@ const NavbarComponent = (props)=>{
       useEffect(()=>{
             categoryParent?.forEach((item,index)=>{
                 setCategoryNameParent(prev=>[...prev,{id:item?._id,name:item?.name}])
-                const newItems = getItem( item?.name, item?._id, <SettingOutlined />, 
+                const newItems = getItem( item?.name, item?._id, <img alt="category" style={{width:'24px',height:'24px'}} src={item?.image      } />, 
                     renderCategoryChild(item?._id)
                   )
                 setItems(prev => [...prev,newItems]);
@@ -79,8 +83,10 @@ const NavbarComponent = (props)=>{
         console.log('click', e);
         setNameCategorySelected(categoryNameParent.filter((item)=>item.id==e.keyPath[1])[0]?.name)
         setNameCategoryChildSelected(categoryNameChild.filter((item)=>item.id==e.key)[0]?.name)
-        setIdSelectedCategoryChild(e.key)
-        handleNavigateType(categoryNameParent.filter((item)=>item.id==e.keyPath[1])[0]?.name,categoryNameParent.filter((item)=>item.id==e.keyPath[1])[0]?.id)
+        //setIdSelectedCategoryChild(e.key)
+        handleNavigateTypeChild(categoryNameParent.filter((item)=>item.id==e.keyPath[1])[0]?.name,
+        categoryNameChild.filter((item)=>item.id==e.key)[0]?.name)
+        //handleNavigateType(categoryNameParent.filter((item)=>item.id==e.keyPath[1])[0]?.name,categoryNameParent.filter((item)=>item.id==e.keyPath[1])[0]?.id)
       };
 
       

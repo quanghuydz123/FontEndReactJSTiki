@@ -12,7 +12,10 @@
 body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box
+}
+.ck.ck-balloon-panel{
+  z-index: 1400 !important // Put a higher value that your MUI Dialog (generaly 1300)
 }
 .slick-prev:before,
 .slick-next:before {

@@ -15,6 +15,7 @@ import * as UserService from './services/UserService'
 import { useLayoutEffect } from 'react'
 import Loading from './components/LoadingComponent/Loading'
 import Cookies from 'js-cookie';
+import ScrollToTopComponent from './components/ScrollToTopCompoent/ScrollToTopComponent'
 
 function App() {
   // const fetchApi = async () => {
@@ -38,7 +39,6 @@ function App() {
     }
     setLoading(false)
   }, [])
-
   UserService.axiosJWT.interceptors.request.use(async function (config) {//xử lý token hết hạn
     // Do something before request is sent
     const  currentTime = new Date
@@ -79,6 +79,7 @@ function App() {
 }
   return (
     <div>
+      <ScrollToTopComponent />
       <Loading isLoading={loading}>
           <Routes>
             {

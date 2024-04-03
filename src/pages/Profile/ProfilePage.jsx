@@ -38,7 +38,6 @@ const ProfilePage = ()=>{
     },[user])
     useEffect(()=>{
         if(data?.status==="OK"){
-            console.log("data?.user",data?.user)
             message.success("Cập nhập thành công")
         }else if(data?.status==="ERR")
         { 
@@ -75,6 +74,10 @@ const ProfilePage = ()=>{
             address,
             avatar,
             access_token:user?.access_token
+        },{
+            onSuccess:()=>{
+                dispatch(updateUser({...user,_id:user?.id,email,name,phone,address,avatar}))
+            }
         })
     }
     return (

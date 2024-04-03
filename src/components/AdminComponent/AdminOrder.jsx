@@ -1,4 +1,4 @@
-import { Button, Form, Modal,Space,Upload, message } from "antd";
+import { Badge, Button, Form, Modal,Space,Upload, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
     EyeOutlined,
@@ -206,7 +206,8 @@ const AdminOrder = ()=>{
         
       ];
       const dataTable = orders?.data?.length && orders?.data?.map((order) => {
-        return { ...order, key: order._id, userName: order?.shippingAddress?.fullName, phone: order?.shippingAddress?.phone, address: order?.shippingAddress?.address, paymentMethod: orderContant.payment[order?.paymentMethod],isPaid: order?.isPaid ? 'TRUE' :'FALSE',isDelivered: order?.isDelivered ? 'TRUE' : 'FALSE', totalPrice: convertPrice(order?.totalPrice)}
+        return { ...order, key: order._id, userName: order?.shippingAddress?.fullName, phone: order?.shippingAddress?.phone, address: order?.shippingAddress?.address, paymentMethod: orderContant.payment[order?.paymentMethod],isPaid: order?.isPaid ?  <Badge status="success" text="Đã thanh toán"/> : <Badge status="warning" text="Chưa thanh toán"></Badge>,
+        isDelivered: order?.isDelivered ?  <Badge status="success" text="Đã giao hàng"/> :  <Badge status="warning" text="Đang giao hàng"/>, totalPrice: convertPrice(order?.totalPrice)}
       })
     return (
         <div>
