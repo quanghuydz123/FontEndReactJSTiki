@@ -1,7 +1,6 @@
-import { Checkbox, Form, InputNumber, Radio, message } from 'antd'
+import { Form, Radio, message } from 'antd'
 import React, { useEffect, useMemo, useState } from 'react'
-import { CustomCheckbox, Lable, WrapperCountOrder, WrapperInfo, WrapperItemOrder, WrapperLeft, WrapperListOrder, WrapperRadio, WrapperRight, WrapperStyleHeader, WrapperStyleHeaderDilivery, WrapperTotal } from './style';
-import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
+import { Lable, WrapperInfo, WrapperItemOrder, WrapperLeft, WrapperListOrder, WrapperRadio, WrapperRight, WrapperStyleHeader, WrapperStyleHeaderDilivery, WrapperTotal } from './style';
 
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +8,7 @@ import { convertPrice } from '../../utils';
 import ModalComponent from '../../components/ModalComponent/ModalComponent';
 import InputComponent from '../../components/InputComponent/InputComponent';
 import { colors } from '../../contants';
-import { increaseAnomunt, decreaseAnomunt, removeOrderProduct, removeAllOrderProduct, selectedOrder } from "../../redux/slides/orderSlide";
+import {  removeAllOrderProduct, selectedOrder } from "../../redux/slides/orderSlide";
 import * as UserService from '../../services/UserService'
 import * as OrderService from '../../services/OrderService'
 import * as PaymentService from '../../services/PaymentService'
@@ -35,7 +34,6 @@ const PaymentPage = () => {
   const [formUpdate] = Form.useForm()
   const navigate = useNavigate()
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false)
-  console.log("123",order)
   const priceMeno = useMemo(() => { //dùng useMemo để không tinh toán không cần thiết khi render
     const result = order?.selectedItemOrder?.reduce((total, cur) => {
       return total + ((cur.price * cur.amount))
@@ -67,15 +65,14 @@ const PaymentPage = () => {
   }, [priceMeno, priceDiscountMeno, diliveryPriceMeno])
 
   const dispatch = useDispatch()
-  const [listChecked, setListChecked] = useState([])
+  // const [listChecked, setListChecked] = useState([])
 
-  useEffect(() => {
-    setListChecked(location.state)
-  }, [])
-
-  useEffect(() => {
-    dispatch(selectedOrder({ listChecked }))
-  }, [listChecked])
+  // useEffect(() => {
+  //   setListChecked(location.state)
+  // }, [])
+  // useEffect(() => {
+  //   dispatch(selectedOrder({ listChecked }))
+  // }, [listChecked])
 
   const mutationAddOrder = useMutationHooks(//call api
     (data) => {

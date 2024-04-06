@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TypeProduct from "../../components/Product/TypeProduct/TypeProduct";
 import SliderComponent from "../../components/SliderComponent/SliderComponent";
 import slider1 from '../../assets/images/slide1.jpg'
@@ -25,9 +25,7 @@ const HomePage = () => {
     const [isLoadingSearch, setIsLoadingSearch] = useState('')
     const searchDounce = useDebounce(searchProduct.search, 200) //sau 1 giây mới gọi API
     const [limit, setLimit] = useState(12)
-    const [typeProducts, setTypeProducts] = useState([])
     const [categoryParent, setCategoryParent] = useState([])
-    const order = useSelector((state) => state.order)
     const fetchProductAll = async (context) => { //context get value cua useQuery
         const search = context?.queryKey && context?.queryKey[2]
         const limit = context?.queryKey && context?.queryKey[1]
@@ -41,7 +39,6 @@ const HomePage = () => {
         return res
 
     }
-    console.log("123", order)
     const { isLoading, data: products, isPlaceholderData } = useQuery({
         queryKey: ['products', limit, searchDounce],
         queryFn: fetchProductAll,

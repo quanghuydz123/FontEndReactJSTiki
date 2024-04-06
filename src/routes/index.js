@@ -21,6 +21,13 @@ export const routes = [
         isShowHeader:true
     },
     {
+        path:'/system/admin/manager',
+        page:AdminPage,
+        isShowHeader:false,
+        isPrivate: true,
+
+    },
+    {
         path:'/order',
         page:OrderPage,
         isShowHeader:true
@@ -45,6 +52,7 @@ export const routes = [
         page:PaymentPage,
         isShowHeader:true
     },
+    
     // {
     //     path:'/product',
     //     page:ProductPage,
@@ -55,10 +63,11 @@ export const routes = [
         page:TypeProductPage,
         isShowHeader:true
     },
+    
     {
         path:'/:type/:childType',
         page:TypeProductPage,
-        isShowHeader:true
+        isShowHeader:true,
     },
     {
         path:'/sign-in',
@@ -85,12 +94,7 @@ export const routes = [
         page:ProfilePage,
         isShowHeader:true
     },
-    {
-        path:'/system/admin',
-        page:AdminPage,
-        isShowHeader:false,
-        isPrivate: true
-    },
+
     {
         path:'*',
         page:NotFoundPage,

@@ -16,6 +16,7 @@ import { useLayoutEffect } from 'react'
 import Loading from './components/LoadingComponent/Loading'
 import Cookies from 'js-cookie';
 import ScrollToTopComponent from './components/ScrollToTopCompoent/ScrollToTopComponent'
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
 
 function App() {
   // const fetchApi = async () => {
@@ -87,7 +88,8 @@ function App() {
                 const Page = item.page
                 const checkAuth = !item.isPrivate || user.isAdmin
                 const Layout = item.isShowHeader ? DefaultComponents : Fragment
-                const path = checkAuth ? item.path : null //phân loại admin
+                let path = checkAuth ? item.path : null //phân loại admin 
+        
                 return (
                   <Route key={index} path={path} element=
                   {

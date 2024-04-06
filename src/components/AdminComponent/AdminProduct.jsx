@@ -24,6 +24,9 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const AdminProduct = () => {
+    const editorConfiguration = {
+        toolbar: [ 'bold', 'italic' ]
+    };
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [rowSelected, setRowSelected] = useState('')
     const [isOpenDrawer, setIsOpenDrawer] = useState('')
@@ -272,6 +275,7 @@ const AdminProduct = () => {
         retry: 3,
         retryDelay: 1000
     });
+    
     const { isLoading: isLoadingTyperoduct, data: typeProduct } = queryTypeProduct
     const { isLoading: isLoadingProduct, data: products } = queryProduct
     const { isLoading: isLoadingCategoryParent, data: categoryParent } = queryAllCategoryParent
@@ -531,6 +535,7 @@ const AdminProduct = () => {
         })
        }
     }
+
     return (
         <div>
             <h1 className="WapperHeaderAdmin">Quản lý sản phẩm</h1>
@@ -892,6 +897,7 @@ const AdminProduct = () => {
                             <CKEditor
                                 editor={ ClassicEditor }
                                 data={stateProductDetals?.description}
+                                
                                 onReady={ editor => {
                                     editor.editing.view.change((writer) => {writer.setStyle(
                                         "height",

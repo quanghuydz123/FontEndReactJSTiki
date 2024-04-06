@@ -89,7 +89,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
     const content = (
         <div>
           <WapperContentPopup><LinkComponent to='/profile-user' style={{color:'black'}} colorOnMouseEnter='red' colorOnMouseLeave='black'>Thông tin người dùng</LinkComponent></WapperContentPopup>
-          {user?.isAdmin && <WapperContentPopup><LinkComponent to='/system/admin' style={{color:'black'}} colorOnMouseEnter='red' colorOnMouseLeave='black'>Quản lý hệ thống</LinkComponent></WapperContentPopup>}
+          {user?.isAdmin && <WapperContentPopup><LinkComponent to='/system/admin/manager' style={{color:'black'}} colorOnMouseEnter='red' colorOnMouseLeave='black'>Quản lý hệ thống</LinkComponent></WapperContentPopup>}
           <WapperContentPopup><Link to={'/my-order'} style={{color:'black'}} onMouseEnter={(e) => e.target.style.color = 'red'}  onMouseLeave={(e) => e.target.style.color = 'black'}  state={{id:user?.id,token:user?.access_token}}>Đơn hàng của tôi</Link></WapperContentPopup>
           <WapperContentPopup onClick={handleLogout}>Đăng xuất</WapperContentPopup>
         </div>

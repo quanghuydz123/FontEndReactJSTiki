@@ -6,8 +6,6 @@ import { useSelector } from "react-redux";
 import { useDispatch} from 'react-redux'
 import { updateUser } from "../../redux/slides/userSlide";
 import * as UserService from '../../services/UserService'
-import { isJsonString } from "../../utils";
-import { jwtDecode } from "jwt-decode";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import * as message from "../../components/Message/message"
 import { Button, Upload } from "antd";
@@ -45,7 +43,6 @@ const ProfilePage = ()=>{
         }
     },[data,isError,isSuccess])
 
-    
     const handleOnchangeEmail = (e) =>{
         setEmail(e.target.value)
     }

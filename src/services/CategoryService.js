@@ -16,6 +16,11 @@ export const getAllCategoryAndParent  = async()=>{
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/category/get-all-category-childAndParent`)
     return res.data
 }   
+export const getCategoryByIdCategoryChild  = async(childIdCategory)=>{
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/category/get-category-parentByIdCategoryChild?childIdCategory=${childIdCategory}`)
+    return res.data
+}   
+
 
 
 

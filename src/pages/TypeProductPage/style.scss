@@ -4,7 +4,7 @@
 .WrapperNavbar{
     background-color: white;
     padding: 10px;
-    min-height: 400px;
+    height: 740px;
     border-radius: 4px;
     margin-top: 20px;
     width: 200px;
@@ -12,11 +12,13 @@
 
 .WrapperLabelTypeProduct{
     margin-top: 20px;
-    font-size: 28px;
     background-color: white;
     padding: 16px;
     border-radius: 8px;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .WrapperProductsType{

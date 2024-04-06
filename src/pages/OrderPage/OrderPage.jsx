@@ -22,6 +22,7 @@ const OrderPage = () => {
   const order = useSelector((state) => state.order)
   const user = useSelector((state) => state.user)
   const [isOpenModalDetele,setIsOpenModalDelete] = useState('')
+
   const [stateUserDetals, setStateUserDetails] = useState({
     name: '',
     phone: '',
@@ -77,7 +78,6 @@ const OrderPage = () => {
     }
 
   }
-  
   const onChange = (e) => {
     if (listChecked.includes(e.target.value)) {
       const newListChecked = listChecked.filter((item) => item !== e.target.value)

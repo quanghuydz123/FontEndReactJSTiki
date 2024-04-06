@@ -108,16 +108,22 @@ export const orderSlide = createSlice({
     selectedOrder:(state,action)=>{
         const {listChecked}= action.payload
         const orderSelected = []
-        if(!listChecked?.includes('buynow') && listChecked?.length!==0)
-        {
-            state.orderItems?.forEach((order)=>{
-                if(listChecked?.includes(order.product)){
-                    orderSelected.push(order)
-                }
-            })
-            state.selectedItemOrder = orderSelected
-        }
-        
+        // if(!listChecked?.includes('buynow'))
+        // {
+        //     state.orderItems?.forEach((order)=>{
+        //         if(listChecked?.includes(order.product)){
+        //             orderSelected.push(order)
+        //         }
+        //     })
+        //     state.selectedItemOrder = orderSelected
+        // }
+
+        state.orderItems?.forEach((order)=>{
+            if(listChecked?.includes(order.product)){
+                orderSelected.push(order)
+            }
+        })
+        state.selectedItemOrder = orderSelected
     },
     buyNowProduct:(state,action)=>{
         const {orderItem}= action.payload

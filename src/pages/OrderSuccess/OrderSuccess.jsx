@@ -1,12 +1,8 @@
-import {Checkbox, Form, InputNumber, Radio, message } from 'antd'
-import React, { useEffect, useMemo, useState } from 'react'
-import { CustomCheckbox, Lable, WrapperItemOrderInfo, WrapperInfo, WrapperValue, WrapperContainer,WrapperItemOrder, WrapperListOrder, WrapperRadio, WrapperRight, WrapperStyleHeader, WrapperStyleHeaderDilivery, WrapperTotal } from './style';
+import React from 'react'
+import { able, WrapperItemOrderInfo, WrapperInfo, WrapperValue, WrapperContainer,WrapperItemOrder, WrapperListOrder, WrapperRadio, WrapperRight, WrapperStyleHeader, WrapperStyleHeaderDilivery, WrapperTotal, Lable } from './style';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { DeleteOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons'
+import {useSelector } from 'react-redux';
 
-import { increaseAnomunt,decreaseAnomunt,removeOrderProduct,removeAllOrderProduct ,selectedOrder} from "../../redux/slides/orderSlide";
-import * as UserService from '../../services/UserService'
 import { useLocation } from 'react-router-dom'; 
 import { convertPrice } from '../../utils';
 import { orderContant } from '../../contant';

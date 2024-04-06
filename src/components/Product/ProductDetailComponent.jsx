@@ -21,7 +21,7 @@ import { convertPrice } from "../../utils";
 import logo from '../../assets/images/logo.png'
 import { useMutationHooks } from "../../hooks/useMutationHook";
 
-const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
+const ProductDetailComponent = ({setDescriptionProduct,setCategoryProduct,idProduct,setCategoryChildProduct})=>{
     const user = useSelector((state) => state.user)
     const order = useSelector((state) => state.order)
     const order123 = useRef(order?.orderItems.filter((order)=>order.product===idProduct))
@@ -32,7 +32,6 @@ const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
     const [check,setCheck] = useState(false)
     const dispatch = useDispatch()
     const fetchProductDetails = async (context)=>{
-
         const res = await ProductService.getDetailsProduct(context.queryKey[1])
         return res?.data
     }
@@ -45,8 +44,7 @@ const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
     const queryProduct = useQuery({
         queryKey: ['products-details',idProduct],
         queryFn: fetchProductDetails,
-        retry: 3,
-        retryDelay: 1000,
+        enabled:idProduct ? true : false
     });
     const { isLoading:isLoadingProduct, data:productDetails } = queryProduct
     // const renderStar = (num)=>{
@@ -58,6 +56,8 @@ const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
     useEffect(()=>{
         if(productDetails?.category?.name){
             setCategoryChildProduct(productDetails?.category?._id)
+            setCategoryProduct(productDetails?.category)
+            setDescriptionProduct(productDetails?.description)
         }
     },[productDetails])
     const fetchProductLikeDetails = async (context)=>{
@@ -155,8 +155,9 @@ const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
                 countInStock:productDetails?.countInStock
             }
         }))
-        navigate('/payment',{ state: ['buynow'] })
+        navigate('/payment',{ state: [productDetails?._id] })
     }
+    console.log(productDetails)
     const fetchProductAllLike = async (context)=>{ //context get value cua useQuery
         const res = await LikeProductService.countLikeProducts()
         return res?.data
@@ -165,9 +166,9 @@ const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
     const useQueryAllLikeProducts = useQuery({
         queryKey: ['allLikeProducts',idProduct],
         queryFn: fetchProductAllLike,
+        enabled:idProduct?true:false
     });
     const { isLoading:isLoadingAllLikeProduct, data:allLikeProducts } = useQueryAllLikeProducts
-    console.log("123",productDetails)
     return (
         <div>
             <Loading isLoading={isLoadingProduct}>
@@ -176,10 +177,10 @@ const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
                     <div style={{position:'relative'}}>
                         <img src={logo} style={{zIndex:'1'}} className="WrapperImage" alt="logo"/>
                         <Image src={productDetails?.image}
-                        preview={false}
+                        preview={true}
                         style={{
                             width:'507px',
-                            height:'507px'
+                            height:'507px',
                         }}
                         alt="image-product"
                     />
@@ -259,11 +260,11 @@ const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
                             {productDetails?.discount ? <><span style={{fontSize:'16px',textDecoration:'line-through', color:'rgb(102 102 102)',marginLeft:'8px'}}> {convertPrice(productDetails?.price)}</span><span style={{fontSize:'16px',color:'red'}}> -{productDetails?.discount}%</span> </>: <span></span>}
                         </h1>
                     </div>
-                    <div className="WrapperAddresstProduct">
+                    {/* <div className="WrapperAddresstProduct">
                         <span> Giao đến </span> 
                         <span className="address">{user?.address}</span>
                         <span className="change-address"> Đổi địa chỉ</span>
-                    </div>  
+                    </div>   */}
                     <div style={{margin:'10px 0 20px',borderTop:'1px solid #e5e5e5',borderBottom:'1px solid #e5e5e5',padding:'10px 0'}}>
                         <div style={{marginBottom:'6px'}}>Số lượng</div>
                         <div className="WrapperQualityProduct">
@@ -311,7 +312,7 @@ const ProductDetailComponent = ({idProduct,setCategoryChildProduct})=>{
                             styleTextButton={{color:'rgb(13,92,182)',fontSize:'15px',fontWeight:500}}
                         />
                     </div>
-                    <div style={{marginTop:'10px'}}>
+                    <div style={{marginTop:'10px'   }} >
                         <div dangerouslySetInnerHTML={{ __html: productDetails?.description }} />
                     </div>
                 </Col>

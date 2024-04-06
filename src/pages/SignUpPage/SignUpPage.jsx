@@ -85,9 +85,9 @@ const SignUpPage = ()=>{
         else if(dataSendOpt?.status === "OK"){
             message.success(dataSendOpt?.message)   
         }
-        else if(isSuccess){
+        else if(isSuccessSendOpt){
             message.success()
-        }else if(isError){
+        }else if(isErrorSendOpt){
             message.error()
         }
     },[isSuccessSendOpt ,isErrorSendOpt,dataSendOpt])

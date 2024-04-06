@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import NavbarComponent from "../../components/NavbarComponent/NavbarComponent";
 import CardComponent from "../../components/Product/CardComponent";
-import { Button, Col, Pagination, Result, Row } from "antd";
-import { useLocation, useParams } from "react-router-dom";
+import { Col, Pagination, Row } from "antd";
+import { useParams } from "react-router-dom";
 import * as ProductService from '../../services/ProductService'
 import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
@@ -10,11 +10,9 @@ import { useDebounce } from "../../hooks/useDebounce";
 import SearchNotFound from "../../components/SearchNotFound/SearchNotFound";
 import { useQuery } from "@tanstack/react-query";
 import * as LikeProductService from '../../services/LikeProductService'
-import LinkComponent from "../../components/LinkComponent/LinkComponent";
-
+import colors from "../../contants/colors";
 
 const TypeProductPage = () => {
-    const location = useLocation() //lấy ra pamrams state
     const params = useParams()
     const searchProduct = useSelector((state) => state?.product?.search)
     const [categoryNameParent, setCategoryNameParent] = useState([])
@@ -23,7 +21,7 @@ const TypeProductPage = () => {
     const [idSelectedCategoryParent, setIdSelectedCategoryParent] = useState('')
     const [idSelectedCategoryChild, setIdSelectedCategoryChild] = useState('')
 
-    const [nameCategoryChildSelected, setNameCategoryChildSelected] = useState('')
+    const [nameCategoryChildSelected, setNameCategoryChildSelected] = useState(params?.childType)
     const searchDounce = useDebounce(searchProduct, 200) //sau 1 giây mới gọi API
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState('')
@@ -35,7 +33,7 @@ const TypeProductPage = () => {
     useEffect(() => {
         setIdSelectedCategoryParent(categoryNameParent.filter((item) => item?.name === params?.type)[0]?.id)
         setIdSelectedCategoryChild(categoryNameChild.filter((item) => item?.name === params?.childType)[0]?.id)
-    }, [params, categoryNameParent])
+    }, [params, categoryNameParent,categoryNameChild])
     const fetchProductType = async (id, page, limit, filter) => {
         setLoading(true)
         const res = await ProductService.getProductByIdParent(id, page, limit, filter)
@@ -83,9 +81,14 @@ const TypeProductPage = () => {
 
                             <Col span={20} style={{ marginLeft: '10px' }}>
                                 <div className="WrapperLabelTypeProduct">
-                                    {nameCategorySelected && nameCategorySelected}
-                                    {nameCategoryChildSelected && '/'}
-                                    {nameCategoryChildSelected && nameCategoryChildSelected}                        
+                                    <span style={{color:colors.colorPrimaryHeader,fontSize:'26px'}}>
+                                        {nameCategorySelected && nameCategorySelected}
+                                        {nameCategoryChildSelected && '/'}
+                                        {nameCategoryChildSelected && nameCategoryChildSelected}  
+                                    </span>
+                                    <div>
+                                        <span>Sắp xếp theo</span>
+                                    </div>                      
                                 </div>
                                 <div className="WrapperProductsType">
                                     {products?.filter(item => item.name.toLowerCase().includes(searchDounce.toLowerCase())).length !== 0 ? products?.filter(item => item.name.toLowerCase().includes(searchDounce.toLowerCase())).map((product, index) => {
