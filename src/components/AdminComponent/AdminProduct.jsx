@@ -557,8 +557,8 @@ const AdminProduct = () => {
                 }} />
             </div>
 
-            <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} className="modal=product" footer={null}>
-                <Loading isLoading={isPending}>
+            <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} className="modal=product" footer={null} width='60%'>
+                <Loading isLoading={isPending}> 
                     <Form
                         name="basic"
                         labelCol={{
@@ -709,15 +709,7 @@ const AdminProduct = () => {
                             <CKEditor
                                 editor={ ClassicEditor }
                                 data=""
-                                onReady={ editor => {
-                                    editor.editing.view.change((writer) => {writer.setStyle(
-                                        "height",
-                                        "150px",
-                                        editor.editing.view.document.getRoot()
-                                    );
-                                    });
-                                    
-                                } }
+                               
                                 onChange={ ( event,editor ) => {
                                     handleOnchangeCKEditorCreate(editor.getData())
                                 } }
@@ -767,7 +759,7 @@ const AdminProduct = () => {
                     </Form>
                 </Loading>
             </ModalComponent>
-            <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={handleCancelDetails} width="50%">
+            <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={handleCancelDetails} width="60%">
                 <Loading isLoading={isPendingUpdate}>
                     <Form
                         name="basic"
@@ -897,16 +889,13 @@ const AdminProduct = () => {
                             <CKEditor
                                 editor={ ClassicEditor }
                                 data={stateProductDetals?.description}
-                                
-                                onReady={ editor => {
-                                    editor.editing.view.change((writer) => {writer.setStyle(
-                                        "height",
-                                        "150px",
-                                        editor.editing.view.document.getRoot()
-                                    );
-                                    });
+                                config={{
+                                    ckfinder:{
+                                        uploadUrl:'/uploads'
+                                    },
                                     
-                                } }
+                                }}
+                               
                                 onChange={ ( event,editor ) => {
                                     console.log("editor.getData()",editor.getData())
                                     handleOnchangeCKEditorUpdate(editor.getData())
