@@ -20,13 +20,11 @@ import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import { useSelector } from "react-redux";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import TextArea from "antd/es/input/TextArea";
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Editor from "ckeditor5-custom-build"
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+
 
 const AdminProduct = () => {
-    const editorConfiguration = {
-        toolbar: [ 'bold', 'italic' ]
-    };
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [rowSelected, setRowSelected] = useState('')
     const [isOpenDrawer, setIsOpenDrawer] = useState('')
@@ -64,6 +62,61 @@ const AdminProduct = () => {
         category:'',
         discount: '',
     })
+    const editorConfiguration = {
+        toolbar: {
+			items: [
+				'heading',
+				'|',
+				'bold',
+				'italic',
+				'link',
+				'bulletedList',
+				'numberedList',
+				'|',
+				'outdent',
+				'indent',
+				'|',
+				'findAndReplace',
+				'imageUpload',
+				'blockQuote',
+				'insertTable',
+				'mediaEmbed',
+				'undo',
+				'redo',
+				'ckbox',
+				'fontBackgroundColor',
+				'fontFamily',
+				'alignment',
+				'fontColor',
+				'fontSize',
+				'imageInsert',
+				'removeFormat',
+				'underline',
+				'highlight',
+				'specialCharacters'
+			]
+		},
+		language: 'en',
+		image: {
+			toolbar: [
+				'imageTextAlternative',
+				'toggleImageCaption',
+				'imageStyle:inline',
+				'imageStyle:block',
+				'imageStyle:side',
+				'linkImage',
+			]
+		},
+		table: {
+			contentToolbar: [
+				'tableColumn',
+				'tableRow',
+				'mergeTableCells',
+				'tableCellProperties',
+				'tableProperties'
+			]
+		}
+    };
     const fetchAllTypeProduct = async () => {
         const res = await ProductService.getAllTypeProduct()
         return res
@@ -707,7 +760,8 @@ const AdminProduct = () => {
                         >
                             {/* <TextArea value={stateProduct.description} onChange={handleOnchange} name="description" /> */}
                             <CKEditor
-                                editor={ ClassicEditor }
+                                editor={ Editor  }
+                                config={ editorConfiguration }
                                 data=""
                                
                                 onChange={ ( event,editor ) => {
@@ -887,14 +941,9 @@ const AdminProduct = () => {
                         >
                             {/* <TextArea value={stateProductDetals.description} onChange={handleOnchangeDetals} name="description" /> */}
                             <CKEditor
-                                editor={ ClassicEditor }
+                                editor={ Editor  }
                                 data={stateProductDetals?.description}
-                                config={{
-                                    ckfinder:{
-                                        uploadUrl:'/uploads'
-                                    },
-                                    
-                                }}
+                                config={ editorConfiguration }
                                
                                 onChange={ ( event,editor ) => {
                                     console.log("editor.getData()",editor.getData())

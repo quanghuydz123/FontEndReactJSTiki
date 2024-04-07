@@ -10,6 +10,7 @@ import * as LikeProductService from '../../services/LikeProductService'
 import Loading from "../../components/LoadingComponent/Loading";
 import LinkComponent from "../../components/LinkComponent/LinkComponent";
 import * as CategoryService from '../../services/CategoryService'
+import { Col, Row } from 'antd';
 
 const ProductDetailPage = () => {
     const { id } = useParams() //lấy value params  truyền vào
@@ -115,9 +116,16 @@ const ProductDetailPage = () => {
                     </Loading>
 
                 </div>
-                <div style={{marginTop:'10px',background:'white',padding:'16px',borderRadius:'4px'}}>
-                    <div dangerouslySetInnerHTML={{ __html: descriptionProduct }} />
-                </div>
+                <Row style={{marginTop:'10px'}} gutter={8}>
+                    <Col span={16}  className="gutter-row">
+                        <div style={{minHeight:'200px',padding:8,backgroundColor:'white',borderRadius:'4px'}} dangerouslySetInnerHTML={{ __html: descriptionProduct }} />
+                    </Col>
+                    <Col span={8}  className="gutter-row">
+                        <div style={{minHeight:'200px',padding:8,backgroundColor:'white',borderRadius:'4px'}}>
+                            123
+                        </div>
+                    </Col>
+                </Row>
 
 
             </div>

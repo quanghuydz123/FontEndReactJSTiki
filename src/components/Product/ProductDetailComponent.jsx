@@ -312,9 +312,9 @@ const ProductDetailComponent = ({setDescriptionProduct,setCategoryProduct,idProd
                             styleTextButton={{color:'rgb(13,92,182)',fontSize:'15px',fontWeight:500}}
                         />
                     </div>
-                    <div style={{marginTop:'10px'   }} >
+                    {/* <div style={{marginTop:'10px'   }} >
                         <div dangerouslySetInnerHTML={{ __html: productDetails?.description }} />
-                    </div>
+                    </div> */}
                 </Col>
             </Row>
             </Loading>
