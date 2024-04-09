@@ -21,7 +21,7 @@ import { convertPrice } from "../../utils";
 import logo from '../../assets/images/logo.png'
 import { useMutationHooks } from "../../hooks/useMutationHook";
 
-const ProductDetailComponent = ({setDescriptionProduct,setCategoryProduct,idProduct,setCategoryChildProduct})=>{
+const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,setCategoryChildProduct})=>{
     const user = useSelector((state) => state.user)
     const order = useSelector((state) => state.order)
     const order123 = useRef(order?.orderItems.filter((order)=>order.product===idProduct))
@@ -57,7 +57,7 @@ const ProductDetailComponent = ({setDescriptionProduct,setCategoryProduct,idProd
         if(productDetails?.category?.name){
             setCategoryChildProduct(productDetails?.category?._id)
             setCategoryProduct(productDetails?.category)
-            setDescriptionProduct(productDetails?.description)
+            setProductDetails(productDetails)
         }
     },[productDetails])
     const fetchProductLikeDetails = async (context)=>{
@@ -260,11 +260,11 @@ const ProductDetailComponent = ({setDescriptionProduct,setCategoryProduct,idProd
                             {productDetails?.discount ? <><span style={{fontSize:'16px',textDecoration:'line-through', color:'rgb(102 102 102)',marginLeft:'8px'}}> {convertPrice(productDetails?.price)}</span><span style={{fontSize:'16px',color:'red'}}> -{productDetails?.discount}%</span> </>: <span></span>}
                         </h1>
                     </div>
-                    {/* <div className="WrapperAddresstProduct">
+                    <div className="WrapperAddresstProduct">
                         <span> Giao đến </span> 
                         <span className="address">{user?.address}</span>
-                        <span className="change-address"> Đổi địa chỉ</span>
-                    </div>   */}
+                        {/* <span className="change-address"> Đổi địa chỉ</span> */}
+                    </div>  
                     <div style={{margin:'10px 0 20px',borderTop:'1px solid #e5e5e5',borderBottom:'1px solid #e5e5e5',padding:'10px 0'}}>
                         <div style={{marginBottom:'6px'}}>Số lượng</div>
                         <div className="WrapperQualityProduct">

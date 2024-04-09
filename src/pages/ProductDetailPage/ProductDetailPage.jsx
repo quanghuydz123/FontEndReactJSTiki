@@ -11,19 +11,18 @@ import Loading from "../../components/LoadingComponent/Loading";
 import LinkComponent from "../../components/LinkComponent/LinkComponent";
 import * as CategoryService from '../../services/CategoryService'
 import { Col, Row } from 'antd';
+import { colors } from "../../contants";
 
 const ProductDetailPage = () => {
     const { id } = useParams() //lấy value params  truyền vào
     const navigate = useNavigate()
     const [categoryChildProduct, setCategoryChildProduct] = useState('')
     const [totalProduct, setTotalProduct] = useState()
-    const [nameCategoryChild,setNameCategoryChild]= useState('')
-    const [CategoryProduct,setCategoryProduct]= useState('')
-    const [descriptionProduct,setDescriptionProduct] = useState('')
-    const handleNavigateHome = () => {
-        navigate('/')
-    }
-
+    const [nameCategoryChild, setNameCategoryChild] = useState('')
+    const [CategoryProduct, setCategoryProduct] = useState('')
+    const [ProductDetails, setProductDetails] = useState('')
+    const [readMore, setReadMore] = useState(false)
+    const [readMoreSpecifications, setReadMoreSpecifications] = useState(false)
     const fetchAllProductChildCategory = async (context) => {
         const filter = context.queryKey[1]
         const res = await ProductService.getProductByIdParent(null, null, null, filter)
@@ -32,7 +31,7 @@ const ProductDetailPage = () => {
     const queryAllProductByChildCategory = useQuery({
         queryKey: ['products-details', categoryChildProduct],
         queryFn: fetchAllProductChildCategory,
-        enabled:categoryChildProduct ? true : false
+        enabled: categoryChildProduct ? true : false
     })
     const { isLoading: isLoadingProduct, data: productDetails } = queryAllProductByChildCategory
 
@@ -44,10 +43,10 @@ const ProductDetailPage = () => {
     const queryGetCategoryByIdCategoryChild = useQuery({
         queryKey: ['category-parent', CategoryProduct?.parentId],
         queryFn: fetchGetCategoryByIdCategoryChild,
-        enabled:CategoryProduct ? true : false
+        enabled: CategoryProduct ? true : false
     })
     const { isLoading: isLoadingCategoryParent, data: categoryParent } = queryGetCategoryByIdCategoryChild
-    console.log("categoryParent",categoryParent)
+    console.log("categoryParent", categoryParent)
     const settings = {
         dots: true,
         infinite: true,
@@ -73,24 +72,25 @@ const ProductDetailPage = () => {
     });
 
     const { isLoading: isLoadingAllLikeProduct, data: allLikeProducts } = useQueryAllLikeProducts
-    console.log("categoryParent",categoryParent)
     return (
         <div style={{ minHeight: '100vh', width: '100%', background: '#efefef' }}>
             <div style={{ width: '1270px', minHeight: '100%', margin: '0 auto' }} className="container">
-                <div style={{ margin: 0,paddingTop:'10px',paddingBottom:'10px',fontSize:'16px'}}>
-                    <LinkComponent to={'/'} style={{color:'black'}}><span style={{ cursor: 'pointer' }}>Trang chủ</span></LinkComponent>
-                    {categoryParent && <><span> /</span><LinkComponent to={`/${categoryParent[0]?.name}`} style={{color:'black'}}><span> {categoryParent[0]?.name}</span></LinkComponent></>}
-                    {CategoryProduct && categoryParent && <><span> /</span><LinkComponent to={`/${categoryParent[0]?.name}/${CategoryProduct?.name}`} style={{color:'black'}}><span> {CategoryProduct?.name}</span></LinkComponent></>}
+                <div style={{ margin: 0, paddingTop: '10px', paddingBottom: '10px', fontSize: '16px' }}>
+                    <LinkComponent to={'/'} style={{ color: 'black' }}><span style={{ cursor: 'pointer' }}>Trang chủ</span></LinkComponent>
+                    {categoryParent && <><span> /</span><LinkComponent to={`/${categoryParent[0]?.name}`} style={{ color: 'black' }}><span> {categoryParent[0]?.name}</span></LinkComponent></>}
+                    {CategoryProduct && categoryParent && <><span> /</span><LinkComponent to={`/${categoryParent[0]?.name}/${CategoryProduct?.name}`} style={{ color: 'black' }}><span> {CategoryProduct?.name}</span></LinkComponent></>
+                    }
+                    <span> / {ProductDetails?.name}</span>
                 </div>
 
-                <ProductDetailComponent setDescriptionProduct={setDescriptionProduct} setCategoryProduct={setCategoryProduct} idProduct={id} setCategoryChildProduct={setCategoryChildProduct} />
+                <ProductDetailComponent setProductDetails={setProductDetails} setCategoryProduct={setCategoryProduct} idProduct={id} setCategoryChildProduct={setCategoryChildProduct} />
                 <div className="slider-container" style={{ marginTop: '12px', padding: '16px', background: 'white', borderRadius: '4px' }}>
                     <div>
                         <h2 style={{ margin: '0 0 10px 0', color: 'rgb(26,148,255)' }}>Sản phẩm tương tự</h2>
                     </div>
                     <Loading isLoading={isLoadingProduct}>
 
-                    <Slider {...settings}>
+                        <Slider {...settings}>
                             {productDetails?.map((product, index) => {
                                 return (
                                     <div key={index}>
@@ -112,18 +112,63 @@ const ProductDetailPage = () => {
                                 )
                             })}
 
-                    </Slider>
+                        </Slider>
                     </Loading>
 
                 </div>
-                <Row style={{marginTop:'10px'}} gutter={8}>
-                    <Col span={16}  className="gutter-row">
-                        <div style={{minHeight:'200px',padding:8,backgroundColor:'white',borderRadius:'4px'}} dangerouslySetInnerHTML={{ __html: descriptionProduct }} />
+                <Row style={{ marginTop: '10px' }} gutter={12}>
+                    <Col span={16} className="gutter-row">
+                        <div
+                            style={readMore ? {
+                                minHeight: '500px',
+                                padding: 16, backgroundColor: 'white', borderRadius: '4px',
+                                overflow: 'hidden'
+
+                            } : {
+                                maxHeight: '500px',
+                                padding: 16, backgroundColor: 'white', borderRadius: '4px',
+                                overflow: 'hidden'
+
+                            }}
+                            dangerouslySetInnerHTML={{ __html: ProductDetails?.description }} />
+                        <p
+                            onClick={() => { setReadMore(!readMore) }}
+                            style=
+                            {{
+                                textAlign: 'center', fontSize: '16px', backgroundColor: 'white', margin: 0, color: 'rgb(255, 57, 69)',
+                                fontWeight: 'bold',
+                                padding: '16px',
+                                cursor: 'pointer',
+                                borderRadius:'4px'
+                            }}
+                        >{readMore ? 'Thu gọn' : 'Xem thêm'}</p>
                     </Col>
-                    <Col span={8}  className="gutter-row">
-                        <div style={{minHeight:'200px',padding:8,backgroundColor:'white',borderRadius:'4px'}}>
-                            123
+                    <Col span={8} className="gutter-row">
+                        <div style={
+                            readMoreSpecifications ? { minHeight: '500px', padding: 16, backgroundColor: 'white', borderRadius: '4px' } :
+                                { maxHeight: '500px', padding: 16, backgroundColor: 'white', borderRadius: '4px', overflow: 'hidden' }
+                        }>
+                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                <img style={{ width: '21px' }} src="https://static-00.iconduck.com/assets.00/settings-icon-1964x2048-8nigtrtt.png" alt="setting" />
+                                <h2 style={{ margin: '0 0 0 10px',color:colors.colorPrimaryHeader }}>Thông số kỹ thuật</h2>
+                            </div>
+                            <div>
+                                <div dangerouslySetInnerHTML={{ __html: ProductDetails?.specifications }} />
+                            </div>
+
                         </div>
+                        <p
+                            onClick={() => { setReadMoreSpecifications(!readMoreSpecifications) }}
+                            style=
+                            {{
+                                textAlign: 'center', fontSize: '16px', backgroundColor: 'white', margin: 0, color: 'rgb(255, 57, 69)',
+                                fontWeight: 'bold',
+                                padding: '16px',
+                                cursor: 'pointer',
+                                borderRadius:'4px'
+                            }}
+                        >{readMoreSpecifications ? 'Thu gọn' : 'Xem thêm'}</p>
+
                     </Col>
                 </Row>
 

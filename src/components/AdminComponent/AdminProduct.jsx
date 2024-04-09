@@ -49,7 +49,8 @@ const AdminProduct = () => {
         type: '',
         countInStock: '',
         category:'',
-        discount: ''
+        discount: '',
+        specifications:''
     })
     const [stateProductDetals, setStateProductDetails] = useState({
         name: '',
@@ -61,6 +62,7 @@ const AdminProduct = () => {
         countInStock: '',
         category:'',
         discount: '',
+        specifications:''
     })
     const editorConfiguration = {
         toolbar: {
@@ -134,7 +136,8 @@ const AdminProduct = () => {
                 type: res?.data.type,
                 countInStock: res?.data.countInStock,
                 discount: res?.data.discount,
-                category:res?.data?.category?._id
+                category:res?.data?.category?._id,
+                specifications:res?.data.specifications
             })
         }
         setCheck(true)
@@ -387,7 +390,8 @@ const AdminProduct = () => {
             type: '',
             countInStock: '',
             discount: '',
-            category:''
+            category:'',
+            specifications:''
         })
         form.resetFields()//xóa hết value input
     };
@@ -439,6 +443,8 @@ const AdminProduct = () => {
             [e.target.name]: e.target.value
         })
     }
+    
+    
     const handleOnchangeAvatar = async ({ fileList }) => {
         const file = fileList[0]
         if (!file.url && !file.preview) {
@@ -549,13 +555,7 @@ const AdminProduct = () => {
     const dataTable = products?.data?.length && products?.data.map((item) => {
         return { ...item, category: item?.category?.name, key: item._id }
     })
-    const handleChange = (value) => {
-        setStateProduct({
-            ...stateProduct,
-            type: value
-
-        })
-    }
+  
     const handleChangeSelect = (value) => {
         setStateProduct({
             ...stateProduct,
@@ -589,6 +589,21 @@ const AdminProduct = () => {
        }
     }
 
+    const handleOnchangeCKEditorCreateSpecifications = (value)=>{
+        setStateProduct({
+            ...stateProduct,
+            specifications: value
+        })
+    }
+    const handleOnchangeCKEditorUpdateSpecifications = (value)=>{
+       if(check){
+        setStateProductDetails({
+            ...stateProductDetals,
+            specifications: value
+        })
+       }
+    }
+    
     return (
         <div>
             <h1 className="WapperHeaderAdmin">Quản lý sản phẩm</h1>
@@ -772,6 +787,29 @@ const AdminProduct = () => {
                         </Form.Item>
 
                         <Form.Item
+                            label="Specifications"
+                            name="specifications"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your specifications!',
+                                },
+                            ]}
+                        >
+                            {/* <TextArea value={stateProduct.description} onChange={handleOnchange} name="description" /> */}
+                            <CKEditor
+                                editor={ Editor  }
+                                config={ editorConfiguration }
+                                data=""
+                               
+                                onChange={ ( event,editor ) => {
+                                    handleOnchangeCKEditorCreateSpecifications(editor.getData())
+                                } }
+                            />
+                            
+                        </Form.Item>
+
+                        <Form.Item
                             label="Image"
                             name="image"
                             rules={[
@@ -946,10 +984,37 @@ const AdminProduct = () => {
                                 config={ editorConfiguration }
                                
                                 onChange={ ( event,editor ) => {
-                                    console.log("editor.getData()",editor.getData())
                                     handleOnchangeCKEditorUpdate(editor.getData())
                                 } }
                             />
+
+                            
+                        </Form.Item>
+
+
+                        <Form.Item
+                            label="Specifications"
+                            name="specifications"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your specifications!',
+                                },
+                            ]}
+                        >
+                            {/* <TextArea value={stateProductDetals.description} onChange={handleOnchangeDetals} name="description" /> */}
+                            <CKEditor
+                                editor={ Editor  }
+                                data={stateProductDetals?.specifications || 'stateProductDetals?.specifications'}
+                                config={ editorConfiguration }
+                               
+                                onChange={ ( event,editor ) => {
+                                    console.log("editor.getData()",editor.getData())
+                                    handleOnchangeCKEditorUpdateSpecifications(editor.getData())
+                                } }
+                            />
+
+                            
                         </Form.Item>
 
                         <Form.Item

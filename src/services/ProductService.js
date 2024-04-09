@@ -69,18 +69,18 @@ export const deleteManyProduct  = async(ids,access_token)=>{
     return res.data
 }
 
-export const getProductByIdParent  = async(id,page,limit,filter)=>{
+export const getProductByIdParent  = async(id,page,limit,filter,sortField,sortValue)=>{
     let res = {}
     if(filter){
         if(limit){
-            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&limit=${limit}&page=${page}`)
+            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&limit=${limit}&page=${page}&sortField=${sortField}&sortValue=${sortValue}`)
         }
         else{
-            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}`)
+            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&sortField=${sortField}&sortValue=${sortValue}`)
         }
     }
     else if(id){
-        res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?id=${id}&limit=${limit}&page=${page}`)
+        res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?id=${id}&limit=${limit}&page=${page}&sortField=${sortField}&sortValue=${sortValue}`)
     }
     return res.data
 }

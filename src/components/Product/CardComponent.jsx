@@ -12,14 +12,16 @@ import { convertPrice } from "../../utils";
 import LinkComponent from "../LinkComponent/LinkComponent";
 const { Meta } = Card;
 const CardComponent = (props)=>{
-    const {countInStock,description,image,name,price,rating,type,selled,discount,id,totalLike,detailsPage} = props
+    const {countInStock,description,image,name,price,rating,type,selled,discount,id,totalLike,detailsPage,typePage} = props
     const navigate = useNavigate()  
   
     return <LinkComponent to={`/product-detail/${id}`}>
             <Card
                     className="WrapperCardStyle"
                     hoverable
-                    style={detailsPage ? { width: 190,margin:'8px',minHeight:'320px',border:'1px solid rgb(240, 240, 240)',padding:'4px'} : { width: 196,minHeight:'320px',border:'1px solid rgb(240, 240, 240)',padding:'4px'}}
+                    style={detailsPage ? { width: 190,margin:'8px',minHeight:'330px',border:'1px solid rgb(240, 240, 240)',padding:'4px'} : 
+                    typePage ? { width: 202,minHeight:'330px',border:'1px solid rgb(240, 240, 240)',padding:'4px'} : { width: 196,minHeight:'330px',border:'1px solid rgb(240, 240, 240)',padding:'4px'}
+                }
                     headStyle={{width:'200px',height:'200px'}}
                     bodyStyle={{padding:10}}
                     cover={<img alt="example" src={image} style={detailsPage ? {width:'180px'} : {width:'190px'}} />}
