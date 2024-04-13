@@ -436,7 +436,6 @@ const AdminProduct = () => {
             [e.target.name]: e.target.value
         })
     }
-
     const handleOnchangeDetals = (e) => {
         setStateProductDetails({
             ...stateProductDetals,
@@ -573,7 +572,6 @@ const AdminProduct = () => {
     const handleCancelDetails = ()=>{
         setIsOpenDrawer(false)
     }
-    console.log("abc",stateProductDetals)
     const handleOnchangeCKEditorCreate = (value)=>{
         setStateProduct({
             ...stateProduct,
@@ -999,7 +997,6 @@ const AdminProduct = () => {
                                 config={ editorConfiguration }
                                
                                 onChange={ ( event,editor ) => {
-                                    console.log("editor.getData()",editor.getData())
                                     handleOnchangeCKEditorUpdateSpecifications(editor.getData())
                                 } }
                             />

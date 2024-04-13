@@ -122,7 +122,6 @@ const TypeProductPage = () => {
         }
     },[stateButton1,stateButton2,stateButton3,stateButton4])
     const getAllProductType = async (context) => {
-        console.log("ccc",context)
         const id = context?.queryKey && context?.queryKey[1]
         const page = context?.queryKey && context?.queryKey[2]
         const limit = context?.queryKey && context?.queryKey[3]
@@ -161,7 +160,6 @@ const TypeProductPage = () => {
         queryFn: fetchProductAllLike,
     });
     const { isLoading: isLoadingAllLikeProduct, data: allLikeProducts } = useQueryAllLikeProducts
-   
     return (
         <>
             <Loading isLoading={isLoadingProductType}>

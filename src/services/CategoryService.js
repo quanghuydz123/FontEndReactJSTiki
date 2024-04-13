@@ -21,6 +21,11 @@ export const getCategoryByIdCategoryChild  = async(childIdCategory)=>{
     return res.data
 }   
 
+export const createCategory  = async(data)=>{
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/category/create`,data)
+    return res.data
+}   
+
 
 
 
