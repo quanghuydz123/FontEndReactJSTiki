@@ -105,3 +105,8 @@ export const forgotPassword  = async(data)=>{
     const res = await axios.put(`${process.env.REACT_APP_API_URL}/user/forgot-password`,data)
     return res.data
 }
+
+export const changePassword  = async(data)=>{
+    const res = await axios.put(`${process.env.REACT_APP_API_URL}/user/change-password`,data)
+    return res.data
+}

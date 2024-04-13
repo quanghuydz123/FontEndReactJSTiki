@@ -789,12 +789,7 @@ const AdminProduct = () => {
                         <Form.Item
                             label="Specifications"
                             name="specifications"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your specifications!',
-                                },
-                            ]}
+                           
                         >
                             {/* <TextArea value={stateProduct.description} onChange={handleOnchange} name="description" /> */}
                             <CKEditor
@@ -995,12 +990,7 @@ const AdminProduct = () => {
                         <Form.Item
                             label="Specifications"
                             name="specifications"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your specifications!',
-                                },
-                            ]}
+                            
                         >
                             {/* <TextArea value={stateProductDetals.description} onChange={handleOnchangeDetals} name="description" /> */}
                             <CKEditor

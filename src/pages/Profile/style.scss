@@ -8,11 +8,17 @@
     display: flex;
     flex-direction: column;
     border: 1px solid #ccc;
-    width: 550px;
+    width: 620px;
     margin: 0 auto;
     padding: 30px;
     border-radius: 10px;
     gap: 30px;
+}
+.labelChangePassword{
+    cursor: pointer;
+    &:hover{
+        color: rgb(26, 148, 255);
+    }
 }
 .WapperLabel{
     color: black;

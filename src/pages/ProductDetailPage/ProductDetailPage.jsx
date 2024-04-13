@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ProductDetailComponent from "../../components/Product/ProductDetailComponent";
 import { useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
@@ -23,9 +23,10 @@ const ProductDetailPage = () => {
     const [ProductDetails, setProductDetails] = useState('')
     const [readMore, setReadMore] = useState(false)
     const [readMoreSpecifications, setReadMoreSpecifications] = useState(false)
+    const textDescription = useRef(null)
     const fetchAllProductChildCategory = async (context) => {
         const filter = context.queryKey[1]
-        const res = await ProductService.getProductByIdParent(null, null, null, filter)
+        const res = await ProductService.getProductByIdParent(null, null, null, filter,null,null)
         return res?.data
     }
     const queryAllProductByChildCategory = useQuery({
@@ -46,7 +47,6 @@ const ProductDetailPage = () => {
         enabled: CategoryProduct ? true : false
     })
     const { isLoading: isLoadingCategoryParent, data: categoryParent } = queryGetCategoryByIdCategoryChild
-    console.log("categoryParent", categoryParent)
     const settings = {
         dots: true,
         infinite: true,
@@ -72,6 +72,7 @@ const ProductDetailPage = () => {
     });
 
     const { isLoading: isLoadingAllLikeProduct, data: allLikeProducts } = useQueryAllLikeProducts
+
     return (
         <div style={{ minHeight: '100vh', width: '100%', background: '#efefef' }}>
             <div style={{ width: '1270px', minHeight: '100%', margin: '0 auto' }} className="container">
@@ -119,6 +120,7 @@ const ProductDetailPage = () => {
                 <Row style={{ marginTop: '10px' }} gutter={12}>
                     <Col span={16} className="gutter-row">
                         <div
+                            ref={textDescription}
                             style={readMore ? {
                                 minHeight: '500px',
                                 padding: 16, backgroundColor: 'white', borderRadius: '4px',

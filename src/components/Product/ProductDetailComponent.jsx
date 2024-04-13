@@ -157,7 +157,6 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
         }))
         navigate('/payment',{ state: [productDetails?._id] })
     }
-    console.log(productDetails)
     const fetchProductAllLike = async (context)=>{ //context get value cua useQuery
         const res = await LikeProductService.countLikeProducts()
         return res?.data

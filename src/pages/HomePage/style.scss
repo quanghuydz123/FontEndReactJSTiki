@@ -31,3 +31,43 @@
     align-items: center;
     justify-content: space-between;
 }
+
+.cssSlider{
+    & .slick-arrow.slick-prev {
+        left: -14px;
+        top: 50%;
+        z-index: 10;
+        &::before {
+            font-size: 30px;
+            color: #ccc;
+        }
+    }
+    & .slick-arrow.slick-next {
+        right: -2px;
+        top: 50%;
+        z-index: 10;
+        &::before {
+            font-size: 30px;
+            color: #ccc;
+        }
+    }
+    & .slick-dots {
+        z-index: 10;
+        bottom: -18px !important;
+        li {
+            button {
+                &::before {
+                    color: black;
+                }
+            }
+        }
+        li.active {
+            button {
+                &::before {
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+

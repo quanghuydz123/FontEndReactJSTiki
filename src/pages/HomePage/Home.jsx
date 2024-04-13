@@ -18,6 +18,8 @@ import { colors } from "../../contants";
 import * as LikeProductService from '../../services/LikeProductService'
 import * as CategoryService from '../../services/CategoryService'
 import NavbarComponent from "../../components/NavbarComponent/NavbarComponent";
+import Slider from "react-slick";
+import LinkComponent from "../../components/LinkComponent/LinkComponent";
 
 const HomePage = () => {
     const searchProduct = useSelector((state) => state.product)
@@ -43,8 +45,6 @@ const HomePage = () => {
         queryKey: ['products', limit, searchDounce],
         queryFn: fetchProductAll,
         placeholderData: keepPreviousData, //giữ lại sản phẩm ban đầu thi reload
-        retry: 3,
-        retryDelay: 1000,
     });
     //
     // const fetchAllTypeProduct = async(  )=>{
@@ -64,6 +64,7 @@ const HomePage = () => {
     useEffect(() => {
         fetchAllCategoryParent()
     }, [])
+
     //
     const fetchProductAllLike = async (context) => { //context get value cua useQuery
         const res = await LikeProductService.countLikeProducts()
@@ -76,6 +77,43 @@ const HomePage = () => {
     });
 
     const { isLoading: isLoadingAllLikeProduct, data: allLikeProducts } = useQueryAllLikeProducts
+
+    const fetchProductByParentCategory = async () => { //context get value cua useQuery
+        const res = await ProductService.getAllProductGroupByChildCategory()
+        return res?.data
+
+    }
+    const useQueryProductParentCategory = useQuery({
+        queryKey: ['product-parentCategory'],
+        queryFn: fetchProductByParentCategory,
+    });
+
+    const { isLoading: isLoadingProductParentCategory, data: productParentCategorys } = useQueryProductParentCategory
+
+    const fetchCategoryParent = async () => { //context get value cua useQuery
+        const res = await CategoryService.getAllCategoryParent()
+        return res?.data
+
+    }
+    const useQueryCategoryParent = useQuery({
+        queryKey: ['category-parent'],
+        queryFn: fetchCategoryParent,
+    });
+
+    const { isLoading: isLoadingCategoryParent, data: categoryParents } = useQueryCategoryParent
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 6,
+        slidesToScroll: 6,
+        variableWidth: true,
+        autoplay: true,
+        autoplaySpeed: 5000,
+
+    }
+    console.log("productParentCategorys", productParentCategorys)
     return (
         <Loading isLoading={isLoadingSearch}>
             <div style={{ width: '1270px', margin: '0 auto' }}>
@@ -96,8 +134,8 @@ const HomePage = () => {
             <div className='body' style={{ width: '100%', backgroundColor: '#efefef', minHeight: '100vh' }}>
                 <div id="container" style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
                     <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5]} />
-                    <div style={{background:'white',padding:'16px',marginTop:'20px',borderRadius:'8px'}}>
-                        <h2 style={{margin:'0px',color:'rgb(26, 148, 255)'}}>
+                    <div style={{ background: 'white', padding: '16px', marginTop: '20px', borderRadius: '8px' }}>
+                        <h2 style={{ margin: '0px', color: 'rgb(26, 148, 255)' }}>
                             Sản phẩm HOT
                         </h2>
                         <Loading isLoading={isLoading}>
@@ -148,8 +186,71 @@ const HomePage = () => {
                         </div>
                     </div>
 
-                    
+                    <Loading isLoading={false}>
+
+                        {productParentCategorys?.map((productParentCategory,index) => {
+                            const totalProduct = productParentCategory?.products?.length
+                            const nameParentCategory = categoryParent.filter((item) => item._id === productParentCategory?._id)[0]?.name
+                            const modifiedSettings = { ...settings, slidesToShow: totalProduct > 6 ? 6 : totalProduct, slidesToScroll: totalProduct > 6 ? 6 : totalProduct, };
+                            return (
+                                <div className="slider-container" style={{ marginTop: '12px', padding: '16px', background: 'white', borderRadius: '4px' }} key={index}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <h2 style={{ margin: '0 0 10px 0', color: 'rgb(26,148,255)' }}>{nameParentCategory}</h2>
+
+                                        <LinkComponent to={`/${nameParentCategory}`}>
+                                            <ButtonComponent
+                                                size={20}
+                                                styleButton={{
+                                                    height: '30px',
+                                                    width: '120px',
+                                                    borderRadius: '4px',
+                                                    padding: '2px 6px 6px',
+                                                    backgroundColor: 'white',
+                                                    margin: '0 8px',
+                                                
+                                    
+                                                }}
+                                                textButton={"Xem tất cả"}
+                                                styleTextButton={
+                                                    { color: 'black', fontSize: '14px' }
+
+                                                } />
+                                        </LinkComponent>
+                                    </div>
+
+                                    <Slider {...modifiedSettings} className="cssSlider">
+                                        {productParentCategory?.products?.map((product, index) => {
+                                            return (
+                                                <div key={index}>
+                                                    <CardComponent key={index}
+                                                        countInStock={product.countInStock}
+                                                        description={product.description}
+                                                        image={product.image}
+                                                        name={product.name}
+                                                        price={product.price}
+                                                        rating={product.rating}
+                                                        type={product.type}
+                                                        selled={product.selled}
+                                                        discount={product.discount}
+                                                        id={product._id}
+                                                        totalLike={allLikeProducts?.filter((item) => item._id.product === product._id)[0]?.totalLikes}
+                                                        detailsPage={true}
+                                                    />
+                                                </div>
+                                            )
+                                        })}
+
+                                    </Slider>
+
+                                </div>
+                            )
+                        })}
+
+
+                    </Loading>
+
                 </div>
+
             </div>
 
         </Loading>

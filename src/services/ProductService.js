@@ -73,14 +73,32 @@ export const getProductByIdParent  = async(id,page,limit,filter,sortField,sortVa
     let res = {}
     if(filter){
         if(limit){
-            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&limit=${limit}&page=${page}&sortField=${sortField}&sortValue=${sortValue}`)
+            if(sortField){
+                res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&limit=${limit}&page=${page}&sortField=${sortField}&sortValue=${sortValue}`)
+            }else{
+                res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&limit=${limit}&page=${page}`)
+            }
         }
         else{
-            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&sortField=${sortField}&sortValue=${sortValue}`)
+            if(sortField){
+                res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&sortField=${sortField}&sortValue=${sortValue}`)
+            }else{
+                res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}`)
+            }
         }
     }
     else if(id){
+       if(sortField){
         res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?id=${id}&limit=${limit}&page=${page}&sortField=${sortField}&sortValue=${sortValue}`)
+       }else{
+        res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?id=${id}&limit=${limit}&page=${page}`)
+       }
     }
+    return res.data
+}
+
+
+export const getAllProductGroupByChildCategory  = async()=>{
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductGroupByChildCategory`)
     return res.data
 }
