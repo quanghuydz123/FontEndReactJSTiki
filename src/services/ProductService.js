@@ -2,18 +2,13 @@ import axios from "axios"
 import { axiosJWT } from "./UserService"
 
 
-export const getAllProduct  = async(search,limit)=>{
+export const getAllProduct  = async(limit)=>{
         let res = {}
-        if(search?.length > 0){
-            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProduct?filter=name&filter=${search}&limit=${limit}`)
+        if(limit){
+            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProduct?limit=${limit}`)
         }
         else{
-            if(limit){
-                res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProduct?limit=${limit}`)
-            }
-            else{
-                res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProduct`)
-            }
+            res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProduct`)
         }
         return res.data
 }
@@ -69,9 +64,25 @@ export const deleteManyProduct  = async(ids,access_token)=>{
     return res.data
 }
 
-export const getProductByIdParent  = async(id,page,limit,filter,sortField,sortValue)=>{
+export const getProductByIdParent  = async(id,page,limit,filter,sortField,sortValue,query)=>{
     let res = {}
-    if(filter){
+    if(query){
+        if(limit){
+            if(sortField){
+                res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?query=${query}&limit=${limit}&page=${page}&sortField=${sortField}&sortValue=${sortValue}`)
+            }else{
+                res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?query=${query}&limit=${limit}&page=${page}`)
+            }
+        }
+        else{
+            if(sortField){
+                res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?query=${query}&sortField=${sortField}&sortValue=${sortValue}`)
+            }else{
+                res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?query=${query}`)
+            }
+        }
+    }
+    else if(filter){
         if(limit){
             if(sortField){
                 res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAllProductByParentCategory?filter=${filter}&limit=${limit}&page=${page}&sortField=${sortField}&sortValue=${sortValue}`)

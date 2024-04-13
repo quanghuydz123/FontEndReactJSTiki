@@ -45,7 +45,7 @@ export const renderOption = (arr)=>{
 export const convertPrice = (price)=>{
   try {
     const results = price?.toLocaleString().replaceAll(',','.')
-    return   `${results} VNĐ`
+    return   `${results} đ`
   } catch (error) {
       return null;
   }

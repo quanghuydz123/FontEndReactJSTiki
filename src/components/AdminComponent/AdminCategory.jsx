@@ -1,7 +1,7 @@
 import { Badge, Button, Form, Modal,Space,Upload, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
-    EyeOutlined,
+    PlusCircleOutlined,
     SearchOutlined,
     DeleteOutlined,
     EditOutlined    
@@ -16,6 +16,8 @@ import { convertPrice } from '../../utils';
 import { orderContant } from '../../contant'
 import { useNavigate } from "react-router-dom";
 import * as CategoryService from '../../services/CategoryService'
+import ModalComponent from "../ModalComponent/ModalComponent";
+import Loading from "../LoadingComponent/Loading";
 
 const AdminCategory = ()=>{
     const [form] = Form.useForm()
@@ -25,8 +27,17 @@ const AdminCategory = ()=>{
     const searchInput = useRef(null);
     const [rowSelected,setRowSelected] = useState(null)
     const [dataTable,setDataTable] = useState([])
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate()
- 
+    const [stateCateogry, setStateCateogry] = useState({
+      names: [],
+      iamge:''
+      
+  })
+  const [stateCateogryDetals, setStateCateogryDetails] = useState({
+      names: [],
+      image:''
+  })
 
     const renderAction = ()=>{
         return (
@@ -211,12 +222,18 @@ const AdminCategory = ()=>{
           setDataTable(itemTable)
         }
       },[categorysParent,categorysChild])
-      console.log("123",dataTable)
+
+    const handleCancel = () => {
+      setIsModalOpen(false);
+      form.resetFields()//xóa hết value input
+  };
     return (
         <div>
             <div>
                 <h1 className="WapperHeaderAdmin">Quản lý danh mục</h1>
-
+                <div style={{ marginTop: '10px' }}>
+                  <Button style={{ height: '150px', width: '150px', borderRadius: '6px' }} onClick={()=>setIsModalOpen(true)}><PlusCircleOutlined style={{ fontSize: '60px' }} /></Button>
+               </div>
                 <div style={{
                 marginTop:'20px'
             }}>
@@ -228,6 +245,36 @@ const AdminCategory = ()=>{
                         
                         };}}/>
             </div>
+            <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} className="modal=product" footer={null} width='50%'>
+                    <Form
+                        name="basic"
+                        labelCol={{
+                            span: 6,
+                        }}
+                        wrapperCol={{
+                            span: 18,
+                        }}
+                        style={{
+                            maxWidth: 600,
+                        }}
+                        form={form}
+                        //onFinish={onFinish}
+                        autoComplete="off"//
+                    >
+                        <Form.Item
+                            label="Name"
+                            name="name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your name!',
+                                },
+                            ]}
+                        >
+                            <InputComponent value={'test'} name="name" />
+                        </Form.Item>
+                    </Form>
+            </ModalComponent>
         </div>
             </div>
     )

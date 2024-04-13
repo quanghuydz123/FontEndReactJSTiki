@@ -184,7 +184,7 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
                         alt="image-product"
                     />
                     </div>
-                    <Row style={{display:'flex',paddingTop:'10px',justifyContent:'space-between'}}>
+                    {/* <Row style={{display:'flex',paddingTop:'10px',justifyContent:'space-between'}}>
                         <Col span={4}>
                             <Image src="https://salt.tikicdn.com/cache/280x280/media/catalog/producttmp/e7/37/0e/bf3b0407b0b0180fae83c6ff215b8519.png.webp"
                             preview={false}
@@ -239,7 +239,7 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
 
                         
                         
-                    </Row>
+                    </Row> */}
                 </Col>
                 <Col span={14} style={{paddingLeft:'10px'}} >
                     <h1 className="WapperStyleNameProduct">{productDetails?.name}</h1>
@@ -255,8 +255,8 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
                     </div>
                     <div className="WrapperPriceProduct">
                         <h1 className="WrapperPriceTextProduct">
-                            {productDetails?.discount ? <span style={{color:'red'}}>{convertPrice(productDetails?.price*(100-productDetails?.discount)/100)}</span>: <span style={{color:'red'}}>{convertPrice(productDetails?.price)}</span>}
-                            {productDetails?.discount ? <><span style={{fontSize:'16px',textDecoration:'line-through', color:'rgb(102 102 102)',marginLeft:'8px'}}> {convertPrice(productDetails?.price)}</span><span style={{fontSize:'16px',color:'red'}}> -{productDetails?.discount}%</span> </>: <span></span>}
+                            {productDetails?.discount ? <span style={{color:'rgb(190, 30, 45)'}}>{convertPrice(productDetails?.price*(100-productDetails?.discount)/100)}</span>: <span style={{color:'rgb(190, 30, 45)'}}>{convertPrice(productDetails?.price)}</span>}
+                            {productDetails?.discount ? <><span style={{fontSize:'16px',textDecoration:'line-through', color:'rgb(102 102 102)',marginLeft:'8px'}}> {convertPrice(productDetails?.price)}</span><span style={{fontSize:'16px',color:'rgb(190, 30, 45)'}}> -{productDetails?.discount}%</span> </>: <span></span>}
                         </h1>
                     </div>
                     <div className="WrapperAddresstProduct">

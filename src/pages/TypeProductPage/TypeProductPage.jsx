@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import NavbarComponent from "../../components/NavbarComponent/NavbarComponent";
 import CardComponent from "../../components/Product/CardComponent";
 import { Col, Pagination, Row } from "antd";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import * as ProductService from '../../services/ProductService'
 import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
@@ -19,6 +19,7 @@ import {
 } from '@ant-design/icons';
 const TypeProductPage = () => {
     const params = useParams()
+    const location = useLocation();
     const searchProduct = useSelector((state) => state?.product?.search)
     const [categoryNameParent, setCategoryNameParent] = useState([])
     const [categoryNameChild, setCategoryNameChild] = useState([])
@@ -26,7 +27,7 @@ const TypeProductPage = () => {
     const [idSelectedCategoryParent, setIdSelectedCategoryParent] = useState('')
     const [idSelectedCategoryChild, setIdSelectedCategoryChild] = useState('')
     const [nameCategoryChildSelected, setNameCategoryChildSelected] = useState(params?.childType)
-    const searchDounce = useDebounce(searchProduct, 200) //sau 1 giây mới gọi API
+    //const searchDounce = useDebounce(searchProduct, 200) //sau 1 giây mới gọi API
     const [current, setCurrent] = useState('');
     const [stateButton1,setStateButton1] = useState(false)
     const [stateButton2,setStateButton2] = useState(false)
@@ -34,12 +35,18 @@ const TypeProductPage = () => {
     const [stateButton4,setStateButton4] = useState(false)
     const [sortField,setSortField] = useState('')
     const [sortValue,setSortByValue] = useState(0)
+    const [query, setQuery] = useState('');
+
     const [panigate, setPanigate] = useState({
         page: 1,
         limit: 10,
         total: 1
     })
-
+    useEffect(() => {//dùng để get qua giá trị q khi search
+        const searchParams = new URLSearchParams(location?.search);
+        const queryParam = searchParams.get('q');
+        setQuery(queryParam);
+      }, [location]);
     useEffect(() => {
         setIdSelectedCategoryParent(categoryNameParent.filter((item) => item?.name === params?.type)[0]?.id)
         setIdSelectedCategoryChild(categoryNameChild.filter((item) => item?.name === params?.childType && item?.parentId === categoryNameParent.filter((item) => item?.name === params?.type)[0]?.id)[0]?.id)
@@ -67,20 +74,7 @@ const TypeProductPage = () => {
     //     fetchProductType(idSelectedCategoryParent, panigate.page, panigate.limit, idSelectedCategoryChild)
     // }, [panigate.page, panigate.limit, idSelectedCategoryParent, idSelectedCategoryChild])
 
-    const getAllProductType = async (context) => {
-        const id = context?.queryKey && context?.queryKey[1]
-        const page = context?.queryKey && context?.queryKey[2]
-        const limit = context?.queryKey && context?.queryKey[3]
-        const filter = context?.queryKey && context?.queryKey[4]
-        const sortField = context?.queryKey && context?.queryKey[5]
-        const sortValue = context?.queryKey && context?.queryKey[6]
-        const res = await ProductService.getProductByIdParent(id, page, limit, filter,sortField,sortValue)
-        setPanigate({
-            ...panigate,
-            total: res?.totalPage
-        })
-        return res
-    }
+    
     const handleClickButtonSort = (button)=>{
         switch(button){
             case 'button1':
@@ -127,11 +121,27 @@ const TypeProductPage = () => {
             setSortByValue('')
         }
     },[stateButton1,stateButton2,stateButton3,stateButton4])
+    const getAllProductType = async (context) => {
+        console.log("ccc",context)
+        const id = context?.queryKey && context?.queryKey[1]
+        const page = context?.queryKey && context?.queryKey[2]
+        const limit = context?.queryKey && context?.queryKey[3]
+        const filter = context?.queryKey && context?.queryKey[4]
+        const sortField = context?.queryKey && context?.queryKey[5]
+        const sortValue = context?.queryKey && context?.queryKey[6]
+        const query = context?.queryKey && context?.queryKey[7]
+        const res = await ProductService.getProductByIdParent(id, page, limit, filter,sortField,sortValue,query)
+        setPanigate({
+            ...panigate,
+            total: res?.totalPage
+        })
+        return res
+    }
 
     const queryProductType = useQuery({
-        queryKey: ['product-type', idSelectedCategoryParent, panigate.page, panigate.limit, idSelectedCategoryChild,sortField,sortValue],
+        queryKey: ['product-type', idSelectedCategoryParent, panigate.page, panigate.limit, idSelectedCategoryChild,sortField,sortValue,query],
         queryFn: getAllProductType,
-        enabled: idSelectedCategoryParent && panigate.page && panigate.limit ? true : false
+        enabled: (idSelectedCategoryParent || query) && panigate.page && panigate.limit ? true : false
     })
     const { isLoading: isLoadingProductType, data: productsTypes } = queryProductType
     const onChange = (current, pageSize) => {
@@ -165,11 +175,12 @@ const TypeProductPage = () => {
 
                             <Col span={20} style={{ marginLeft: '10px' }}>
                                 <div className="WrapperLabelTypeProduct">
+                                    {query ? <span style={{ color: colors.colorPrimaryHeader, fontSize: '26px' }}>Tìm kiếm</span> :
                                     <span style={{ color: colors.colorPrimaryHeader, fontSize: '26px' }}>
-                                        {nameCategorySelected && nameCategorySelected}
-                                        {nameCategoryChildSelected && ' / '}
-                                        {nameCategoryChildSelected && nameCategoryChildSelected}
-                                    </span>
+                                    {nameCategorySelected && nameCategorySelected}
+                                    {nameCategoryChildSelected && ' / '}
+                                    {nameCategoryChildSelected && nameCategoryChildSelected}
+                                </span>}
                                     <div>
                                         <span style={{ margin: '0px 0px 0px ',fontWeight:'500' }}>Sắp xếp theo</span>
                                         <ButtonComponent
@@ -274,8 +285,10 @@ const TypeProductPage = () => {
                                     </div>
                                 </div>
                                 <div className="WrapperProductsType">
-                                    {productsTypes?.data?.filter(item => item.name.toLowerCase().includes(searchDounce.toLowerCase())).length !== 0 ? productsTypes?.data?.filter(item => item.name.toLowerCase().includes(searchDounce.toLowerCase())).map((product, index) => {
-                                        return <CardComponent key={index}
+                                {/* ?.filter(item => item.name.toLowerCase().includes(searchDounce.toLowerCase())) seach thủ công */}
+                                    {productsTypes?.data?.length !== 0 ? productsTypes?.data?.map((product, index) => {
+                                        return <CardComponent 
+                                            key={index}
                                             countInStock={product.countInStock}
                                             description={product.description}
                                             image={product.image}

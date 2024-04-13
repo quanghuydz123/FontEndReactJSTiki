@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Col, Popover } from 'antd';
+import { Badge, Col, Popover, message } from 'antd';
 import {WapperHeader,WapperTextHeader,WapperHeaderAccuont, WapperContentPopup} from './style'
 import {
     UserOutlined,
@@ -16,9 +16,11 @@ import Loading from "../LoadingComponent/Loading";
 import { searchProduct } from "../../redux/slides/productSlide";
 import {Link} from 'react-router-dom';
 import LinkComponent from "../LinkComponent/LinkComponent";
+import { useRef } from "react";
 
 const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
     //lấy dữ liệu truyền vào redux
+    const searchProduct123 = useSelector((state) => state.product)
     const user = useSelector((state) => state.user)
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -99,6 +101,14 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
         dispatch(searchProduct(e.target.value))
     }
     //const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+    const handleSearch = (search)=>{
+        if(search){
+            navigate(`/search?q=${search}`)
+            dispatch(searchProduct(''))
+        }else{
+            message.warning("Hãy nhập thông tin cần tìm kiếm")
+        }
+    }
     return (
         <div>
              <WapperHeader style={{display:"flex",alignItems:'center'}}>
@@ -111,7 +121,9 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
                             size='large'
                             textButton = 'Tìm kiếm'
                             placeholder='Bạn tìm gì hôm nay'
+                            value={searchProduct123.search}
                             onChange={onSearch}
+                            onClick={()=>handleSearch(searchProduct123.search)}
                         />      
                         
                         </Col>)

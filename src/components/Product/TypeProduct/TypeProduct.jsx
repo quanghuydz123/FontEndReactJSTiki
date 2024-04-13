@@ -21,7 +21,7 @@ const TypeProduct = (props)=>{
     // }
     return (
         <div style={{marginRight:mr,padding:p,cursor:'pointer',color:'rgb(128,128,137)'}} >
-            <LinkComponent to={`/${name}`} style={{color:'black'}} colorOnMouseEnter='red' colorOnMouseLeave='black'>{name}</LinkComponent>
+            <LinkComponent to={`/${name}`} style={{color:'black'}} colorOnMouseEnter='rgb(26, 148, 255)' colorOnMouseLeave='black'>{name}</LinkComponent>
         </div>
     )
 }

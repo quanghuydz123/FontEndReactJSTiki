@@ -22,16 +22,15 @@ import Slider from "react-slick";
 import LinkComponent from "../../components/LinkComponent/LinkComponent";
 
 const HomePage = () => {
-    const searchProduct = useSelector((state) => state.product)
+    //const searchProduct = useSelector((state) => state.product)
     const user = useSelector((state) => state.user)
     const [isLoadingSearch, setIsLoadingSearch] = useState('')
-    const searchDounce = useDebounce(searchProduct.search, 200) //sau 1 giây mới gọi API
+    //const searchDounce = useDebounce(searchProduct.search, 200) //sau 1 giây mới gọi API
     const [limit, setLimit] = useState(12)
     const [categoryParent, setCategoryParent] = useState([])
     const fetchProductAll = async (context) => { //context get value cua useQuery
-        const search = context?.queryKey && context?.queryKey[2]
         const limit = context?.queryKey && context?.queryKey[1]
-        const res = await ProductService.getAllProduct(search, limit)
+        const res = await ProductService.getAllProduct(limit)
         // if(search.length > 0 || refSearch.current){
         //     setStateProduct(res?.data)
         // }else
@@ -42,7 +41,7 @@ const HomePage = () => {
 
     }
     const { isLoading, data: products, isPlaceholderData } = useQuery({
-        queryKey: ['products', limit, searchDounce],
+        queryKey: ['products', limit],
         queryFn: fetchProductAll,
         placeholderData: keepPreviousData, //giữ lại sản phẩm ban đầu thi reload
     });
@@ -113,7 +112,6 @@ const HomePage = () => {
         autoplaySpeed: 5000,
 
     }
-    console.log("productParentCategorys", productParentCategorys)
     return (
         <Loading isLoading={isLoadingSearch}>
             <div style={{ width: '1270px', margin: '0 auto' }}>

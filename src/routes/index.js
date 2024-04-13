@@ -63,7 +63,11 @@ export const routes = [
         page:TypeProductPage,
         isShowHeader:true
     },
-    
+    {
+        path:'/search',
+        page:TypeProductPage,
+        isShowHeader:true
+    },
     {
         path:'/:type/:childType',
         page:TypeProductPage,
