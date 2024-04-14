@@ -48,3 +48,23 @@ export const cancelOrder = async (id, access_token,orderItems) => {
     return res.data
   }
   
+
+  export const paidOrder  = async (id,access_token)=>{
+    const res = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/order/paid-order/${id}`,null,
+    {
+        headers:{
+            token: `Bearer ${access_token}`
+        }
+    })
+    return res.data
+}
+
+export const confirmDeliveryOrder  = async (id,access_token)=>{
+    const res = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/order/confirm-delivery/${id}`,null,
+    {
+        headers:{
+            token: `Bearer ${access_token}`
+        }
+    })
+    return res.data
+}

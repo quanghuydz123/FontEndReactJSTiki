@@ -684,6 +684,7 @@ const AdminCategory = () => {
             </Form>
           </Loading>
         </DrawerComponent>
+       
       </div>
     </div>
   )

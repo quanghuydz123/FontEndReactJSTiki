@@ -139,7 +139,7 @@ const PaymentPage = () => {
     } else if (isErrorUpdate || dataUpdate?.status === "ERR") {
       message.error(dataUpdate?.message || "Lỗi rồi")
     }
-  }, [isSuccessUpdate, isErrorUpdate])
+  }, [isSuccessUpdate, isErrorUpdate,dataUpdate])
 
   const handleChangeAddress = () => {
     fetchUserDetails(user?.id)
@@ -159,6 +159,7 @@ const PaymentPage = () => {
         fullName: user?.name,
         address: user?.address,
         phone: user?.phone,
+        deliveryMethod:delivery,
         paymentMethod: payment,
         itemsPrice: priceMeno,
         shippingPrice: diliveryPriceMeno,
@@ -199,13 +200,14 @@ const PaymentPage = () => {
       fullName: user?.name,
       address: user?.address,
       phone: user?.phone,
+      deliveryMethod:delivery,
       paymentMethod: payment,
       itemsPrice: priceMeno,
       shippingPrice: diliveryPriceMeno,
       totalPrice: totalPriceMeno - priceDiscountMeno,
       user: user?.id,
       isPaid:true,
-      paidAt:details.update_time ,
+      paidAt:details.update_time,
       email:user?.email 
     }, {
       onSuccess: (data) => {
