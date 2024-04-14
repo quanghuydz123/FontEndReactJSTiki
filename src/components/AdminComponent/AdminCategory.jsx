@@ -21,6 +21,7 @@ import ModalComponent from "../ModalComponent/ModalComponent";
 import Loading from "../LoadingComponent/Loading";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import { useMutationHooks } from "../../hooks/useMutationHook";
+import DrawerComponent from "../DrawerComponent/DrawerComponent";
 
 const AdminCategory = () => {
   const [form] = Form.useForm()
@@ -31,9 +32,15 @@ const AdminCategory = () => {
   const searchInput = useRef(null);
   const [rowSelected, setRowSelected] = useState('')
   const [dataTable, setDataTable] = useState([])
+  const [isOpenDrawer, setIsOpenDrawer] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate()
-  const [amountChildCategory,setAmountChildCategory] = useState(0)
+  const [amountChildCategory, setAmountChildCategory] = useState(0)
+  const [amountChildCategoryDetails, setAmountChildCategoryDetails] = useState(0)
+  const [previousRowSelected, setPreviousRowSelected] = useState(true);
+  const [isPendingUpdate, setIsPendingUpdate] = useState(false)
+
+
   const [stateCategory, setStateCateogry] = useState({
     names: {},
     image: '',
@@ -43,7 +50,8 @@ const AdminCategory = () => {
   const [stateCategoryDetails, setStateCateogryDetails] = useState({
     names: {},
     image: '',
-    nameArr: []
+    nameArr: [],
+    idArr:[]
   })
 
   const renderAction = () => {
@@ -55,6 +63,7 @@ const AdminCategory = () => {
           cursor: 'pointer'
         }}
           title="cập nhập người dùng"
+          onClick={handleDetalsCategory}
         />
 
 
@@ -223,13 +232,12 @@ const AdminCategory = () => {
           child.push({ name: itemChild?.name, id: itemChild?._id })
         }
       })
-      return { name: itemParent?.name, icon: itemParent?.image, childItem: child }
+      return { _id: itemParent?._id, name: itemParent?.name, icon: itemParent?.image, childItem: child }
     })
     if (itemTable) {
       setDataTable(itemTable)
     }
   }, [categorysParent, categorysChild])
-
   const handleCancel = () => {
     setIsModalOpen(false);
     setStateCateogry({
@@ -250,11 +258,30 @@ const AdminCategory = () => {
       image: file.preview
     })
   }
+
+  const handleOnchangeAvatarDetails = async ({ fileList }) => {
+    const file = fileList[0]
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setStateCateogryDetails({
+      ...stateCategoryDetails,
+      image: file.preview
+    })
+  }
   const handleOnchange = (e) => {
     setStateCateogry({
       ...stateCategory,
       //[e.target.name]: e.target.value
       names: { ...stateCategory.names, [e.target.name]: e.target.value }
+    })
+  }
+
+  const handleOnchangeDetails = (e) => {
+    setStateCateogryDetails({
+      ...stateCategoryDetails,
+      //[e.target.name]: e.target.value
+      names: { ...stateCategoryDetails.names, [e.target.name]: e.target.value }
     })
   }
   useEffect(() => {
@@ -266,64 +293,157 @@ const AdminCategory = () => {
     }
 
   }, [stateCategory.names])
-  console.log("state",stateCategory)
+
+  useEffect(() => {
+    if (stateCategoryDetails.names) {
+      setStateCateogryDetails({
+        ...stateCategoryDetails,
+        nameArr: Object.values(stateCategoryDetails?.names)
+      })
+    }
+
+  }, [stateCategoryDetails.names])
   const mutationCreateCategory = useMutationHooks(//call api
-  (data) => {
-    const res = CategoryService.createCategory(data)
-    return res
-  }
+    (data) => {
+      const res = CategoryService.createCategory(data)
+      return res
+    }
   )
   const { data, isPending, isSuccess, isError, error } = mutationCreateCategory
   useEffect(() => {
     if (data?.status === "OK") {
-        message.success(data?.message)
+      message.success(data?.message)
     } else if (data?.status === "ERR") {
-        message.error(data?.message)
+      message.error(data?.message)
     } else if (isSuccess) {
-        message.success('Thành công')
-    } else if (data) {
-        message.error("Lỗi rồi")
+      message.success('Thành công')
+    } else if (isError) {
+      message.error("Lỗi rồi")
     }
-}, [data, isSuccess, isError])
+  }, [data, isSuccess, isError])
 
   const onFinish = () => {
-    mutationCreateCategory.mutate({names:stateCategory.nameArr,image:stateCategory.image}, {
-            onSettled: () => {//tự động load lại khi update
-                queryCategory.refetch()
-                queryCategoryChild.refetch()
-            }
-        })
-};
-const handleDeleteInputChild = (key)=>{
-  const updatedObject = {...stateCategory.names}
-  const updatedObjectAfterDelete = {}
-  let index = 1
-  if (updatedObject.hasOwnProperty(key)) //kiểm tra có tồn tại hay không
-  {
-    // Delete the key
-    delete updatedObject[key];//xóa theo key
-    
-    Object.keys(updatedObject).forEach((key) => {
-      // Thực hiện thay đổi giá trị ở đây
-      const value = updatedObject[key];
-      if(key!="name"){
-        updatedObjectAfterDelete[`name${index}`] = value
-        index++
-      }else{
-        updatedObjectAfterDelete[`name`] = value
+    mutationCreateCategory.mutate({ names: stateCategory.nameArr, image: stateCategory.image }, {
+      onSettled: () => {//tự động load lại khi update
+        queryCategory.refetch()
+        queryCategoryChild.refetch()
       }
-    });
-
-
-    setStateCateogry({
-      ...stateCategory,
-      names:{...updatedObjectAfterDelete}
     })
-    setAmountChildCategory(prev => prev - 1)
-  }else{
-    setAmountChildCategory(prev => prev - 1)
+  };
+  const handleDeleteInputChild = (key) => {
+    const updatedObject = { ...stateCategory.names }
+    const updatedObjectAfterDelete = {}
+    let index = 1
+    if (updatedObject.hasOwnProperty(key)) //kiểm tra có tồn tại hay không
+    {
+      // Delete the key
+      delete updatedObject[key];//xóa theo key
+
+      Object.keys(updatedObject).forEach((key) => {
+        // Thực hiện thay đổi giá trị ở đây
+        const value = updatedObject[key];
+        if (key != "name") {
+          updatedObjectAfterDelete[`name${index}`] = value
+          index++
+        } else {
+          updatedObjectAfterDelete[`name`] = value
+        }
+      });
+
+      setStateCateogry({
+        ...stateCategory,
+        names: { ...updatedObjectAfterDelete }
+      })
+      setAmountChildCategory(prev => prev - 1)
+    } else {
+      setAmountChildCategory(prev => prev - 1)
+    }
   }
-}
+  const handleDetalsCategory = () => {
+    if (rowSelected) {
+      setIsPendingUpdate(true)
+    }
+    setIsOpenDrawer(true)
+  }
+
+  const fetchCategoryDetails = async (id) => {
+    const res = await CategoryService.getDetailsCategory(id)
+    if (res?.data) {
+      //
+      let newStateCategoryDetails = { ...stateCategoryDetails }; //tao ra 1 object mới
+      res?.data?.forEach((item,index)=>{
+        if(index === 0 ){
+          newStateCategoryDetails = {
+            ...newStateCategoryDetails,
+            image: item?.image,
+            names: { ...newStateCategoryDetails.names, ['name']: item?.name },
+            idArr:[...newStateCategoryDetails.idArr,item?._id]
+          };
+        }else{
+          newStateCategoryDetails = {
+            ...newStateCategoryDetails,
+            names: { ...newStateCategoryDetails.names, [`name${index}`]: item?.name },
+            idArr:[...newStateCategoryDetails.idArr,item?._id]
+          };
+        }
+      })
+      setStateCateogryDetails(newStateCategoryDetails); // truyền object vào useState
+    }
+    setIsPendingUpdate(false)
+    setAmountChildCategoryDetails(res?.data?.length - 1)
+  }
+  useEffect(() => {
+    if (rowSelected) {
+      fetchCategoryDetails(rowSelected)
+    }
+  }, [rowSelected, previousRowSelected])
+
+  useEffect(() => {
+    formUpdate.setFieldsValue({name:stateCategoryDetails?.nameArr[0],image:stateCategoryDetails.image})//set value vào input
+  }, [formUpdate, stateCategoryDetails])
+
+  const handleCancelDetails = () => {
+    setIsOpenDrawer(false)
+    setStateCateogryDetails({
+      names: {},
+      image: '',
+      nameArr: [],
+      idArr:[]
+    })
+    setAmountChildCategoryDetails(0)
+    formUpdate.resetFields()//xóa hết value input
+  }
+  console.log("state",stateCategoryDetails)
+  const mutationUpdateCategory = useMutationHooks(//call api
+  (data) => {
+      const {token, idArr, image, nameArr } = data
+      console.log("token, stateCategoryDetails",token, idArr, image, nameArr)
+      const res = CategoryService.updateCategory(token, {idArr, image, nameArr})
+      return res
+  })
+
+  const { data: dataUpdate, isPending: isPendingUpdate1, isSuccess: isSuccessUpdate, isError: isErrorUpdate, error: errorUpdate } = mutationUpdateCategory
+
+  useEffect(() => {
+    if (dataUpdate?.status === "OK") {
+      message.success(dataUpdate?.message)
+    } else if (dataUpdate?.status === "ERR") {
+      message.error(dataUpdate?.message)
+    } else if (isSuccessUpdate) {
+      message.success('Cập nhập thành công')
+    } else if (isErrorUpdate) {
+      message.error("Lỗi rồi")
+    }
+  }, [dataUpdate, isSuccessUpdate, isErrorUpdate])
+  const onUpdateProduct = ()=>{
+    const { idArr, image, nameArr, names } = stateCategoryDetails;
+    mutationUpdateCategory.mutate({ token: user?.access_token, idArr, image, nameArr}, {
+      onSettled: () => {//tự động load lại khi update
+          queryCategory.refetch()
+          queryCategoryChild.refetch()
+      }
+  })
+  }
   return (
     <div>
       <div>
@@ -338,6 +458,7 @@ const handleDeleteInputChild = (key)=>{
             return {
               onClick: (event) => {
                 setRowSelected(record._id)
+                setPreviousRowSelected(!previousRowSelected)
               }, // click row
 
             };
@@ -378,38 +499,38 @@ const handleDeleteInputChild = (key)=>{
             >
               <ButtonComponent
                 size={20}
-                onClick={(()=>{setAmountChildCategory(prev => prev + 1)})}
+                onClick={(() => { setAmountChildCategory(prev => prev + 1) })}
                 styleButton={{
-                    height: '30px',
-                    width: '30px',
-                    borderRadius: '4px',
-                    padding: '2px 6px 6px',
-                    backgroundColor: 'white',
+                  height: '30px',
+                  width: '30px',
+                  borderRadius: '4px',
+                  padding: '2px 6px 6px',
+                  backgroundColor: 'white',
                 }}
                 textButton={"+"}
                 styleTextButton={
-                    { color: 'black', fontSize: '14px' }
+                  { color: 'black', fontSize: '14px' }
                 } />
-                {Array.from({ length: amountChildCategory }).map((_, index) => // giống như vòng for
-                  <div style={{marginTop:'10px',display:'flex'}} >
-                    <InputComponent value={'' || stateCategory?.nameArr[index+1]} onChange={handleOnchange} name={`name${index+1}`} /> 
-                    <ButtonComponent
-                      size={20}
-                      onClick={(()=>{handleDeleteInputChild(`name${index+1}`)})}
-                      styleButton={{
-                          height: '30px',
-                          width: '30px',
-                          borderRadius: '4px',
-                          padding: '2px 6px 6px',
-                          backgroundColor: 'white',
-                          marginLeft:'6px'
-                      }}
-                      textButton={"-"}
-                      styleTextButton={
-                          { color: 'black', fontSize: '14px' }
+              {Array.from({ length: amountChildCategory }).map((_, index) => // giống như vòng for
+                <div style={{ marginTop: '10px', display: 'flex' }} >
+                  <InputComponent value={'' || stateCategory?.nameArr[index + 1]} onChange={handleOnchange} name={`name${index + 1}`} />
+                  <ButtonComponent
+                    size={20}
+                    onClick={(() => { handleDeleteInputChild(`name${index + 1}`) })}
+                    styleButton={{
+                      height: '30px',
+                      width: '30px',
+                      borderRadius: '4px',
+                      padding: '2px 6px 6px',
+                      backgroundColor: 'white',
+                      marginLeft: '6px'
+                    }}
+                    textButton={"-"}
+                    styleTextButton={
+                      { color: 'black', fontSize: '14px' }
                     } />
-                  </div>
-                )}
+                </div>
+              )}
             </Form.Item>
 
             <Form.Item
@@ -434,21 +555,114 @@ const handleDeleteInputChild = (key)=>{
                   }} alt="avatar" />
                 )}
               </Upload>
-             
+
             </Form.Item>
             <Form.Item
-                wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                }}
-                style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0px' }}
+              wrapperCol={{
+                offset: 8,
+                span: 16,
+              }}
+              style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0px' }}
             >
-                <Button type="primary" htmlType="submit">
-                    Thêm
-                </Button>
+              <Button type="primary" htmlType="submit">
+                Thêm
+              </Button>
             </Form.Item>
           </Form>
         </ModalComponent>
+        <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={handleCancelDetails} width="50%">
+          <Loading isLoading={isPendingUpdate}>
+            <Form
+              name="basic"
+              labelCol={{
+                span: 6,
+              }}
+              wrapperCol={{
+                span: 18,
+              }}
+              style={{
+                maxWidth: 600,
+              }}
+              form={formUpdate}
+              onFinish={onUpdateProduct}
+              autoComplete="off"
+            >
+              <Form.Item
+                label="Tên thể loại"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Tên thể loại không thể bỏ trống!',
+                  },
+                ]}
+              >
+                <InputComponent value={'' || stateCategoryDetails?.nameArr[0]} onChange={handleOnchangeDetails} name="name" />
+              </Form.Item>
+
+              <Form.Item
+                label="Tên thể loại con"
+                name="nameChild"  
+              >
+                <ButtonComponent
+                size={20}
+                styleButton={{
+                  height: '30px',
+                  width: '30px',
+                  borderRadius: '4px',
+                  padding: '2px 6px 6px',
+                  backgroundColor: 'white',
+                }}
+                textButton={"+"}
+                styleTextButton={
+                  { color: 'black', fontSize: '14px' }
+                } />
+                {Array.from({ length: amountChildCategoryDetails }).map((_, index) => // giống như vòng for
+                  <div style={{ marginTop: '10px', display: 'flex' }} >
+                    <InputComponent value={'' || stateCategoryDetails?.nameArr[index + 1]} onChange={handleOnchangeDetails} name={`name${index + 1}`} />
+                  </div>
+                )}
+              </Form.Item>
+
+              <Form.Item
+                label="Image"
+                name="image"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your image!',
+                  },
+                ]}
+              >
+                <Upload onChange={handleOnchangeAvatarDetails} className="WapperUploadFile" maxCount={1}>
+                  <Button icon={<UploadOutlined />}>Select File</Button>
+                  {stateCategoryDetails.image && (
+                    <img src={stateCategoryDetails.image} style={{
+                      height: '60px',
+                      width: '60px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      marginLeft: '20px'
+                    }} alt="avatar" />
+                  )}
+                </Upload>
+
+              </Form.Item>
+              <Form.Item
+                  wrapperCol={{
+                      offset: 8,
+                      span: 16,
+                  }}
+                  style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '50px' }}
+              >
+                  <Button type="primary" htmlType="submit">
+                      Cập nhập
+                  </Button>
+              </Form.Item>
+
+            </Form>
+          </Loading>
+        </DrawerComponent>
       </div>
     </div>
   )

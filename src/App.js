@@ -40,9 +40,9 @@ function App() {
     }
     setLoading(false)
   }, [])
-  UserService.axiosJWT.interceptors.request.use(async function (config) {//xử lý token hết hạn
+  UserService.axiosJWT.interceptors.request.use(async (config) => {//xử lý token hết hạn
     // Do something before request is sent
-    const  currentTime = new Date
+    const  currentTime = new Date 
     const {decoded} = handleDecoded()
     let storageRefreshToken = localStorage.getItem('refresh_token')
     const refreshToken = JSON.parse(storageRefreshToken)

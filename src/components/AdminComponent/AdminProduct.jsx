@@ -154,7 +154,6 @@ const AdminProduct = () => {
         setIsOpenDrawer(true)
 
     }
-    
     useEffect(() => {
         if (rowSelected) {
             fetchProductDetails(rowSelected)
@@ -601,7 +600,7 @@ const AdminProduct = () => {
         })
        }
     }
-    
+
     return (
         <div>
             <h1 className="WapperHeaderAdmin">Quản lý sản phẩm</h1>

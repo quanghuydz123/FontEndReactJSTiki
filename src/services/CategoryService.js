@@ -27,6 +27,20 @@ export const createCategory  = async(data)=>{
 }   
 
 
+export const getDetailsCategory  = async(id)=>{
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/category/get-details-categoryParent?id=${id}`)
+    return res.data
+}
+
+
+export const updateCategory  = async(access_token,data)=>{
+    const res = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/category/update-category`,data,{
+        headers:{
+            token: `Bearer ${access_token}`
+        }
+    })
+    return res.data
+}
 
 
 
