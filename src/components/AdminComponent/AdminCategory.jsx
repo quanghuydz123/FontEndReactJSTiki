@@ -612,6 +612,7 @@ const AdminCategory = () => {
               >
                 <ButtonComponent
                 size={20}
+                onClick={(() => { setAmountChildCategoryDetails(prev => prev + 1) })}
                 styleButton={{
                   height: '30px',
                   width: '30px',
