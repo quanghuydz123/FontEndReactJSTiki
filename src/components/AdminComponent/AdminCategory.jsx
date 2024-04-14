@@ -277,13 +277,6 @@ const AdminCategory = () => {
     })
   }
 
-  const handleOnchangeDetails = (e) => {
-    setStateCateogryDetails({
-      ...stateCategoryDetails,
-      //[e.target.name]: e.target.value
-      names: { ...stateCategoryDetails.names, [e.target.name]: e.target.value }
-    })
-  }
   useEffect(() => {
     if (stateCategory.names) {
       setStateCateogry({
@@ -294,6 +287,14 @@ const AdminCategory = () => {
 
   }, [stateCategory.names])
 
+  
+  const handleOnchangeDetails = (e) => {
+    setStateCateogryDetails({
+      ...stateCategoryDetails,
+      names: { ...stateCategoryDetails.names, [e.target.name]: e.target.value}
+    })
+  }
+  
   useEffect(() => {
     if (stateCategoryDetails.names) {
       setStateCateogryDetails({
@@ -303,6 +304,9 @@ const AdminCategory = () => {
     }
 
   }, [stateCategoryDetails.names])
+
+
+
   const mutationCreateCategory = useMutationHooks(//call api
     (data) => {
       const res = CategoryService.createCategory(data)
@@ -399,7 +403,7 @@ const AdminCategory = () => {
   }, [rowSelected, previousRowSelected])
 
   useEffect(() => {
-    formUpdate.setFieldsValue({name:stateCategoryDetails?.nameArr[0],image:stateCategoryDetails.image})//set value vào input
+    formUpdate.setFieldsValue({...stateCategoryDetails.names,image:stateCategoryDetails.image})//set value vào input
   }, [formUpdate, stateCategoryDetails])
 
   const handleCancelDetails = () => {
@@ -413,11 +417,9 @@ const AdminCategory = () => {
     setAmountChildCategoryDetails(0)
     formUpdate.resetFields()//xóa hết value input
   }
-  console.log("state",stateCategoryDetails)
   const mutationUpdateCategory = useMutationHooks(//call api
   (data) => {
       const {token, idArr, image, nameArr } = data
-      console.log("token, stateCategoryDetails",token, idArr, image, nameArr)
       const res = CategoryService.updateCategory(token, {idArr, image, nameArr})
       return res
   })
@@ -444,6 +446,7 @@ const AdminCategory = () => {
       }
   })
   }
+  console.log("state",stateCategoryDetails)
   return (
     <div>
       <div>
@@ -480,6 +483,7 @@ const AdminCategory = () => {
             onFinish={onFinish}
             autoComplete="off"//
           >
+            
             <Form.Item
               label="Tên thể loại"
               name="name"
@@ -492,6 +496,8 @@ const AdminCategory = () => {
             >
               <InputComponent value={'' || stateCategory?.nameArr[0]} onChange={handleOnchange} name="name" />
             </Form.Item>
+
+           
 
             <Form.Item
               label="Tên thể loại con"
@@ -512,7 +518,7 @@ const AdminCategory = () => {
                   { color: 'black', fontSize: '14px' }
                 } />
               {Array.from({ length: amountChildCategory }).map((_, index) => // giống như vòng for
-                <div style={{ marginTop: '10px', display: 'flex' }} >
+                <div style={{ marginTop: '10px', display: 'flex' }} key={index} >
                   <InputComponent value={'' || stateCategory?.nameArr[index + 1]} onChange={handleOnchange} name={`name${index + 1}`} />
                   <ButtonComponent
                     size={20}
@@ -571,7 +577,7 @@ const AdminCategory = () => {
           </Form>
         </ModalComponent>
         <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={handleCancelDetails} width="50%">
-          <Loading isLoading={isPendingUpdate}>
+          <Loading isLoading={isPendingUpdate1}>
             <Form
               name="basic"
               labelCol={{
@@ -597,7 +603,7 @@ const AdminCategory = () => {
                   },
                 ]}
               >
-                <InputComponent value={'' || stateCategoryDetails?.nameArr[0]} onChange={handleOnchangeDetails} name="name" />
+                <InputComponent value={'' || stateCategoryDetails?.names[0]} onChange={handleOnchangeDetails} name="name" />
               </Form.Item>
 
               <Form.Item
@@ -617,13 +623,27 @@ const AdminCategory = () => {
                 styleTextButton={
                   { color: 'black', fontSize: '14px' }
                 } />
-                {Array.from({ length: amountChildCategoryDetails }).map((_, index) => // giống như vòng for
-                  <div style={{ marginTop: '10px', display: 'flex' }} >
+                {/* {Array.from({ length: amountChildCategoryDetails }).map((_, index) => // giống như vòng for
+                  <div style={{ marginTop: '10px', display: 'flex' }} key={index}>
                     <InputComponent value={'' || stateCategoryDetails?.nameArr[index + 1]} onChange={handleOnchangeDetails} name={`name${index + 1}`} />
                   </div>
-                )}
+                )} */}
               </Form.Item>
-
+              {Array.from({ length: amountChildCategoryDetails }).map((_, index) => // giống như vòng for
+                   <Form.Item
+                   label={`Tên thể loại con ${index+1}`}
+                   name={`name${index+1}`}
+                  //  rules={[
+                  //    {
+                  //      required: true,
+                  //      message: 'Tên thể loại không thể bỏ trống!',
+                  //    },
+                  //  ]}
+                 >
+                    <InputComponent value={'' || stateCategoryDetails?.nameArr[index + 1]} onChange={handleOnchangeDetails} name={`name${index + 1}`} />
+                 </Form.Item>
+   
+                )}
               <Form.Item
                 label="Image"
                 name="image"
