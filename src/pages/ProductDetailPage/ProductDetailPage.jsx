@@ -101,7 +101,7 @@ const ProductDetailPage = () => {
                                             image={product.image}
                                             name={product.name}
                                             price={product.price}
-                                            rating={product.rating}
+                                            rating={product.rating} 
                                             type={product.type}
                                             selled={product.selled}
                                             discount={product.discount}
