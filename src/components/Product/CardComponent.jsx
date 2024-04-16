@@ -26,7 +26,7 @@ const CardComponent = (props)=>{
                     bodyStyle={{padding:10}}
                     cover={<img alt="example" src={image} style={detailsPage ? {width:'180px'} : {width:'190px'}} />}
                     >
-                        <img src={logo} style={{}} className="WrapperImage" alt="logo"/>
+                        <img src={logo} style={{objectFit:'contain'}} className="WrapperImage" alt="logo"/>
                         <div className="NameProduct">
                             {name}
                         </div>

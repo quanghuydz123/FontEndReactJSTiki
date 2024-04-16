@@ -180,6 +180,7 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
                         style={{
                             width:'507px',
                             height:'507px',
+                            objectFit:'contain'
                         }}
                         alt="image-product"
                     />

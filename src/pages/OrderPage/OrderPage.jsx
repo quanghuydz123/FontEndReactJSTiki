@@ -184,7 +184,7 @@ const OrderPage = () => {
     } else if (isErrorUpdate || dataUpdate?.status === "ERR") {
       message.error(dataUpdate?.message || "Lỗi rồi")
     }
-  }, [isSuccessUpdate, isErrorUpdate])
+  }, [isSuccessUpdate, isErrorUpdate,dataUpdate])
   const handleNavigateProductOrder = (id) => {
     //window.open('/system/admin', '_blank');
     window.open(`/product-detail/${id}`, '_blank');
@@ -210,7 +210,7 @@ const OrderPage = () => {
   return (
     <div style={{ background: '#f5f5fa', with: '100%', height: '100vh' }}>
       <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
-        <h3 style={{ fontWeight: 'bold' }}>Giỏ hàng</h3>
+        <h4 style={{margin:0,padding:'10px 0'}}>Giỏ hàng</h4>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <WrapperLeft>
             <WrapperStyleHeaderDilivery>

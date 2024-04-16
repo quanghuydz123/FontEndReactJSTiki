@@ -72,7 +72,7 @@ const DetailsOrderPage = () => {
     <Loading isLoading={isLoading}>
     <div style={{ width: '100%', minHeight: 'calc(100vh)', background: '#f5f5fa' }}>
       <div style={{ width: '1270px', margin: '0 auto', minHeight: '100%' }}>
-        <h4>Chi tiết đơn hàng</h4>
+        <h4 style={{margin:0,padding:'10px 0'}}>Chi tiết đơn hàng</h4>
         <WrapperHeaderUser>
           <WrapperInfoUser>
             <WrapperLabel>Địa chỉ người nhận</WrapperLabel>
