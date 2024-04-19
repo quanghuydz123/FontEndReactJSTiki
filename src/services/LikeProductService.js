@@ -18,4 +18,11 @@ export const countLikeProducts  = async()=>{
 }
 
 
+export const getAllProductLikeByIdUser  = async(userId,limit)=>{
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/like-product/get-all-productLikeByIdUser/${userId}?limit=${limit}`);
+    return res.data
+}
+
+
+
 

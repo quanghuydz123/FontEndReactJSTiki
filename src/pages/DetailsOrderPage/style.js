@@ -66,7 +66,7 @@ export const WrapperItem = styled.div`
   width: 200px;
   font-weight: bold;
   &:last-child {
-    color: red
+    color: rgb(190, 30, 45)
   }
 `
 export const WrapperItemLabel = styled.div`
@@ -78,6 +78,8 @@ export const WrapperItemLabel = styled.div`
 
 export const WrapperAllPrice = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: flex-end
+  align-items: flex-end;
+  justify-content: flex-end;
+  font-weight:bold;
+
 `

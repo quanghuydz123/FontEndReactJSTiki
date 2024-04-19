@@ -132,7 +132,7 @@ const DetailsOrderPage = () => {
                 </WrapperNameProduct>
                 <WrapperItem>{convertPrice(order?.price)}</WrapperItem>
                 <WrapperItem>{order?.amount}</WrapperItem>
-                <WrapperItem>{order?.discount ? convertPrice(order?.price*(order?.discount/100)) : '0 VNĐ'} <span style={{color:'#ccc',fontSize:'10px'}}>-{order?.discount}%</span></WrapperItem>
+                <WrapperItem>{order?.discount ? convertPrice(order?.price*(order?.discount/100))  : '0 VNĐ'} {order?.discount &&  <span style={{color:'rgb(190, 30, 45)',fontSize:'10px'}}>-{order?.discount}%</span>}</WrapperItem>
 
 
               </WrapperProduct>
@@ -140,17 +140,17 @@ const DetailsOrderPage = () => {
           })}
 
 
-          <WrapperAllPrice>
+          {/* <WrapperAllPrice>
             <WrapperItemLabel>Tạm tính</WrapperItemLabel>
             <WrapperItem>0</WrapperItem>
-          </WrapperAllPrice>
+          </WrapperAllPrice> */}
           <WrapperAllPrice>
-            <WrapperItemLabel>Phí vận chuyển</WrapperItemLabel>
-            <WrapperItem>0</WrapperItem>
+            <WrapperItemLabel>Phí vận chuyển :</WrapperItemLabel>
+            <WrapperItem>{convertPrice(orderDetails?.data?.shippingPrice)}</WrapperItem>
           </WrapperAllPrice>
-          <WrapperAllPrice>
-            <WrapperItemLabel>Tổng cộng</WrapperItemLabel>
-            <WrapperItem><WrapperItem>{convertPrice(orderDetails?.data?.totalPrice)}</WrapperItem></WrapperItem>
+          <WrapperAllPrice style={{}}>
+            <WrapperItemLabel>Tổng cộng : </WrapperItemLabel>
+            <WrapperItem>{convertPrice(orderDetails?.data?.totalPrice)}</WrapperItem>
           </WrapperAllPrice>
         </WrapperStyleContent>
       </div>

@@ -13,6 +13,7 @@ import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 import MyOrderPage from "../pages/MyOrderPage/MyOrderPage";
 import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage/ForgotPasswordPage";
+import ProductfFavoritePage from "../pages/ProductfFavoritePage/ProductfFavoritePage";
 
 export const routes = [
     {   
@@ -98,7 +99,11 @@ export const routes = [
         page:ProfilePage,
         isShowHeader:true
     },
-
+    {
+        path:'/favorite',
+        page:ProductfFavoritePage,
+        isShowHeader:true
+    },
     {
         path:'*',
         page:NotFoundPage,

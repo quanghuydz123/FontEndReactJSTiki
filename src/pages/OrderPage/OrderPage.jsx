@@ -50,12 +50,12 @@ const OrderPage = () => {
   }, [order])
 
   const diliveryPriceMeno = useMemo(() => { //dùng useMemo để không tinh toán không cần thiết khi render
-    if(priceMeno >= 20000 && priceMeno < 500000){
-      return 10000
-    }else if(priceMeno >= 500000 || order?.selectedItemOrder?.length === 0) {
+    if(priceMeno >= 500000 && priceMeno < 10000000){
+      return 50000
+    }else if(priceMeno >= 10000000 || order?.selectedItemOrder?.length === 0) {
       return 0
     } else {
-      return 20000
+      return 100000
     }
   }, [priceMeno])
   const totalPriceMeno = useMemo(() => {
@@ -195,16 +195,16 @@ const OrderPage = () => {
   }
   const itemsDelivery = [
     {
-      title: '20.000 VNĐ',
-      description: 'Dưới 200.000 VNĐ',
+      title: '100.000 VNĐ',
+      description: 'Dưới 5.000.000 VNĐ',
     },
     {
-      title: '10.000 VNĐ',
-      description: 'Từ 200.000 VNĐ đến dưới 500.000 VNĐ',
+      title: '50.000 VNĐ',
+      description: 'Từ 5.000.000 VNĐ đến dưới 10.000.000 VNĐ',
     },
     {
       title: 'Free ship',
-      description : 'Trên 500.000 VNĐ',
+      description : 'Trên 10.000.000 VNĐ',
     },
   ]
   return (
@@ -214,8 +214,8 @@ const OrderPage = () => {
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <WrapperLeft>
             <WrapperStyleHeaderDilivery>
-              <StepComponent items={itemsDelivery} current={diliveryPriceMeno === 10000 
-                ? 2 : diliveryPriceMeno === 20000 ? 1 
+              <StepComponent items={itemsDelivery} current={diliveryPriceMeno === 50000 
+                ? 2 : diliveryPriceMeno === 100000 ? 1 
                 : order.selectedItemOrder.length === 0 ? 0:  3}/>
 
             </WrapperStyleHeaderDilivery>
