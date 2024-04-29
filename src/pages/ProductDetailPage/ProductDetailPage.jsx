@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import ProductDetailComponent from "../../components/Product/ProductDetailComponent";
 import { useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
-import { Image } from "antd";
 import CardComponent from "../../components/Product/CardComponent";
 import * as ProductService from '../../services/ProductService'
 import { useQuery } from "@tanstack/react-query";

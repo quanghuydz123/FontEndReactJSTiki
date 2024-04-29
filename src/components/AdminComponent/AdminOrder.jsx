@@ -175,14 +175,20 @@ const AdminOrder = () => {
     {
       title: 'Paided',
       dataIndex: 'isPaid',
-      sorter: (a, b) => a.isPaid.length - b.isPaid.length,
-      ...getColumnSearchProps('isPaid')
+      // sorter: (a, b) => a.isPaid.length - b.isPaid.length,
+      // ...getColumnSearchProps('isPaid')
     },
     {
       title: 'Shipped',
       dataIndex: 'isDelivered',
-      sorter: (a, b) => a.isDelivered.length - b.isDelivered.length,
-      ...getColumnSearchProps('isDelivered')
+      // sorter: (a, b) => a.isDelivered.length - b.isDelivered.length,
+      // ...getColumnSearchProps('isDelivered')
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      // sorter: (a, b) => a.isDelivered.length - b.isDelivered.length,
+      // ...getColumnSearchProps('isDelivered')
     },
     // {
     //   title: 'Payment method',
@@ -199,20 +205,32 @@ const AdminOrder = () => {
     {
       title: 'Action',
       dataIndex: 'action',
+      width:'138px',
       render: (_, record) =>
-        <div>
-          <DollarOutlined style={{
+        <div style={{display:'flex',justifyContent:'center'}}>
+          <DollarOutlined style={record?.status123 ? {
             color: 'green',
             fontSize: '28px',
+            cursor: 'pointer',
+          }:{
+            color: 'green',
+            fontSize: '28px',
+            display:'none',
             cursor: 'pointer',
           }}
           onClick={()=>setIsOpenModalPaidOrder(true)}
             title="Thanh toán"
           />
-          <CheckCircleOutlined style={{
+          <CheckCircleOutlined style={record?.status123 ?{
             color: 'orange',
             fontSize: '28px',
             cursor: 'pointer',
+            marginLeft: '10px'
+          }:{
+            color: 'orange',
+            fontSize: '28px',
+            cursor: 'pointer',
+            display:'none',
             marginLeft: '10px'
           }}
           onClick={()=>setIsOpenModalConfirmDeliveryOrder(true)}
@@ -234,7 +252,7 @@ const AdminOrder = () => {
   const dataTable = orders?.data?.length && orders?.data?.map((order) => {
     return {
       ...order, key: order._id, userName: order?.shippingAddress?.fullName, phone: order?.shippingAddress?.phone, address: order?.shippingAddress?.address, paymentMethod: orderContant.payment[order?.paymentMethod], isPaid: order?.isPaid ? <Badge status="success" text="Đã thanh toán" /> : <Badge status="warning" text="Chưa thanh toán"></Badge>,
-      isDelivered: order?.isDelivered ? <Badge status="success" text="Đã giao hàng" /> : <Badge status="warning" text="Đang giao hàng" />, totalPrice: convertPrice(order?.totalPrice)
+      isDelivered: order?.isDelivered ? <Badge status="success" text="Đã giao hàng" /> : <Badge status="warning" text="Đang giao hàng" />,status:order?.status ? <Badge status="success" text="Đã xác nhận" /> : <Badge status="error" text="Đã hủy" />,status123:order?.status, totalPrice: convertPrice(order?.totalPrice)
     }
   })
   console.log("row",rowSelected)
@@ -301,7 +319,7 @@ const handleConfirmOrder =()=>{
         <div style={{
           marginTop: '20px'
         }}>
-          <TableComponent columns={columns} isLoading={isLoadingOrders} data={dataTable} onRow={(record, rowIndex) => {
+          <TableComponent unRowSelection={true} columns={columns} isLoading={isLoadingOrders} data={dataTable} onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
                 setRowSelected(record._id)

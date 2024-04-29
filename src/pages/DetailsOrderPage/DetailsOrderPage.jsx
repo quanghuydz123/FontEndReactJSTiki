@@ -67,7 +67,6 @@ const DetailsOrderPage = () => {
       }
     }
   },[orderDetails])
-  console.log("order",orderDetails)
   return (
     <Loading isLoading={isLoading}>
     <div style={{ width: '100%', minHeight: 'calc(100vh)', background: '#f5f5fa' }}>

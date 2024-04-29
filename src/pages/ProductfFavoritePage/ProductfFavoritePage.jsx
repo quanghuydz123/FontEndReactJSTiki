@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import * as ProductService from '../../services/ProductService'
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { colors } from "../../contants";
 import CardComponent from "../../components/Product/CardComponent";
@@ -7,9 +6,12 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import Loading from "../../components/LoadingComponent/Loading";
 import * as LikeProductService from '../../services/LikeProductService'
 import { useSelector } from "react-redux";
+import { Button, Result } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const ProductfFavoritePage = ()=>{
     const user = useSelector((state) => state.user)
+    const navigate = useNavigate()
     const [limit, setLimit] = useState(12)
     // const fetchProductAll = async (context) => { //context get value cua useQuery
     //     const limit = context?.queryKey && context?.queryKey[1]
@@ -58,7 +60,7 @@ const ProductfFavoritePage = ()=>{
                         </h2>
                         <Loading isLoading={isLoading}>
                             <div className="WrapperProducts">
-                                {products?.data?.filter(item=>item.product!=null).map((product, index) => {
+                                {products?.data?.length !== 0 ? products?.data?.filter(item=>item.product!=null).map((product, index) => {
                                     return (
                                         <CardComponent key={index}
                                             countInStock={product?.product.countInStock}
@@ -74,7 +76,13 @@ const ProductfFavoritePage = ()=>{
                                             totalLike={allLikeProducts?.filter((item) => item._id.product === product?.product._id)[0]?.totalLikes}
                                         />
                                     )
-                                })}
+                                }):<Result
+                                style={{width:'100%'}}
+                                status="404"
+                                title="Chưa có sản phẩm yêu thích"
+                                subTitle="Hãy quay về trang chủ và tìm sản phẩm"
+                                extra={<Button onClick={() => { navigate('/') }} type="primary">Trang chủ</Button>}
+                              />}
 
 
                             </div>

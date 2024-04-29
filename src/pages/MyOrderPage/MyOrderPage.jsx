@@ -15,6 +15,11 @@ import LinkComponent from '../../components/LinkComponent/LinkComponent';
 
 const MyOrderPage = () => {
   const user = useSelector((state) => state.user)
+  const [dateCancelOrder,setDateCancelOrder]= useState({
+    day:'',
+    month:'',
+    year:''
+  })
   const [isOpenModalDetele, setIsOpenModalDelete] = useState('')
   const [OrderSelected, setOrderSelected] = useState('')
   const location = useLocation()
@@ -68,16 +73,16 @@ const MyOrderPage = () => {
     } else if (dataCancel?.status === 'ERR') {
       message.error(dataCancel?.message)
     } else if (isErrorCancle) {
-      message.error()
+      message.error("Lỗi rồi")
     } else if (isSuccessCancel) {
-      message.success('thành công')
+      message.success('Thành công')
     }
   }, [isErrorCancle, isSuccessCancel, dataCancel])
   const renderProduct = (data) => {
-    return data?.map((order) => {
+    return data?.map((order,index) => {
       return (
         <>
-          <WrapperHeaderItem key={order?._id}>
+          <WrapperHeaderItem key={index}>
           <LinkComponent to={`/product-detail/${order?.product}`} style={{color:'black'}} colorOnMouseEnter='rgb(26,148,255)' colorOnMouseLeave='black' >
             <div style={{ display: 'flex', cursor: 'pointer' }}>
               <img src={order?.image}
@@ -105,17 +110,25 @@ const MyOrderPage = () => {
       )
     })
   }
+  console.log("order",data?.data);
   return (
     <Loading isLoading={isLoading || isLoadingCancel}>
       <WrapperContainer>
         <div style={{ height: '100%', width: '1270px', margin: '0 auto', marginBottom: '20px' }}>
           <h4 style={{margin:0,padding:'10px 0'}}>Đơn hàng của tôi</h4>
           <WrapperListOrder>
-            {data?.data?.length !== 0 ? data?.data?.map((order) => {
+            {data?.data?.length !== 0 ? data?.data?.map((order,index) => {
               return (
-                <WrapperItemOrder key={order?._id}>
+                <WrapperItemOrder key={index}>
                   <WrapperStatus>
-                    <span style={{ fontSize: '14px', fontWeight: 'bold' }}>Trạng thái</span>
+                    <div style={{display:'flex',justifyContent:'space-between'}}>
+                        <span style={{ fontSize: '14px', fontWeight: 'bold' }}>Trạng thái</span>
+                        {!order?.status && 
+                        <div style={{display:'flex',flexDirection:'column',alignItems:'end'}}>
+                          <span style={{ fontSize: '14px', fontStyle:'italic',color:'red',fontWeight:'bold'}}>Đơn đã hủy</span>
+                          <span>Ngày hủy: 28 - 04 - 2024</span>
+                        </div>}
+                    </div>
                     <div>
                       <span style={{ color: 'rgb(255, 66, 78)' }}>Giao hàng: </span>
                       <span style={{ color: 'rgb(90, 32, 193)', fontWeight: 'bold' }}>{order?.isDelivered ? 'Đã giao hàng' : 'Đang giao hàng'}</span>
@@ -134,7 +147,7 @@ const MyOrderPage = () => {
                       >{convertPrice(order?.totalPrice)}</span>
                     </div>
                     <div style={{ display: 'flex', gap: '10px' }}>
-                      <ButtonComponent
+                      {(order?.status && !(order?.isDelivered && order?.isPaid)) &&  <ButtonComponent
                         onClick={() => { setIsOpenModalDelete(true); setOrderSelected(order); }}
                         size={40}
                         styleButton={{
@@ -145,7 +158,7 @@ const MyOrderPage = () => {
                         textButton={'Hủy đơn hàng'}
                         styleTextButton={{ color: '#9255FD', fontSize: '14px' }}
                       >
-                      </ButtonComponent>
+                      </ButtonComponent>}
                       <LinkComponent to={`/details-order/${order?._id}`} style={{color:'black'}} colorOnMouseEnter='rgb(26,148,255)' colorOnMouseLeave='black' >
                       <ButtonComponent
                         size={40}

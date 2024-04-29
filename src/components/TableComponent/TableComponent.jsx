@@ -4,7 +4,7 @@ import Loading from "../LoadingComponent/Loading";
 
 const TableComponent = (props)=>{
     const [selectionType, setSelectionType] = useState('checkbox');
-    const {columns,data,isLoading,onRow,handleDeleteMany} = props  
+    const {columns,data,isLoading,onRow,handleDeleteMany,unRowSelection} = props  
     const [rowSelectedKey,setRowSelectedKey] = useState([])
       const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
@@ -49,7 +49,7 @@ const TableComponent = (props)=>{
             >Xóa tất cả</span>
           </div> }
             <Table
-                rowSelection={{
+                rowSelection={!unRowSelection && {
                     type: selectionType,
                     ...rowSelection,
                 }}

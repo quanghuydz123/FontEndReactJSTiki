@@ -34,7 +34,6 @@ const SignInPage = ()=>{
             message.warning(location?.state?.message)
         }
     },[])
-    console.log("data",data)
     useEffect(()=>{
         if(data?.status === "ERR"){
             message.error()   

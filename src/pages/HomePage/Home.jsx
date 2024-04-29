@@ -139,7 +139,7 @@ const HomePage = () => {
                         <Loading isLoading={isLoading}>
                             <div className="WrapperProducts">
                                 {/* .filter(item => item.name.includes(product.search)) */}
-                                {products?.data.map((product, index) => {
+                                {products?.data?.map((product, index) => {
                                     return (
                                         <CardComponent key={index}
                                             countInStock={product.countInStock}
