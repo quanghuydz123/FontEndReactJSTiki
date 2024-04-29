@@ -28,6 +28,11 @@ const DetailsOrderPage = () => {
     month:'',
     year:''
   })
+  const [dateCancel,setDayCancel]= useState({
+    day:'',
+    month:'',
+    year:''
+  })
   const fetchDetailsOrder = async (context) => {
     const id = context.queryKey[1]
     const token = context.queryKey[2]
@@ -80,6 +85,9 @@ const DetailsOrderPage = () => {
               <div className='address-info'><span>Ngày đặt hàng: </span><span style={{color:'rgb(234, 133, 0)'}}>{`${dateOrder?.day} - ${dateOrder.month} - ${dateOrder.year}`}</span></div>
               <div className='address-info'><span>Địa chỉ: </span> {orderDetails?.data?.shippingAddress?.address}</div>
               <div className='phone-info' style={{margin:0}}><span>Điện thoại: </span>{orderDetails?.data?.shippingAddress?.phone}</div>
+              <div className='address-info'><span>Ngày đặt hàng: </span><span style={{color:'rgb(234, 133, 0)'}}>{`${dateOrder?.day} - ${dateOrder.month} - ${dateOrder.year}`}</span></div>
+              <div className='address-info'><span>Ngày đặt hàng: </span><span style={{color:'rgb(234, 133, 0)'}}>{`${dateOrder?.day} - ${dateOrder.month} - ${dateOrder.year}`}</span></div>
+
             </WrapperContentInfo>
           </WrapperInfoUser>
           <WrapperInfoUser>
@@ -106,6 +114,7 @@ const DetailsOrderPage = () => {
             <WrapperItemLabel>Giá</WrapperItemLabel>
             <WrapperItemLabel>Số lượng</WrapperItemLabel>
             <WrapperItemLabel>Giảm giá</WrapperItemLabel>
+
           </div>
           {orderDetails?.data?.orderItems.map((order, index) => {
             return (

@@ -110,7 +110,10 @@ const MyOrderPage = () => {
       )
     })
   }
-  console.log("order",data?.data);
+  const convertDate = (dateCancel)=>{
+    const date = new Date(dateCancel);
+    return <span style={{ fontSize: '14px', fontStyle:'italic',color:'red',fontWeight:'bold'}}>Ngày hủy: {`${date.getDate()} - ${date.getMonth() + 1} - ${date.getFullYear()}`}</span>
+  }
   return (
     <Loading isLoading={isLoading || isLoadingCancel}>
       <WrapperContainer>
@@ -123,11 +126,13 @@ const MyOrderPage = () => {
                   <WrapperStatus>
                     <div style={{display:'flex',justifyContent:'space-between'}}>
                         <span style={{ fontSize: '14px', fontWeight: 'bold' }}>Trạng thái</span>
-                        {!order?.status && 
-                        <div style={{display:'flex',flexDirection:'column',alignItems:'end'}}>
-                          <span style={{ fontSize: '14px', fontStyle:'italic',color:'red',fontWeight:'bold'}}>Đơn đã hủy</span>
-                          <span>Ngày hủy: 28 - 04 - 2024</span>
-                        </div>}
+                        {
+                          !order?.status && 
+                          <div style={{display:'flex',flexDirection:'column',alignItems:'end'}}>
+                            <span style={{ fontSize: '14px', fontStyle:'italic',color:'red',fontWeight:'bold'}}>Đơn đã hủy</span>
+                            {convertDate(order?.cancelAt)}
+                          </div>
+                        }
                     </div>
                     <div>
                       <span style={{ color: 'rgb(255, 66, 78)' }}>Giao hàng: </span>
