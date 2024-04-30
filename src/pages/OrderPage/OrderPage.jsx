@@ -207,6 +207,7 @@ const OrderPage = () => {
       description : 'Trên 10.000.000 VNĐ',
     },
   ]
+  console.log("order",order)
   return (
     <div style={{ background: '#f5f5fa', with: '100%', height: '100vh' }}>
       <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>

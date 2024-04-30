@@ -17,7 +17,7 @@ import { useMutationHooks } from "../../hooks/useMutationHook";
 import Loading from "../LoadingComponent/Loading";
 import { useQuery } from "@tanstack/react-query";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import TextArea from "antd/es/input/TextArea";
 import Editor from "ckeditor5-custom-build"
@@ -42,6 +42,7 @@ const AdminProduct = () => {
     const [typeSelect, setTypeSelect] = useState('')
     const [previousRowSelected, setPreviousRowSelected] = useState(true);
     const [check,setCheck] = useState(false)
+    const dispatch = useDispatch()
     const [stateProduct, setStateProduct] = useState({
         name: '',
         price: '',
@@ -55,6 +56,7 @@ const AdminProduct = () => {
         specifications:''
     })
     const [stateProductDetals, setStateProductDetails] = useState({
+        id:'',
         name: '',
         price: '',
         description: '',
@@ -130,6 +132,7 @@ const AdminProduct = () => {
         const res = await ProductService.getDetailsProduct(id)
         if (res?.data) {
             setStateProductDetails({
+                id:res?.data?._id,
                 name: res?.data.name,
                 price: res?.data.price,
                 description: res?.data.description,
@@ -430,7 +433,7 @@ const AdminProduct = () => {
                 queryProduct.refetch()
             },
             onSuccess:()=>{
-                console.log("thành công",order)
+                dispatch(updateOrder({...stateProductDetals}))
             }
         })
     }
@@ -605,7 +608,7 @@ const AdminProduct = () => {
         })
        }
     }
-
+    console.log("order",order)
     return (
         <div>
             <h1 className="WapperHeaderAdmin">Quản lý sản phẩm</h1>
