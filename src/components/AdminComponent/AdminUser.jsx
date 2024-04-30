@@ -488,7 +488,7 @@ const AdminUser = ()=>{
                         span: 18,
                     }}
                     style={{
-                        maxWidth: 600,
+                        minWidth: 0,
                     }}
                     form={formUpdate}
                     onFinish={onUpdateUser}

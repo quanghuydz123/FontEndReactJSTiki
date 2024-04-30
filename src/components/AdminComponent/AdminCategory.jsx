@@ -477,7 +477,7 @@ const AdminCategory = () => {
               span: 18,
             }}
             style={{
-              maxWidth: 600,
+              minWidth: 0,
             }}
             form={form}
             onFinish={onFinish}
@@ -568,7 +568,7 @@ const AdminCategory = () => {
                 offset: 8,
                 span: 16,
               }}
-              style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '0px' }}
+              style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '50px' }}
             >
               <Button type="primary" htmlType="submit">
                 Thêm
@@ -587,7 +587,7 @@ const AdminCategory = () => {
                 span: 18,
               }}
               style={{
-                maxWidth: 600,
+                minWidth: 0,
               }}
               form={formUpdate}
               onFinish={onUpdateProduct}

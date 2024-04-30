@@ -136,10 +136,14 @@ export const orderSlide = createSlice({
         state.isSuccessOrder=true
 
     },
+    updateOrder:(state, action)=>{
+       console.log("123",action.payload)
+
+    },
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { addOrderProduct,decreaseAnomunt,removeOrderProduct,increaseAnomunt,removeAllOrderProduct,selectedOrder,buyNowProduct ,resetOrder } = orderSlide.actions
+export const { addOrderProduct,decreaseAnomunt,removeOrderProduct,increaseAnomunt,removeAllOrderProduct,selectedOrder,buyNowProduct ,resetOrder,updateOrder } = orderSlide.actions
 
 export default orderSlide.reducer

@@ -22,9 +22,11 @@ import ModalComponent from "../ModalComponent/ModalComponent";
 import TextArea from "antd/es/input/TextArea";
 import Editor from "ckeditor5-custom-build"
 import { CKEditor } from '@ckeditor/ckeditor5-react'
+import {updateOrder} from "../../redux/slides/orderSlide";
 
 
 const AdminProduct = () => {
+    const order = useSelector((state) => state.order)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [rowSelected, setRowSelected] = useState('')
     const [isOpenDrawer, setIsOpenDrawer] = useState('')
@@ -426,6 +428,9 @@ const AdminProduct = () => {
         mutationUpdateProduct.mutate({ id: rowSelected, token: user?.access_token, stateProductDetals }, {
             onSettled: () => {//tự động load lại khi update
                 queryProduct.refetch()
+            },
+            onSuccess:()=>{
+                console.log("thành công",order)
             }
         })
     }
@@ -633,7 +638,7 @@ const AdminProduct = () => {
                             span: 18,
                         }}
                         style={{
-                            maxWidth: 600,
+                            minWidth: 0,
                         }}
                         form={form}
                         onFinish={onFinish}
@@ -854,7 +859,7 @@ const AdminProduct = () => {
                             span: 18,
                         }}
                         style={{
-                            maxWidth: 600,
+                            minWidth: 0,
                         }}
                         form={formUpdate}
                         onFinish={onUpdateProduct}

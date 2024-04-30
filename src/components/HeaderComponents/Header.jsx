@@ -133,7 +133,8 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
                 <Col span={6} style={{
                     display:'flex',
                     gap:'54px',
-                    alignItems:'center'
+                    alignItems:'center',
+                    justifyContent:'space-between'
                 }}>
                     <Loading isLoading={loading}>
                         <WapperHeaderAccuont>

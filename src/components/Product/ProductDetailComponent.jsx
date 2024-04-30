@@ -109,6 +109,7 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
             dispatch(resetOrder())
         }
     },[])
+    console.log("productDetails",productDetails)
     const handleAddOrderProduct = ()=>{
         if(!user?.id){
             navigate('/sign-in',{state:{path:location.pathname,message:'Vui lòng đăng nhập trước khi thêm sản phẩm'}}) //giữ lại trang khi người dùng đăng nhập lại
@@ -128,13 +129,16 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
             // check.current ++
             dispatch(addOrderProduct({
                 orderItem:{
+                    id:productDetails?._id,
                     name: productDetails?.name,
                     amount:numProduct,
                     image:productDetails?.image,
                     price:productDetails?.price,
                     product:productDetails?._id,
                     discount:productDetails?.discount,
-                    countInStock:productDetails?.countInStock
+                    countInStock:productDetails?.countInStock,
+                    description:productDetails?.description,
+                    specifications:productDetails?.specifications
                 }
             }))
             if(order?.isSuccessOrder && (Number((order123.current.length!==0 ? Number(order123?.current[0]?.amount) : 0))+Number(numProduct))<=Number(order123.current.length!==0 ? order123?.current[0]?.countInStock : productDetails?.countInStock)){
@@ -146,13 +150,16 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
     const handleBuyNowProduct = ()=>{
         dispatch(buyNowProduct({
             orderItem:{
+                id:productDetails?._id,
                 name: productDetails?.name,
                 amount:numProduct,
                 image:productDetails?.image,
                 price:productDetails?.price,
                 product:productDetails?._id,
                 discount:productDetails?.discount,
-                countInStock:productDetails?.countInStock
+                countInStock:productDetails?.countInStock,
+                description:productDetails?.description,
+                specifications:productDetails?.specifications
             }
         }))
         navigate('/payment',{ state: [productDetails?._id] })
@@ -243,7 +250,7 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
                     </Row> */}
                 </Col>
                 <Col span={14} style={{paddingLeft:'10px'}} >
-                    <h1 className="WapperStyleNameProduct">{productDetails?.name}</h1>
+                    <h1 className="WapperStyleNameProduct">{productDetails?.name} {productDetails?.countInStock <=0 && <span style={{  fontStyle:'italic',color:'red',fontWeight:'bold'}}>Tạm thời hết hàng</span>}</h1>
                     <div style={{display:'flex', alignItems:'center'}}>
                         {/* {renderStar(productDetails?.rating)} */}
                         {/* <Rate allowHalf defaultValue={productDetails?.rating} value={productDetails?.rating} /> */}
@@ -289,6 +296,7 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
                                 border:'none',
                                 borderRadius:'4px'
                             }}
+                            disabled={productDetails?.countInStock <= 0}
                             onClick={handleAddOrderProduct}
                             textButton={"Thêm vào giỏ hàng"}
                             styleTextButton={{color:'white'}}
@@ -307,6 +315,7 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
                                 border:'1px solid rgb(13,92,182)',
                                 borderRadius:'4px'
                             }}
+                            disabled={productDetails?.countInStock <= 0}
                             onClick={handleBuyNowProduct}
                             textButton={"Mua ngay"}
                             styleTextButton={{color:'rgb(13,92,182)',fontSize:'15px',fontWeight:500}}
