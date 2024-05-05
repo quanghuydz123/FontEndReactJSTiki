@@ -148,6 +148,10 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
         }
     }
     const handleBuyNowProduct = ()=>{
+       if(!user?.phone || !user?.address  || !user?.address){
+        message.warning("Hãy cập nhập thông tin đầy đủ")
+        navigate('/profile-user')
+       }else{
         dispatch(buyNowProduct({
             orderItem:{
                 id:productDetails?._id,
@@ -163,6 +167,7 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
             }
         }))
         navigate('/payment',{ state: [productDetails?._id] })
+       }
     }
     const fetchProductAllLike = async (context)=>{ //context get value cua useQuery
         const res = await LikeProductService.countLikeProducts()

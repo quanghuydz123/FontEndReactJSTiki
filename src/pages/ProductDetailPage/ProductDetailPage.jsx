@@ -11,6 +11,7 @@ import LinkComponent from "../../components/LinkComponent/LinkComponent";
 import * as CategoryService from '../../services/CategoryService'
 import { Col, Row } from 'antd';
 import { colors } from "../../contants";
+import { useSelector } from "react-redux";
 
 const ProductDetailPage = () => {
     const { id } = useParams() //lấy value params  truyền vào

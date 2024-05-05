@@ -52,7 +52,7 @@ const PaymentPage = () => {
   }, [order])
 
   const diliveryPriceMeno = useMemo(() => { //dùng useMemo để không tinh toán không cần thiết khi render
-    if(priceMeno >= 500000 && priceMeno < 10000000){
+    if(priceMeno >= 5000000 && priceMeno < 10000000){
       return 50000
     }else if(priceMeno >= 10000000 || order?.selectedItemOrder?.length === 0) {
       return 0
