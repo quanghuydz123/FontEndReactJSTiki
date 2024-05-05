@@ -137,17 +137,27 @@ export const orderSlide = createSlice({
 
     },
     updateOrder:(state, action)=>{
-        const {id,countInStock,discount,price,description,image,specifications,name} = action.payload
-        const itemOrder = state?.orderItems?.find((item)=>item?.product === id)
-        if(itemOrder){
-            itemOrder.countInStock = parseFloat(countInStock)
-            itemOrder.description = description
-            itemOrder.discount = parseFloat(discount)
-            itemOrder.price = parseFloat(price)
-            itemOrder.image = image
-            itemOrder.specifications = specifications
-            itemOrder.name = name
-        }
+        const { id, countInStock, discount, price, description, image, specifications, name } = action.payload;
+
+        // Tìm itemOrder trong mảng orderItems
+        const updatedOrderItems = state.orderItems.map(item => {
+            if (item.product === id) {
+                // Nếu tìm thấy, tạo một bản sao của item và cập nhật các thuộc tính mới
+                return {
+                    ...item,
+                    countInStock: parseFloat(countInStock),
+                    description: description,
+                    discount: parseFloat(discount),
+                    price: parseFloat(price),
+                    image: image,
+                    specifications: specifications,
+                    name: name
+                };
+            }
+            return item; // Trả về item không thay đổi nếu không phải là item cần cập nhật
+        });
+        state.orderItems = updatedOrderItems;
+    
 
     },
   }

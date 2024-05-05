@@ -11,12 +11,15 @@ import InputComponent from '../../components/InputComponent/InputComponent';
 import { colors } from '../../contants';
 import { increaseAnomunt, decreaseAnomunt, removeOrderProduct, removeAllOrderProduct, selectedOrder } from "../../redux/slides/orderSlide";
 import * as UserService from '../../services/UserService'
+import * as ProductService from '../../services/ProductService'
+
 import { useMutationHooks } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
 import { updateUser } from '../../redux/slides/userSlide';
 import { useNavigate } from 'react-router-dom';
 import StepComponent from '../../components/Step/Step';
 import LinkComponent from '../../components/LinkComponent/LinkComponent';
+import { useQuery } from '@tanstack/react-query';
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order)
@@ -32,6 +35,8 @@ const OrderPage = () => {
   const [formUpdate] = Form.useForm()
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false)
   const [idProductSelected,setIdProductSelected] = useState('')
+  const [checkAmount,setCheckAmonut] = useState(true)
+  const [nameProductOutOfStock,setNameProductOutOfStock] = useState([])
   const priceMeno = useMemo(() => { //dùng useMemo để không tinh toán không cần thiết khi render
     const result = order?.selectedItemOrder?.reduce((total, cur) => {
       return total + ((cur.price * cur.amount))
@@ -137,6 +142,24 @@ const OrderPage = () => {
   useEffect(() => {
     formUpdate.setFieldsValue(stateUserDetals)//set value vào input
   }, [formUpdate, stateUserDetals])
+  //Xử lý sản phẩm hết 
+  useEffect(()=>{
+    order?.selectedItemOrder?.map((order,index)=>{
+        const product = products?.data?.find((item) => item?._id === order?.id)
+        console.log("order?.amount > product?.countInStock,",order?.amount > product?.countInStock)
+        if(order?.amount > product?.countInStock){
+            if(!nameProductOutOfStock?.includes(product?.name)){
+              setNameProductOutOfStock(prevState => [...prevState, product?.name]);
+            }
+          }else{
+            setNameProductOutOfStock(prevState => prevState.filter(name => name !== product?.name));
+          }
+    })
+    
+  },[order?.selectedItemOrder])
+  console.log("name",nameProductOutOfStock)
+  // console.log("oder",order)
+  console.log(checkAmount)
   const handleAddCard = () => {
     if (order?.selectedItemOrder?.length < 1) {
       message.warning("Hãy chọn đơn hàng cần thanh toán")
@@ -145,9 +168,12 @@ const OrderPage = () => {
       setIsOpenModalUpdateInfo(true)
       message.warning("Hãy cập nhập thông tin đầy đủ")
     } else {
-      navigate('/payment', { state: listChecked })
+      if(nameProductOutOfStock.length == 0){
+        navigate('/payment', { state: listChecked })
+      }else{
+        message.warning("dã hết hàng")
+      }
     }
-
   }
   const hanldeCancelUpdate = () => {
     setIsOpenModalUpdateInfo(false)
@@ -207,7 +233,16 @@ const OrderPage = () => {
       description : 'Trên 10.000.000 VNĐ',
     },
   ]
-  console.log("order",order)
+  //Lấy all sản phẩm
+  const fetchProductAll = async (context) => { //context get value cua useQuery
+    const res = await ProductService.getAllProduct()
+    return res
+  
+  }
+  const { isLoading, data: products, isPlaceholderData } = useQuery({
+      queryKey: ['products'],
+      queryFn: fetchProductAll,
+  });
   return (
     <div style={{ background: '#f5f5fa', with: '100%', height: '100vh' }}>
       <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
