@@ -148,10 +148,12 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
         }
     }
     const handleBuyNowProduct = ()=>{
-       if(!user?.phone || !user?.address  || !user?.address){
+       if(!user?.id){
+        navigate('/sign-in',{state:{path:location.pathname,message:'Vui lòng đăng nhập trước khi thêm sản phẩm'}}) //giữ lại trang khi người dùng đăng nhập lại
+       }else if(!user?.phone || !user?.address  || !user?.address){
         message.warning("Hãy cập nhập thông tin đầy đủ")
         navigate('/profile-user')
-       }else{
+    }else{
         dispatch(buyNowProduct({
             orderItem:{
                 id:productDetails?._id,
