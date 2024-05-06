@@ -151,7 +151,7 @@ const ProductDetailComponent = ({setProductDetails,setCategoryProduct,idProduct,
        if(!user?.id){
         navigate('/sign-in',{state:{path:location.pathname,message:'Vui lòng đăng nhập trước khi thêm sản phẩm'}}) //giữ lại trang khi người dùng đăng nhập lại
        }else if(!user?.phone || !user?.address  || !user?.address){
-        message.warning("Hãy cập nhập thông tin đầy đủ")
+        message.warning("Hãy cập nhập thông tin đầy đủ đi")
         navigate('/profile-user')
     }else{
         dispatch(buyNowProduct({
