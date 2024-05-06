@@ -17,7 +17,7 @@ import { useMutationHooks } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
 import { updateUser } from '../../redux/slides/userSlide';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PayPalButton } from 'react-paypal-button-v2';
+// import { PayPalButton } from 'react-paypal-button-v2';
 
 const PaymentPage = () => {
   const order = useSelector((state) => state.order)
@@ -314,14 +314,15 @@ const PaymentPage = () => {
                 </WrapperTotal>
               </div>
               {payment === 'paypal' && sdkReadty ? <div style={{ width: '320px' }}>
-                <PayPalButton
+                {/* <PayPalButton
                   amount={(Math.round((totalPriceMeno - priceDiscountMeno)/24755 * 10) / 10)}
                   // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
                   onSuccess={onSuccessPaypal}
                   onError={() => {
                     alert("Mua thất bại")
                   }}
-                />
+                /> */}
+                <span>Tạm thời ngưng hoạt động do 1 số vấn đề vui lòng thông cảm cho ạ!!</span>
               </div> :
                 <ButtonComponent
                   onClick={() => handleAddOrder()}
