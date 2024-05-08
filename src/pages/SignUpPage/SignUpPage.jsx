@@ -51,8 +51,8 @@ const SignUpPage = ()=>{
 
     const handleSignUp = ()=>{
         mutation.mutate({
-            name:"Nguyễn Quang Huy",
-            phone:"0367386108",
+            name:"Người dùng",
+            phone:"",
             email,// truyền data req.body
             password,
             confirmPassword
