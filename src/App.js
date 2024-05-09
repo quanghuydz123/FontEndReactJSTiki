@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, useParams, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useParams, useLocation,useNavigate } from 'react-router-dom'
 import HomePage from './pages/HomePage/Home'
 import OrderPage from './pages/OrderPage/OrderPage'
 import { routes } from './routes'
@@ -28,6 +28,7 @@ function App() {
   const dispatch = useDispatch()
   const [loading,setLoading] = useState(false)
   const user = useSelector((state) => state.user)
+  const navigate = useNavigate()
   useEffect(() => {//lưu data token thi load lại web
     setLoading(true)
     let storageData = localStorage.getItem('access_token')
