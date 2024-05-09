@@ -40,6 +40,19 @@ function App() {
     }
     setLoading(false)
   }, [])
+  useEffect(()=>{
+    const fetchData = async () => {
+      if (user?.stateUser === 0) {
+        setLoading(true);
+        await UserService.loguotUser();
+        dispatch(resetUser());
+        localStorage.removeItem('access_token');
+        navigate('/sign-in', { state: { path: location.pathname, message: 'Tài khoản đã bị ngừng hoạt động !!' } }); //giữ lại trang khi người dùng đăng nhập lại
+        setLoading(false);
+      }
+    };
+    fetchData();
+  },[user])
   UserService.axiosJWT.interceptors.request.use(async (config) => {//xử lý token hết hạn
     // Do something before request is sent
     const  currentTime = new Date 
@@ -76,7 +89,7 @@ function App() {
     let storageRefreshToken = localStorage.getItem('refresh_token')
     const refreshToken = JSON.parse(storageRefreshToken)
     const res = await UserService.getDetailsUser(id,token)
-    dispatch(updateUser({...res?.data,access_token:token,refreshToken:refreshToken}))
+    dispatch(updateUser({...res?.data,stateUser:res?.data?.status==true ? 1 : 0,access_token:token,refreshToken:refreshToken}))
 }
   return (
     <div>
