@@ -21,6 +21,7 @@ const ForgotPasswordPage = ()=>{
     const [password,setPassword] = useState('')
     const [confirmPassword,setComfirmPassword] = useState('')
     const [checkOtp,setCheckOpt] = useState(false)
+    const [emailSendOpt,setEmailSendOpt] = useState('')
     const mutation = useMutationHooks(//call api
          (data) => UserService.forgotPassword(data)
     )
@@ -71,6 +72,7 @@ const ForgotPasswordPage = ()=>{
         else { setCheckOpt(false) }
     }
     const handleSendOpt=()=>{
+        setCheckOpt(false)
         setValueOpt(Math.floor(Math.random() * (999999-100000))+100000)
         
     }
@@ -84,9 +86,11 @@ const ForgotPasswordPage = ()=>{
         }
         else if(dataSendOpt?.status === "OK"){
             message.success(dataSendOpt?.message)   
+            setEmailSendOpt(email)
         }
         else if(isSuccess){
             message.success()
+            setEmailSendOpt(email)
         }else if(isError){
             message.error()
         }
@@ -117,7 +121,7 @@ const ForgotPasswordPage = ()=>{
                         <InputFormComponent  handleOnChange={handleOnchangeInputOpt} placeholder="Nhập OTP" style={{marginRight:'20px'}} />
                         <ButtonComponent
                         size={20}
-                        disabled={checkOtp || !email}
+                        disabled={(checkOtp && emailSendOpt===email) || !email}
                         onClick={handleSendOpt}
                         styleButton={{
                             backgroundColor: colors.primary,
@@ -130,7 +134,7 @@ const ForgotPasswordPage = ()=>{
                         styleTextButton={{ color: 'white' }}
                     />
                     </div>
-                    <div style={checkOtp ? { position: 'relative',marginTop:'10px' } : { position: 'relative',marginTop:'10px',display:"none" }}>
+                    <div style={(checkOtp && emailSendOpt===email) ? { position: 'relative',marginTop:'10px' } : { position: 'relative',marginTop:'10px',display:"none" }}>
                         <span
                         onClick={() => setIsShowPassword(!isShowPassword)}
                         style={{
@@ -153,7 +157,7 @@ const ForgotPasswordPage = ()=>{
                         handleOnChange={hanleOnChangePassword}
                         />
                     </div>
-                    <div style={checkOtp ? { position: 'relative' } : { position: 'relative',display:"none" }}>
+                    <div style={(checkOtp && emailSendOpt===email) ? { position: 'relative' } : { position: 'relative',display:"none" }}>
                         <span
                         onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
                         style={{

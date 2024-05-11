@@ -123,7 +123,6 @@ const ProfilePage = ()=>{
             message.error('Lỗi rồi')
         }
     },[dataChangePassword,isSuccessChangePassword,isErrorChangePassword])
-    console.log("dataChangePassword",stateChangePassword)
     return (
         <div style={{width:'1270px', margin:'0 auto',marginBottom:'20px'}}>
             <h1 className="WapperHeaderProfile">Thông tin người dùng</h1>
