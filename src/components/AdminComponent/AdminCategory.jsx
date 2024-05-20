@@ -446,7 +446,6 @@ const AdminCategory = () => {
       }
   })
   }
-  console.log("state",stateCategoryDetails)
   return (
     <div>
       <div>

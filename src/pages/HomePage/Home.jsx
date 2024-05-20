@@ -6,6 +6,10 @@ import slider2 from '../../assets/images/slide2.webp'
 import slider3 from '../../assets/images/slide3.webp'
 import slider4 from '../../assets/images/slide4.webp'
 import slider5 from '../../assets/images/slide5.webp'
+import slider6 from '../../assets/images/slide6.png'
+import slider7 from '../../assets/images/slide7.png'
+import slider8 from '../../assets/images/slide8.webp'
+
 import CardComponent from "../../components/Product/CardComponent";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useQuery } from "@tanstack/react-query";
@@ -131,7 +135,7 @@ const HomePage = () => {
             </div>
             <div className='body' style={{ width: '100%', backgroundColor: '#efefef', minHeight: '100vh' }}>
                 <div id="container" style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
-                    <SliderComponent arrImages={[slider1, slider2, slider3, slider4, slider5]} />
+                    <SliderComponent arrImages={[slider6, slider7, slider8]} />
                     <div style={{ background: 'white', padding: '16px', marginTop: '20px', borderRadius: '8px' }}>
                         <h2 style={{ margin: '0px', color: 'rgb(26, 148, 255)' }}>
                             Sản phẩm HOT
