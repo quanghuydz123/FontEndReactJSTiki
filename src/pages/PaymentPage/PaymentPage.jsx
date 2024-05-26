@@ -17,6 +17,7 @@ import { useMutationHooks } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
 import { updateUser } from '../../redux/slides/userSlide';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ContainerComponent from '../../components/ContainerComponent/ContainerComponent';
 // import { PayPalButton } from 'react-paypal-button-v2';
 
 const PaymentPage = () => {
@@ -254,9 +255,9 @@ const PaymentPage = () => {
   }, [])
   
   return (
-    <div style={{ background: '#f5f5fa', with: '100%', height: '100vh' }}>
+    <ContainerComponent style={{ background: '#f5f5fa', with: '100%', height: '100vh' }}>
       <Loading isLoading={isLoadingAddOrder}>
-        <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
+        <div style={{ height: '100%', width: '100%', margin: '0 auto' }}>
           <h3 style={{ fontWeight: 'bold' }}>Giỏ hàng</h3>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <WrapperLeft>
@@ -378,7 +379,7 @@ const PaymentPage = () => {
           </Form>
         </Loading>
       </ModalComponent>
-    </div>
+    </ContainerComponent>
   )
 }
 

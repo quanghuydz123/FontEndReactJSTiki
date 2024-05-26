@@ -1,5 +1,6 @@
 import React from "react";
 import { PhoneFilled } from '@ant-design/icons'
+import ContainerComponent from "../ContainerComponent/ContainerComponent";
 
 
 const FooterComponent = () => {
@@ -13,8 +14,10 @@ const FooterComponent = () => {
         }
     }
     return (
-        <div style={{ backgroundColor: '#183544' }}>
-            <div style={{ padding: '10px 120px', display: 'flex', justifyContent: 'space-around' }}>
+        <>
+        <ContainerComponent style={{ backgroundColor: '#183544' }}>
+        <div style={{width:'100%'}}>
+            <div style={{  display: 'flex', justifyContent: 'space-around' }}>
                 <div style={{ flex:'1' }}>
                     <h1 style={{ fontSize: '22px', color: 'white' }}><span style={{ textDecoration: 'underline' }}>SHOP</span> CỦA TÔI</h1>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -43,7 +46,7 @@ const FooterComponent = () => {
                         <span style={{ padding: '10px 0px', fontSize: '15px', color: 'white' }}>Hướng dẫn mua hàng</span>
                         <span style={{ padding: '10px 0px', fontSize: '15px', color: 'white' }}>Liên hệ</span>
                         <span style={{ padding: '10px 0px', fontSize: '17px', fontWeight: '700', color: 'white' }}>Chấp nhập thanh toán</span>
-                        <img src="https://khothietbicamtay.com/view/thanh-toan.png" alt="Thanh toán" style={{ width: '336px', height: '65px' }}></img>
+                        <img src="https://khothietbicamtay.com/view/thanh-toan.png" alt="Thanh toán" style={{ width: '100%', height: '65px' }}></img>
                     </div>
                 </div>
                 <div style={{ flex:'1' }}>
@@ -55,10 +58,12 @@ const FooterComponent = () => {
                     </div>
                 </div>
             </div>
-            <div style={{ backgroundColor: '#0e2530', height: '37px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <span style={{ color: 'white', fontSize: '13px' }}>Copyright © SHOP CỦA TÔI 2024. All rights reserved. </span>
-            </div>
         </div>
+        </ContainerComponent>
+        <div style={{ backgroundColor: '#0e2530', height: '37px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <span style={{ color: 'white', fontSize: '13px' }}>Copyright © SHOP CỦA TÔI 2024. All rights reserved. </span>
+    </div>  
+    </>
     )
 }
 

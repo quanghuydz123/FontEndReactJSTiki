@@ -12,6 +12,7 @@ import { useMutationHooks } from "../../hooks/useMutationHook";
 import { Button, Result, message } from 'antd';
 import ModalComponent from '../../components/ModalComponent/ModalComponent';
 import LinkComponent from '../../components/LinkComponent/LinkComponent';
+import ContainerComponent from '../../components/ContainerComponent/ContainerComponent';
 
 const MyOrderPage = () => {
   const user = useSelector((state) => state.user)
@@ -116,8 +117,9 @@ const MyOrderPage = () => {
   }
   return (
     <Loading isLoading={isLoading || isLoadingCancel}>
+      <ContainerComponent style={{background: '#f5f5fa'}}>
       <WrapperContainer>
-        <div style={{ height: '100%', width: '1270px', margin: '0 auto', marginBottom: '20px' }}>
+        <div style={{ height: '100%', width: '100%', margin: '0 auto', marginBottom: '20px' }}>
           <h4 style={{margin:0,padding:'10px 0'}}>Đơn hàng của tôi</h4>
           <WrapperListOrder>
             {data?.data?.length !== 0 ? data?.data?.map((order,index) => {
@@ -190,6 +192,7 @@ const MyOrderPage = () => {
           </WrapperListOrder>
         </div>
       </WrapperContainer>
+      </ContainerComponent>
       <ModalComponent title="Hủy đơn hàng" isOpen={isOpenModalDetele} onCancel={hanldeCancelDelete} onOk={() => handleCanceOrder(OrderSelected)}>
         <div>
           Bạn có muốn hủy đơn hàng này không ?

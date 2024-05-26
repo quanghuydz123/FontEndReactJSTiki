@@ -24,6 +24,7 @@ import * as CategoryService from '../../services/CategoryService'
 import NavbarComponent from "../../components/NavbarComponent/NavbarComponent";
 import Slider from "react-slick";
 import LinkComponent from "../../components/LinkComponent/LinkComponent";
+import ContainerComponent from "../../components/ContainerComponent/ContainerComponent";
 
 const HomePage = () => {
     //const searchProduct = useSelector((state) => state.product)
@@ -118,23 +119,25 @@ const HomePage = () => {
     }
     return (
         <Loading isLoading={isLoadingSearch}>
-            <div style={{ width: '1270px', margin: '0 auto' }}>
-                <div className="WrapperType123">
-                    <div className="WrapperTypeProduct">
-                        {categoryParent.map((item) => {
-                            return (
-                                <TypeProduct id={item._id} name={item.name} key={item.name} />
-                            )
-                        })}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src="https://salt.tikicdn.com/ts/upload/88/5c/9d/f5ee506836792eb7775e527ef8350a44.png" alt="location" style={{ width: '20px', height: '20px' }} />
-                        <span style={{ color: 'rgb(128,128,137)' }}> Giao đến:</span> <span style={{ fontWeight: 'bold', textDecoration: 'underline', color: 'rgb(39, 39, 42)' }}>{user.address}</span>
+            <ContainerComponent>
+                <div style={{ width: '100%', margin: '0 auto' }}>
+                    <div className="WrapperType123">
+                        <div className="WrapperTypeProduct">
+                            {categoryParent.map((item) => {
+                                return (
+                                    <TypeProduct id={item._id} name={item.name} key={item.name} />
+                                )
+                            })}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <img src="https://salt.tikicdn.com/ts/upload/88/5c/9d/f5ee506836792eb7775e527ef8350a44.png" alt="location" style={{ width: '20px', height: '20px' }} />
+                            <span style={{ color: 'rgb(128,128,137)' }}> Giao đến:</span> <span style={{ fontWeight: 'bold', textDecoration: 'underline', color: 'rgb(39, 39, 42)' }}>{user.address}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className='body' style={{ width: '100%', backgroundColor: '#efefef', minHeight: '100vh' }}>
-                <div id="container" style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
+            </ContainerComponent>
+            <ContainerComponent style={{ backgroundColor: '#efefef', minHeight: '100vh' }}>
+                <div style={{ height: '100%', width: '100%', margin: '0 auto' }}>
                     <SliderComponent arrImages={[slider1,slider2,slider3,slider4,slider5]} />
                     <div style={{ background: 'white', padding: '16px', marginTop: '20px', borderRadius: '8px' }}>
                         <h2 style={{ margin: '0px', color: 'rgb(26, 148, 255)' }}>
@@ -253,7 +256,7 @@ const HomePage = () => {
 
                 </div>
 
-            </div>
+            </ContainerComponent>
 
         </Loading>
     )

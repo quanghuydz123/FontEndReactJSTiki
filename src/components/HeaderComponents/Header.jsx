@@ -111,13 +111,13 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
         }
     }
     return (
-        <div>
+        <Col span={24}>
              <WapperHeader style={{display:"flex",alignItems:'center'}}>
             {isAdmin ? <Col span={18}><WapperTextHeader><LinkComponent to='/' style={{color:'white'}} colorOnMouseEnter='white' colorOnMouseLeave='white'>Shop của tôi</LinkComponent></WapperTextHeader></Col> :
             <Col span={5}><WapperTextHeader><LinkComponent to='/' style={{color:'white'}} colorOnMouseEnter='white' colorOnMouseLeave='white'>Shop của tôi</LinkComponent></WapperTextHeader></Col>}
              
                 {!isHiddenSearch &&
-                    (                    <Col span={13}>
+                    (<Col span={13}>
                         <ButtonInputSearch
                             size='large'
                             textButton = 'Tìm kiếm'
@@ -182,7 +182,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
             </WapperHeader>
            
             
-        </div>
+        </Col>
         
     )
 }
