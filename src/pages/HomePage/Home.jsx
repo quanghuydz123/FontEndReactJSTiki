@@ -135,7 +135,7 @@ const HomePage = () => {
             </div>
             <div className='body' style={{ width: '100%', backgroundColor: '#efefef', minHeight: '100vh' }}>
                 <div id="container" style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
-                    <SliderComponent arrImages={[slider6, slider7, slider8]} />
+                    <SliderComponent arrImages={[slider1,slider2,slider3,slider4,slider5]} />
                     <div style={{ background: 'white', padding: '16px', marginTop: '20px', borderRadius: '8px' }}>
                         <h2 style={{ margin: '0px', color: 'rgb(26, 148, 255)' }}>
                             Sản phẩm HOT
