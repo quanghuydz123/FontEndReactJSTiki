@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import { orderContant } from '../../contant';
 import { convertPrice } from '../../utils';
 import Loading from '../../components/LoadingComponent/Loading';
+import ContainerComponent from '../../components/ContainerComponent/ContainerComponent'
 
 const DetailsOrderPage = () => {
   const user = useSelector((state) => state.user)
@@ -117,7 +118,7 @@ const DetailsOrderPage = () => {
             </WrapperContentInfo>
           </WrapperInfoUser>
         </WrapperHeaderUser>
-        <WrapperStyleContent style={{ background: 'white', padding: '20px',borderRadius:'6px' }}>
+        <WrapperStyleContent style={{ background: 'white', padding: '20px',borderRadius:'6px'}}>
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ width: '670px' }}>Sản phẩm</div>
             <WrapperItemLabel>Giá</WrapperItemLabel>

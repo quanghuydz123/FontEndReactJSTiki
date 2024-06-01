@@ -12,6 +12,7 @@ import * as CategoryService from '../../services/CategoryService'
 import { Col, Row } from 'antd';
 import { colors } from "../../contants";
 import { useSelector } from "react-redux";
+import ContainerComponent from "../../components/ContainerComponent/ContainerComponent";
 
 const ProductDetailPage = () => {
     const { id } = useParams() //lấy value params  truyền vào
@@ -74,8 +75,9 @@ const ProductDetailPage = () => {
     const { isLoading: isLoadingAllLikeProduct, data: allLikeProducts } = useQueryAllLikeProducts
 
     return (
-        <div style={{ minHeight: '100vh', width: '100%', background: '#efefef' }}>
-            <div style={{ width: '1270px', minHeight: '100%', margin: '0 auto' }} className="container">
+        <ContainerComponent style={{ backgroundColor: '#efefef'}}>
+        <div style={{ minHeight: '100vh'}}>
+            <div style={{ width: '100%', minHeight: '100%', margin: '0 auto' }}>
                 <div style={{ margin: 0, paddingTop: '10px', paddingBottom: '10px', fontSize: '16px' }}>
                     <LinkComponent to={'/'} style={{ color: 'black' }}><span style={{ cursor: 'pointer' }}>Trang chủ</span></LinkComponent>
                     {categoryParent && <><span> /</span><LinkComponent to={`/${categoryParent[0]?.name}`} style={{ color: 'black' }}><span> {categoryParent[0]?.name}</span></LinkComponent></>}
@@ -177,6 +179,7 @@ const ProductDetailPage = () => {
 
             </div>
         </div>
+        </ContainerComponent>
     )
 }
 

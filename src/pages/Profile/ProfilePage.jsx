@@ -13,6 +13,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import {getBase64} from '../../utils'
 import ModalComponent from "../../components/ModalComponent/ModalComponent";
 import InputComponent from "../../components/InputComponent/InputComponent";
+import ContainerComponent from "../../components/ContainerComponent/ContainerComponent";
 const ProfilePage = ()=>{
     const user = useSelector((state) => state.user)
     const [email,setEmail] = useState(user.email)
@@ -124,7 +125,8 @@ const ProfilePage = ()=>{
         }
     },[dataChangePassword,isSuccessChangePassword,isErrorChangePassword])
     return (
-        <div style={{width:'1270px', margin:'0 auto',marginBottom:'20px'}}>
+        <ContainerComponent>
+        <div style={{width:'100%', margin:'0 auto',marginBottom:'20px'}}>
             <h1 className="WapperHeaderProfile">Thông tin người dùng</h1>
             <div className="WapperContentProfile">
                 <div className="WapperInputProfile">
@@ -248,6 +250,7 @@ const ProfilePage = ()=>{
             </Form>
             </ModalComponent>
         </div>
+        </ContainerComponent>
         
     )
 }

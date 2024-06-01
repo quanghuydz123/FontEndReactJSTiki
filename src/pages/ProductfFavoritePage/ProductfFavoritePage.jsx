@@ -8,6 +8,7 @@ import * as LikeProductService from '../../services/LikeProductService'
 import { useSelector } from "react-redux";
 import { Button, Result } from "antd";
 import { useNavigate } from "react-router-dom";
+import ContainerComponent from "../../components/ContainerComponent/ContainerComponent";
 
 const ProductfFavoritePage = ()=>{
     const user = useSelector((state) => state.user)
@@ -51,9 +52,9 @@ const ProductfFavoritePage = ()=>{
     const { isLoading: isLoadingAllLikeProduct, data: allLikeProducts } = useQueryAllLikeProducts
 
     return (
-       
-            <div className='body' style={{ width: '100%', backgroundColor: '#efefef', minHeight: '100vh' }}>
-                <div id="container" style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
+        <ContainerComponent style={{ backgroundColor: '#efefef'}}>
+            <div style={{ width: '100%', minHeight: '100vh' }}>
+                <div style={{ height: '100%', width: '100%', margin: '0 auto' }}>
                     <div style={{ background: 'white', padding: '16px', borderRadius: '8px' }}>
                         <h2 style={{ margin: '0px', color: 'rgb(26, 148, 255)' }}>
                             Sản phẩm yêu thích
@@ -116,7 +117,7 @@ const ProductfFavoritePage = ()=>{
                 </div>
 
             </div>
-
+            </ContainerComponent>
     )
 }
 

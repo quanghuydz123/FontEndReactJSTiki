@@ -17,6 +17,7 @@ import {
     RiseOutlined,
     FallOutlined
 } from '@ant-design/icons';
+import ContainerComponent from "../../components/ContainerComponent/ContainerComponent";
 const TypeProductPage = () => {
     const params = useParams()
     const location = useLocation();
@@ -163,8 +164,8 @@ const TypeProductPage = () => {
     return (
         <>
             <Loading isLoading={isLoadingProductType}>
-                <div style={{ width: '100%', backgroundColor: "#efefef", minHeight: 'calc(100vh)' }}>
-                    <div style={{ width: '1270px', margin: '0 auto', minHeight: 'calc(100vh)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <ContainerComponent style={{ backgroundColor: "#efefef", minHeight: 'calc(100vh)' }}>
+                    <div style={{ width: '100%', margin: '0 auto', minHeight: 'calc(100vh)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                         <Row style={{ flexWrap: 'nowrap', paddingTop: '10px' }}>
 
                             <Col span={4} style={{}} className="WrapperNavbar">
@@ -320,7 +321,7 @@ const TypeProductPage = () => {
                             }}
                         />
                     </div>
-                </div>
+                </ContainerComponent>
             </Loading>
         </>
     )

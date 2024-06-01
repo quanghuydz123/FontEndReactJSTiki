@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import StepComponent from '../../components/Step/Step';
 import LinkComponent from '../../components/LinkComponent/LinkComponent';
 import { useQuery } from '@tanstack/react-query';
+import ContainerComponent from '../../components/ContainerComponent/ContainerComponent';
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order)
@@ -244,8 +245,8 @@ const OrderPage = () => {
       queryFn: fetchProductAll,
   });
   return (
-    <div style={{ background: '#f5f5fa', with: '100%', height: '100vh' }}>
-      <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
+    <ContainerComponent style={{ background: '#f5f5fa', with: '100%', height: '100vh' }}>
+      <div style={{ height: '100%', width: '100%', margin: '0 auto' }}>
         <h4 style={{margin:0,padding:'10px 0'}}>Giỏ hàng</h4>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <WrapperLeft>
@@ -406,7 +407,7 @@ const OrderPage = () => {
                 Bạn có muốn hủy sản phẩm này không ?
             </div>
       </ModalComponent>
-    </div>
+    </ContainerComponent>
   )
 }
 

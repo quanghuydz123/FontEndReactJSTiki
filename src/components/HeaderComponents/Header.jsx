@@ -117,7 +117,7 @@ const Header = ({isHiddenSearch = false,isHiddenCart = false,isAdmin=false})=>{
             <Col span={5}><WapperTextHeader><LinkComponent to='/' style={{color:'white'}} colorOnMouseEnter='white' colorOnMouseLeave='white'>Shop của tôi</LinkComponent></WapperTextHeader></Col>}
              
                 {!isHiddenSearch &&
-                    (                    <Col span={13}>
+                    (<Col span={13}>
                         <ButtonInputSearch
                             size='large'
                             textButton = 'Tìm kiếm'
