@@ -1,3 +1,3 @@
 - Đây là một project về website thương mại điện tử về sản phẩm công nghệ như điện thoại, laptop, phụ kiện,...
 Class diagram:
-![Example Image](/my-app/src/assets/images/classDiagram.drawio.png)
+![Example Image](assets/images/classDiagram.drawio.png)
